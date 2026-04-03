@@ -54,7 +54,8 @@ body {
   object-fit: cover; border: 2px solid rgba(155,184,136,0.6);
   background: white; box-shadow: 0 4px 12px rgba(30,58,30,0.15);
 }
-.logo-name { font-size: 1rem; font-weight: 600; color: var(--verde-oscuro); white-space: nowrap; }
+/* logo-name oculto - se quitó el nombre del header */
+.logo-name { display: none; }
 .hamburger {
   background: rgba(255,255,255,0.2); border: 1.5px solid rgba(155,184,136,0.5);
   width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
@@ -218,7 +219,6 @@ body {
   width: 100%; height: 100%; object-fit: cover; display: block;
   transition: transform 0.5s ease;
   image-rendering: auto;
-  image-resolution: from-image;
 }
 .prop-card:hover .prop-img-main img { transform: scale(1.05); }
 .prop-badge {
@@ -406,7 +406,6 @@ body {
   position: relative;
   overflow: hidden;
 }
-/* Decoración adicional: líneas y acentos */
 .serv-card::before {
   content: '';
   position: absolute;
@@ -431,9 +430,7 @@ body {
   transition: transform 0.5s ease;
   transform-origin: left;
 }
-.serv-card:hover::after {
-  transform: scaleX(1);
-}
+.serv-card:hover::after { transform: scaleX(1); }
 .serv-card:hover { transform: translateY(-12px); box-shadow: 0 35px 60px rgba(0,0,0,0.45); border-color: rgba(255,255,255,0.65); background: rgba(45,71,45,0.94);}
 .serv-num {
   font-size: 3.5rem; font-weight: 800; color: rgba(255,255,255,0.2); line-height: 1; margin-bottom: 12px;
@@ -580,26 +577,101 @@ body {
 .wa-float:hover { transform: scale(1.12); box-shadow: 0 10px 30px rgba(37,211,102,0.5); }
 .wa-float svg { width: 30px; height: 30px; fill: white; }
 
-/* ===== MEDIA QUERIES ===== */
-@media (max-width: 900px) {
-  .hero-content h1 { font-size: 3rem; }
-  .sobre-container { grid-template-columns: 1fr; }
-  .sobre-img-frame { max-width: 320px; }
-  .carousel-slide { grid-template-columns: 1fr; }
-  .servicios-grid { grid-template-columns: 1fr; max-width: 460px; margin: 0 auto; }
-  .contacto-container { grid-template-columns: 1fr; }
-  .detail-body { grid-template-columns: 1fr; }
-  .detail-sidebar { position: static; }
+/* ===== FOOTER STYLES ===== */
+.footer {
+    background: #f0f5ea;
+    padding: 40px 20px 20px;
+    font-family: 'DM Sans', sans-serif;
+    border-top: 1px solid #c2d4b5;
+    width: 100%;
+    position: relative;
+    clear: both;
 }
-@media (max-width: 600px) {
-  .hero-content h1 { font-size: 2.3rem; }
-  .hero-content h2 { font-size: 1.3rem; }
-  .sobre-titulo { font-size: 2.2rem; }
-  .section-head h2 { font-size: 2rem; }
-  .contacto-form-box { padding: 28px 20px; }
-  .detail-main-img { height: 280px; }
-  .prop-galeria { grid-template-columns: repeat(3,1fr); }
-  .logo-name { display: none; }
+.footer-container { max-width: 1200px; margin: 0 auto; }
+.footer-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #c2d4b5;
+}
+.footer-logo-col { flex: 1; min-width: 250px; }
+.footer-logo-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    padding: 6px 15px 6px 10px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    border: 1px solid #c2d4b5;
+    transition: all 0.3s ease;
+}
+.footer-logo-container:hover { background: rgba(255, 255, 255, 0.8); border-color: #9bb888; }
+.footer-logo-container img { width: 40px; height: 40px; border-radius: 50%; background: white; }
+.footer-brand-name { font-size: 1.1rem; font-weight: 600; color: #1e3a1e; white-space: nowrap; }
+.footer-phone-col { flex: 1; min-width: 250px; text-align: center; }
+.footer-phone-number {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e3a1e;
+    text-decoration: none;
+    padding: 6px 15px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    border: 1px solid #c2d4b5;
+    margin-bottom: 5px;
+}
+.footer-phone-number svg { width: 18px; height: 18px; fill: #1e3a1e; }
+.footer-phone-text { font-size: 0.85rem; color: #2d472d; font-weight: 500; }
+.footer-social-col { flex: 1; min-width: 250px; text-align: right; }
+.footer-social-container {
+    display: inline-flex;
+    gap: 12px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    border: 1px solid #c2d4b5;
+}
+.footer-social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+.footer-social-link.instagram { background: linear-gradient(45deg, #f09433, #d62976, #962fbf, #4f5bd5); }
+.footer-social-link.instagram:hover { transform: scale(1.1); opacity: 0.9; }
+.footer-social-link.whatsapp { background: #25D366; }
+.footer-social-link.whatsapp:hover { transform: scale(1.1); background: #20b859; }
+.footer-social-link svg { width: 22px; height: 22px; fill: white; }
+.footer-bottom { text-align: center; padding-top: 20px; }
+.footer-copyright { font-size: 0.85rem; color: #2d472d; }
+.footer-copyright a { color: #1e3a1e; text-decoration: none; font-weight: 600; }
+.footer-copyright a:hover { text-decoration: underline; }
+@media (max-width: 768px) {
+    .footer { padding: 30px 15px 15px; }
+    .footer-row { flex-direction: column; gap: 20px; text-align: center; }
+    .footer-logo-col, .footer-phone-col, .footer-social-col { text-align: center; width: 100%; }
+    .footer-social-container { margin: 0 auto; }
+    .footer-phone-number { margin: 0 auto 5px; }
+}
+@media (max-width: 480px) {
+    .footer-logo-container { padding: 4px 12px 4px 8px; }
+    .footer-logo-container img { width: 35px; height: 35px; }
+    .footer-brand-name { font-size: 1rem; }
+    .footer-phone-number { font-size: 1rem; padding: 5px 12px; }
+    .footer-phone-text { font-size: 0.8rem; }
+    .footer-social-link { width: 36px; height: 36px; }
+    .footer-social-link svg { width: 20px; height: 20px; }
 }
 </style>
 </head>
@@ -610,7 +682,7 @@ body {
   <div class="header-inner">
     <a href="#inicio" class="logo-wrap">
       <img src="https://i.imgur.com/FqChLBS.png" alt="Logo" class="logo-img">
-      <span class="logo-name">Bárbara Insaurralde</span>
+      <span class="logo-name"></span>
     </a>
     <button class="hamburger" id="hamburger" aria-label="Menú">
       <span></span><span></span><span></span>
@@ -670,13 +742,9 @@ body {
     <p>Encontrá tu próxima inversión o vivienda ideal</p>
     <div class="section-line"></div>
   </div>
-
-  <!-- CARRUSEL -->
   <div class="carousel-wrapper" id="carouselWrapper">
     <div class="carousel-viewport">
-      <div class="carousel-track" id="carouselTrack">
-        <!-- generado por JS -->
-      </div>
+      <div class="carousel-track" id="carouselTrack"></div>
     </div>
     <div class="carousel-controls">
       <button class="carousel-btn" id="prevBtn">&#8592;</button>
@@ -684,8 +752,6 @@ body {
       <button class="carousel-btn" id="nextBtn">&#8594;</button>
     </div>
   </div>
-
-  <!-- VISTA DETALLADA -->
   <div class="detail-view" id="detailView">
     <button class="detail-back" id="detailBack">&#8592; Volver al carrusel</button>
     <img src="" alt="" class="detail-main-img" id="detailMainImg">
@@ -696,51 +762,27 @@ body {
         <p class="detail-info-ubi" id="detailUbi"></p>
         <div class="detail-tags" id="detailTags"></div>
         <p class="detail-descripcion" id="detailDesc"></p>
-        <div class="detail-caracteristicas">
-          <h4>Características</h4>
-          <ul id="detailCaract"></ul>
-        </div>
+        <div class="detail-caracteristicas"><h4>Características</h4><ul id="detailCaract"></ul></div>
       </div>
       <div class="detail-sidebar">
         <div class="detail-precio" id="detailPrecio"></div>
         <div class="detail-precio-nota" id="detailPrecioNota"></div>
         <a href="#" class="btn-consultar" id="detailWA">Consultar por WhatsApp</a>
-        <a href="#contacto" class="btn-wa">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19.077 4.928C17.191 3.041 14.683 2 12.006 2c-5.226 0-9.49 4.248-9.495 9.476-.002 1.638.42 3.237 1.222 4.646L2 22l5.994-1.663c1.36.744 2.892 1.136 4.47 1.137h.004c5.222 0 9.486-4.25 9.49-9.478.002-2.534-.984-4.916-2.87-6.802z"/></svg>
-          Pedir información
-        </a>
+        <a href="#contacto" class="btn-wa"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19.077 4.928C17.191 3.041 14.683 2 12.006 2c-5.226 0-9.49 4.248-9.495 9.476-.002 1.638.42 3.237 1.222 4.646L2 22l5.994-1.663c1.36.744 2.892 1.136 4.47 1.137h.004c5.222 0 9.486-4.25 9.49-9.478.002-2.534-.984-4.916-2.87-6.802z"/></svg>Pedir información</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SERVICIOS con decoración extra -->
+<!-- SERVICIOS -->
 <section class="servicios-section" id="servicios">
   <div class="servicios-overlay">
     <div class="servicios-inner">
-      <div class="servicios-head">
-        <h2>Mis Servicios</h2>
-        <div class="section-line"></div>
-      </div>
+      <div class="servicios-head"><h2>Mis Servicios</h2><div class="section-line"></div></div>
       <div class="servicios-grid">
-        <div class="serv-card">
-          <div class="serv-num">01</div>
-          <h3 class="serv-titulo">Venta de propiedades</h3>
-          <p class="serv-desc">Asesoramiento integral para la comercialización de inmuebles, incluyendo tasación, estrategia de difusión y acompañamiento hasta la concreción de la operación.</p>
-          <a href="#contacto" class="serv-btn">SOLICITAR</a>
-        </div>
-        <div class="serv-card">
-          <div class="serv-num">02</div>
-          <h3 class="serv-titulo">Tasaciones inmobiliarias</h3>
-          <p class="serv-desc">Valoración profesional de propiedades basada en análisis de mercado, ubicación y características del inmueble para determinar su valor real.</p>
-          <a href="#contacto" class="serv-btn">SOLICITAR</a>
-        </div>
-        <div class="serv-card">
-          <div class="serv-num">03</div>
-          <h3 class="serv-titulo">Alquileres y administración</h3>
-          <p class="serv-desc">Gestión integral de alquileres, redacción de contratos, selección de inquilinos y seguimiento administrativo durante toda la relación locativa.</p>
-          <a href="#contacto" class="serv-btn">SOLICITAR</a>
-        </div>
+        <div class="serv-card"><div class="serv-num">01</div><h3 class="serv-titulo">Venta de propiedades</h3><p class="serv-desc">Asesoramiento integral para la comercialización de inmuebles, incluyendo tasación, estrategia de difusión y acompañamiento hasta la concreción de la operación.</p><a href="#contacto" class="serv-btn">SOLICITAR</a></div>
+        <div class="serv-card"><div class="serv-num">02</div><h3 class="serv-titulo">Tasaciones inmobiliarias</h3><p class="serv-desc">Valoración profesional de propiedades basada en análisis de mercado, ubicación y características del inmueble para determinar su valor real.</p><a href="#contacto" class="serv-btn">SOLICITAR</a></div>
+        <div class="serv-card"><div class="serv-num">03</div><h3 class="serv-titulo">Alquileres y administración</h3><p class="serv-desc">Gestión integral de alquileres, redacción de contratos, selección de inquilinos y seguimiento administrativo durante toda la relación locativa.</p><a href="#contacto" class="serv-btn">SOLICITAR</a></div>
       </div>
     </div>
   </div>
@@ -749,324 +791,50 @@ body {
 <!-- MAPA -->
 <section class="mapa-section" id="ubicacion">
   <div class="mapa-container">
-    <div class="section-head">
-      <h2>Nuestra Ubicación</h2>
-      <p>Posadas, Misiones, Argentina</p>
-      <div class="section-line"></div>
-    </div>
-    <div class="mapa-frame">
-      <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28740.26!2d-55.8969!3d-27.3666!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9457bd4a0c4fc35f%3A0x62e9e57e69c40a72!2sPosadas%2C+Misiones!5e0!3m2!1ses!2sar!4v1"
-        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ubicación Posadas Misiones">
-      </iframe>
-    </div>
-    <div class="mapa-info">
-      <p class="mapa-dir">📍 <strong>Posadas, Misiones, Argentina</strong> – Atención con turno previo</p>
-      <a href="https://maps.google.com/?q=-27.3666,-55.8969" target="_blank" class="btn-llegar">
-        ↗ Cómo llegar
-      </a>
-    </div>
+    <div class="section-head"><h2>Nuestra Ubicación</h2><p>Posadas, Misiones, Argentina</p><div class="section-line"></div></div>
+    <div class="mapa-frame"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28740.26!2d-55.8969!3d-27.3666!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9457bd4a0c4fc35f%3A0x62e9e57e69c40a72!2sPosadas%2C+Misiones!5e0!3m2!1ses!2sar!4v1" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ubicación Posadas Misiones"></iframe></div>
+    <div class="mapa-info"><p class="mapa-dir">📍 <strong>Posadas, Misiones, Argentina</strong> – Atención con turno previo</p><a href="https://maps.google.com/?q=-27.3666,-55.8969" target="_blank" class="btn-llegar">↗ Cómo llegar</a></div>
   </div>
 </section>
 
 <!-- CONTACTO -->
 <section class="contacto-section" id="contacto">
   <div class="contacto-container">
-    <div class="contacto-left">
-      <span class="contacto-tag">¿Querés vender tu propiedad?</span>
-      <h2>Vendé tu propiedad con asesoramiento profesional</h2>
-      <p>Vender una propiedad requiere conocimiento del mercado, una correcta valoración y una estrategia de comercialización adecuada.</p>
-      <p>Te acompaño durante todo el proceso con asesoramiento profesional y difusión estratégica para lograr una operación segura y exitosa.</p>
-      <ul class="servicios-lista">
-        <li>Tasación profesional</li>
-        <li>Publicación en portales inmobiliarios</li>
-        <li>Difusión en redes sociales</li>
-        <li>Asesoramiento legal y comercial</li>
-        <li>Acompañamiento hasta la firma</li>
-      </ul>
-      <a href="https://wa.me/5493765409158?text=Hola%20Bárbara%2C%20quiero%20solicitar%20una%20tasación%20de%20mi%20propiedad." class="btn-tasacion" target="_blank">Solicitar tasación</a>
-    </div>
-    <div class="contacto-form-box">
-      <h3 class="form-titulo">Solicitar información</h3>
-      <p class="form-subtitulo">Te respondemos en menos de 1 hora</p>
-      <form id="contactForm">
-        <div class="form-row">
-          <div class="form-group">
-            <input type="text" id="nombre" placeholder=" " required>
-            <label for="nombre">Nombre completo</label>
-          </div>
-          <div class="form-group">
-            <input type="email" id="email" placeholder=" " required>
-            <label for="email">Correo electrónico</label>
-          </div>
-          <div class="form-group">
-            <input type="tel" id="telefono" placeholder=" " required>
-            <label for="telefono">Teléfono / WhatsApp</label>
-          </div>
-          <div class="form-group">
-            <textarea id="mensaje" placeholder=" " rows="3"></textarea>
-            <label for="mensaje">¿Qué propiedad buscás?</label>
-          </div>
-          <div class="form-wa-check">
-            <input type="checkbox" id="waCheck" checked>
-            <label for="waCheck"><strong>✅ Notificarme por WhatsApp</strong></label>
-          </div>
-          <button type="submit" class="btn-submit">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-            Enviar solicitud
-          </button>
-        </div>
-      </form>
-      <p class="form-nota">Tus datos están seguros. No compartimos información.</p>
-    </div>
+    <div class="contacto-left"><span class="contacto-tag">¿Querés vender tu propiedad?</span><h2>Vendé tu propiedad con asesoramiento profesional</h2><p>Vender una propiedad requiere conocimiento del mercado, una correcta valoración y una estrategia de comercialización adecuada.</p><p>Te acompaño durante todo el proceso con asesoramiento profesional y difusión estratégica para lograr una operación segura y exitosa.</p><ul class="servicios-lista"><li>Tasación profesional</li><li>Publicación en portales inmobiliarios</li><li>Difusión en redes sociales</li><li>Asesoramiento legal y comercial</li><li>Acompañamiento hasta la firma</li></ul><a href="https://wa.me/5493765409158?text=Hola%20Bárbara%2C%20quiero%20solicitar%20una%20tasación%20de%20mi%20propiedad." class="btn-tasacion" target="_blank">Solicitar tasación</a></div>
+    <div class="contacto-form-box"><h3 class="form-titulo">Solicitar información</h3><p class="form-subtitulo">Te respondemos en menos de 1 hora</p><form id="contactForm"><div class="form-row"><div class="form-group"><input type="text" id="nombre" placeholder=" " required><label for="nombre">Nombre completo</label></div><div class="form-group"><input type="email" id="email" placeholder=" " required><label for="email">Correo electrónico</label></div><div class="form-group"><input type="tel" id="telefono" placeholder=" " required><label for="telefono">Teléfono / WhatsApp</label></div><div class="form-group"><textarea id="mensaje" placeholder=" " rows="3"></textarea><label for="mensaje">¿Qué propiedad buscás?</label></div><div class="form-wa-check"><input type="checkbox" id="waCheck" checked><label for="waCheck"><strong>✅ Notificarme por WhatsApp</strong></label></div><button type="submit" class="btn-submit"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>Enviar solicitud</button></div></form><p class="form-nota">Tus datos están seguros. No compartimos información.</p></div>
   </div>
 </section>
 
 <!-- WA FLOTANTE -->
-<a href="https://wa.me/5493765409158" class="wa-float" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-  <svg viewBox="0 0 24 24"><path d="M19.077 4.928C17.191 3.041 14.683 2 12.006 2c-5.226 0-9.49 4.248-9.495 9.476-.002 1.638.42 3.237 1.222 4.646L2 22l5.994-1.663c1.36.744 2.892 1.136 4.47 1.137h.004c5.222 0 9.486-4.25 9.49-9.478.002-2.534-.984-4.916-2.87-6.802zM12.006 20.36h-.003c-1.393 0-2.757-.375-3.94-1.08l-.283-.168-3.558.987 1.05-3.445-.185-.3c-.78-1.24-1.192-2.66-1.19-4.118.004-4.36 3.55-7.902 7.92-7.902 2.115 0 4.103.826 5.6 2.326 1.497 1.5 2.322 3.49 2.32 5.605-.004 4.36-3.55 7.905-7.914 7.905z"/></svg>
-</a>
+<a href="https://wa.me/5493765409158" class="wa-float" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M19.077 4.928C17.191 3.041 14.683 2 12.006 2c-5.226 0-9.49 4.248-9.495 9.476-.002 1.638.42 3.237 1.222 4.646L2 22l5.994-1.663c1.36.744 2.892 1.136 4.47 1.137h.004c5.222 0 9.486-4.25 9.49-9.478.002-2.534-.984-4.916-2.87-6.802zM12.006 20.36h-.003c-1.393 0-2.757-.375-3.94-1.08l-.283-.168-3.558.987 1.05-3.445-.185-.3c-.78-1.24-1.192-2.66-1.19-4.118.004-4.36 3.55-7.902 7.92-7.902 2.115 0 4.103.826 5.6 2.326 1.497 1.5 2.322 3.49 2.32 5.605-.004 4.36-3.55 7.905-7.914 7.905z"/></svg></a>
+
+<!-- FOOTER -->
+<footer class="footer"><div class="footer-container"><div class="footer-row"><div class="footer-logo-col"><a href="#inicio" class="footer-logo-container"><img src="https://i.imgur.com/FqChLBS.png" alt="Barbara Insaurralde"><span class="footer-brand-name">Barbara Insaurralde</span></a></div><div class="footer-phone-col"><div><a href="tel:+5493765409158" class="footer-phone-number"><svg viewBox="0 0 24 24"><path d="M20 10.999h2C22 5.869 18.127 2 12.99 2v2C17.052 4 20 6.943 20 10.999z"/><path d="M13 8c2.103 0 3 .897 3 3h2c0-3.225-1.775-5-5-5v2zm3.422 5.443a1.001 1.001 0 0 0-1.391.043l-2.393 2.461c-.576-.11-1.734-.471-2.926-1.66-1.192-1.193-1.553-2.354-1.66-2.926l2.459-2.394a1 1 0 0 0 .043-1.391L6.859 3.513a1 1 0 0 0-1.391-.087l-2.17 1.861a1 1 0 0 0-.29.649c-.015.25-.301 6.172 4.291 10.766 4.006 4.006 9.024 4.299 10.406 4.299.202 0 .326-.006.359-.008a.992.992 0 0 0 .648-.291l1.86-2.171a1 1 0 0 0-.086-1.391l-4.064-3.697z"/></svg>+54 9 3765-409158</a><div class="footer-phone-text">Contacta para más información</div></div></div><div class="footer-social-col"><div class="footer-social-container"><a href="https://www.instagram.com/barbarainsaurralde_realstate" class="footer-social-link instagram" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1 1 12.324 0 6.162 6.162 0 0 1-12.324 0zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm4.965-10.405a1.44 1.44 0 1 1 2.881.001 1.44 1.44 0 0 1-2.881-.001z"/></svg></a><a href="https://wa.me/5493765409158" class="footer-social-link whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M19.077 4.928C17.191 3.041 14.683 2 12.006 2c-5.226 0-9.49 4.248-9.495 9.476-.002 1.638.42 3.237 1.222 4.646L2 22l5.994-1.663c1.36.744 2.892 1.136 4.47 1.137h.004c5.222 0 9.486-4.25 9.49-9.478.002-2.534-.984-4.916-2.87-6.802zM12.006 20.36h-.003c-1.393 0-2.757-.375-3.94-1.08l-.283-.168-3.558.987 1.05-3.445-.185-.3c-.78-1.24-1.192-2.66-1.19-4.118.004-4.36 3.55-7.902 7.92-7.902 2.115 0 4.103.826 5.6 2.326 1.497 1.5 2.322 3.49 2.32 5.605-.004 4.36-3.55 7.905-7.914 7.905z"/></svg></a></div></div></div><div class="footer-bottom"><div class="footer-copyright">© 2025 <a href="#">Bárbara Insaurralde</a> - Asesora Inmobiliaria</div></div></div></footer>
 
 <script>
 (function() {
-  // ===== DATOS DE PROPIEDADES (IMÁGENES MEJORADAS) =====
   const PROPIEDADES_DEFAULT = [
-    {
-      id: 1,
-      badge: 'En Venta',
-      titulo: 'Departamento en Venta – Edificio Ysyry',
-      ubicacion: 'Planta baja – contrafrente, Posadas, Misiones',
-      precio: 'USD 70.000',
-      precioNota: '',
-      descripcion: 'Excelente oportunidad en uno de los edificios más buscados de la ciudad, ubicado en una zona estratégica, con cercanía al centro, la costanera y principales accesos. Ideal tanto para vivienda como para inversión.',
-      tags: ['1 dormitorio', '1 baño', '40,74 m²'],
-      caracteristicas: ['Cocina integrada', 'Living-comedor luminoso', 'Lavadero', 'Diseño moderno', 'Ascensor', 'Entorno residencial tranquilo'],
-      imagenPrincipal: 'https://i.imgur.com/tLw6bP7.jpeg',
-      galeria: ['https://i.imgur.com/LvKt0EX.jpeg','https://i.imgur.com/1c96F9E.jpeg','https://i.imgur.com/qQ9kQJP.jpeg','https://i.imgur.com/yjX9z3W.jpeg']
-    },
-    {
-      id: 2,
-      badge: 'En Venta',
-      titulo: 'Departamento en Venta – Edificio Citrino',
-      ubicacion: 'Séptimo piso con vista al río Paraná, Posadas, Misiones',
-      precio: 'USD 200.000',
-      precioNota: 'Cochera incluida',
-      descripcion: 'Excelente departamento en uno de los edificios más destacados de Posadas, con cercanía al centro, la costanera y principales accesos. Séptimo piso con vista al río.',
-      tags: ['2 dormitorios', '2 baños', 'Cochera incluida', 'Vista al río'],
-      caracteristicas: ['Cocina funcional', 'Living-comedor amplio y luminoso', 'Lavadero independiente', 'Seguridad y accesos controlados', 'Ascensores', 'Excelente calidad constructiva'],
-      imagenPrincipal: 'https://i.imgur.com/61dJdMq.jpeg',
-      galeria: ['https://i.imgur.com/YPb4Jcy.jpeg','https://i.imgur.com/yK9oYXo.jpeg','https://i.imgur.com/OriQGtF.jpeg','https://i.imgur.com/cQGgqnP.jpeg','https://i.imgur.com/aKfYyZV.jpeg','https://i.imgur.com/5g4GNDC.jpeg']
-    },
-    {
-      id: 3,
-      badge: 'En Venta',
-      titulo: 'Terreno en Venta – Av. Las Heras',
-      ubicacion: 'Avenida Las Heras, Posadas, Misiones',
-      precio: 'USD 50.000',
-      precioNota: 'Negociable • Consultar financiación',
-      descripcion: 'Excelente oportunidad sobre una de las avenidas principales de Posadas, con alto tránsito, visibilidad y gran proyección comercial y residencial.',
-      tags: ['433 m²', 'Frente sobre avenida', 'Zona consolidada'],
-      caracteristicas: ['Superficie total 433 m²', 'Frente sobre avenida principal', 'Construcción existente apta para reciclaje', 'Entorno consolidado', 'Alto tránsito vehicular', 'Negociable'],
-      imagenPrincipal: 'https://i.imgur.com/rpFJgWX.jpeg',
-      galeria: ['https://i.imgur.com/bI5o6Wh.jpeg','https://i.imgur.com/4xWqE4T.jpeg']
-    },
-    {
-      id: 4,
-      badge: 'En Alquiler',
-      titulo: 'Inmueble de Destino Mixto en Alquiler – Ruta 12',
-      ubicacion: 'Sobre Ruta Nacional 12, frente al Hospital Baliña, Posadas, Misiones',
-      precio: '$1.250.000/mes',
-      precioNota: 'Antes $1.500.000',
-      descripcion: 'Excelente propiedad de destino mixto (comercial/habitacional), en zona de alto tránsito vehicular y gran visibilidad. Ideal para empresas, instituciones, comercios, consultorios o logística.',
-      tags: ['45x45 m', '3 dormitorios', '2 baños', 'Uso mixto'],
-      caracteristicas: ['Terreno de 45x45 metros', '3 dormitorios y 2 baños', 'Galería techada', 'Predio totalmente cerrado', 'Muros perimetrales y portones', 'Sistema de alarma', 'Frente al Hospital Baliña'],
-      imagenPrincipal: 'https://i.imgur.com/XIY3bw7.jpeg',
-      galeria: ['https://i.imgur.com/llbmpFz.jpeg','https://i.imgur.com/hHlP3C9.jpeg','https://i.imgur.com/9fIPlwO.jpeg','https://i.imgur.com/dD48nKk.jpeg','https://i.imgur.com/1NHvMsR.jpeg','https://i.imgur.com/S9FlQlM.jpeg']
-    }
+    { id: 1, badge: 'En Venta', titulo: 'Departamento en Venta – Edificio Ysyry', ubicacion: 'Planta baja – contrafrente, Posadas, Misiones', precio: 'USD 70.000', precioNota: '', descripcion: 'Excelente oportunidad en uno de los edificios más buscados de la ciudad, ubicado en una zona estratégica, con cercanía al centro, la costanera y principales accesos. Ideal tanto para vivienda como para inversión.', tags: ['1 dormitorio', '1 baño', '40,74 m²'], caracteristicas: ['Cocina integrada', 'Living-comedor luminoso', 'Lavadero', 'Diseño moderno', 'Ascensor', 'Entorno residencial tranquilo'], imagenPrincipal: 'https://i.ibb.co/Mk1M19JK/imagen1.jpg', galeria: ['https://i.ibb.co/5WNk97S2/imagen2.jpg','https://i.ibb.co/DfVQxv6C/imagen3.jpg','https://i.ibb.co/209RJVGn/imagen4.jpg','https://i.ibb.co/twCqCtkC/imagen5.jpg'] },
+    { id: 2, badge: 'En Venta', titulo: 'Departamento en Venta – Edificio Citrino', ubicacion: 'Séptimo piso con vista al río Paraná, Posadas, Misiones', precio: 'USD 200.000', precioNota: 'Cochera incluida', descripcion: 'Excelente departamento en uno de los edificios más destacados de Posadas, con cercanía al centro, la costanera y principales accesos. Séptimo piso con vista al río.', tags: ['2 dormitorios', '2 baños', 'Cochera incluida', 'Vista al río'], caracteristicas: ['Cocina funcional', 'Living-comedor amplio y luminoso', 'Lavadero independiente', 'Seguridad y accesos controlados', 'Ascensores', 'Excelente calidad constructiva'], imagenPrincipal: 'https://i.ibb.co/4ZRDzRVN/imagen1.jpg', galeria: ['https://i.ibb.co/0RGkthtm/imagen2.jpg','https://i.ibb.co/ym30xhJL/imagen3.jpg','https://i.ibb.co/1tDTgY3K/imagen4.jpg','https://i.ibb.co/Vpx0v1DW/imagen5.jpg','https://i.ibb.co/99m1B426/imagen6.jpg','https://i.ibb.co/20bss0h5/imagen7.jpg','https://i.ibb.co/BKqs7YcK/imagen8.jpg'] },
+    { id: 3, badge: 'En Venta', titulo: 'Terreno en Venta – Av. Las Heras', ubicacion: 'Avenida Las Heras, Posadas, Misiones', precio: 'USD 50.000', precioNota: 'Negociable • Consultar financiación', descripcion: 'Excelente oportunidad sobre una de las avenidas principales de Posadas, con alto tránsito, visibilidad y gran proyección comercial y residencial.', tags: ['433 m²', 'Frente sobre avenida', 'Zona consolidada'], caracteristicas: ['Superficie total 433 m²', 'Frente sobre avenida principal', 'Construcción existente apta para reciclaje', 'Entorno consolidado', 'Alto tránsito vehicular', 'Negociable'], imagenPrincipal: 'https://i.ibb.co/GvrGyvdZ/terreno1.jpg', galeria: ['https://i.ibb.co/DfbM1Tdx/terreno2.jpg','https://i.ibb.co/qF0Nd1Q6/terreno3.jpg'] },
+    { id: 4, badge: 'En Alquiler', titulo: 'Inmueble de Destino Mixto en Alquiler – Ruta 12', ubicacion: 'Sobre Ruta Nacional 12, frente al Hospital Baliña, Posadas, Misiones', precio: '$1.250.000/mes', precioNota: 'Antes $1.500.000', descripcion: 'Excelente propiedad de destino mixto (comercial/habitacional), en zona de alto tránsito vehicular y gran visibilidad. Ideal para empresas, instituciones, comercios, consultorios o logística.', tags: ['45x45 m', '3 dormitorios', '2 baños', 'Uso mixto'], caracteristicas: ['Terreno de 45x45 metros', '3 dormitorios y 2 baños', 'Galería techada', 'Predio totalmente cerrado', 'Muros perimetrales y portones', 'Sistema de alarma', 'Frente al Hospital Baliña'], imagenPrincipal: 'https://i.ibb.co/wNNdMn8S/inmueble1.jpg', galeria: ['https://i.ibb.co/prfy2HJy/inmueble2.jpg','https://i.ibb.co/nqV8KLtr/inmueble3.jpg','https://i.ibb.co/RpLmdGLz/inmueble4.jpg','https://i.ibb.co/yBBzDcsC/inmueble5.jpg','https://i.ibb.co/JFCXgbRW/inmueble6.jpg','https://i.ibb.co/XxDFJtmm/inmueble7.jpg'] }
   ];
-
-  function getPropiedades() {
-    try {
-      const saved = localStorage.getItem('barbara_propiedades');
-      return saved ? JSON.parse(saved) : PROPIEDADES_DEFAULT;
-    } catch(e) { return PROPIEDADES_DEFAULT; }
-  }
-
-  // ===== HEADER =====
+  function getPropiedades() { try { const saved = localStorage.getItem('barbara_propiedades'); return saved ? JSON.parse(saved) : PROPIEDADES_DEFAULT; } catch(e) { return PROPIEDADES_DEFAULT; } }
   const header = document.getElementById('header');
-  window.addEventListener('scroll', () => {
-    header.classList.toggle('scrolled', window.scrollY > 40);
-  });
-
-  // ===== MENÚ =====
-  const hamburger = document.getElementById('hamburger');
-  const sideMenu = document.getElementById('sideMenu');
-  const overlay = document.getElementById('overlay');
-
-  function toggleMenu(open) {
-    const isOpen = open !== undefined ? open : !sideMenu.classList.contains('open');
-    sideMenu.classList.toggle('open', isOpen);
-    hamburger.classList.toggle('open', isOpen);
-    overlay.classList.toggle('active', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-  }
-  hamburger.addEventListener('click', () => toggleMenu());
-  overlay.addEventListener('click', () => toggleMenu(false));
-  document.querySelectorAll('.menu-close-link').forEach(a => {
-    a.addEventListener('click', () => toggleMenu(false));
-  });
-
-  // ===== SCROLL SUAVE =====
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
-      if (!target) return;
-      e.preventDefault();
-      const offset = document.getElementById('header').offsetHeight + 10;
-      window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
-    });
-  });
-
-  // ===== CARRUSEL =====
-  let propiedades = getPropiedades();
-  const track = document.getElementById('carouselTrack');
-  const dotsContainer = document.getElementById('carouselDots');
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  const carouselWrapper = document.getElementById('carouselWrapper');
-  const detailView = document.getElementById('detailView');
+  window.addEventListener('scroll', () => { header.classList.toggle('scrolled', window.scrollY > 40); });
+  const hamburger = document.getElementById('hamburger'), sideMenu = document.getElementById('sideMenu'), overlay = document.getElementById('overlay');
+  function toggleMenu(open) { const isOpen = open !== undefined ? open : !sideMenu.classList.contains('open'); sideMenu.classList.toggle('open', isOpen); hamburger.classList.toggle('open', isOpen); overlay.classList.toggle('active', isOpen); document.body.style.overflow = isOpen ? 'hidden' : ''; }
+  hamburger.addEventListener('click', () => toggleMenu()); overlay.addEventListener('click', () => toggleMenu(false)); document.querySelectorAll('.menu-close-link').forEach(a => { a.addEventListener('click', () => toggleMenu(false)); });
+  document.querySelectorAll('a[href^="#"]').forEach(a => { a.addEventListener('click', e => { const target = document.querySelector(a.getAttribute('href')); if (!target) return; e.preventDefault(); const offset = document.getElementById('header').offsetHeight + 10; window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' }); }); });
+  const track = document.getElementById('carouselTrack'), dotsContainer = document.getElementById('carouselDots'), prevBtn = document.getElementById('prevBtn'), nextBtn = document.getElementById('nextBtn'), carouselWrapper = document.getElementById('carouselWrapper'), detailView = document.getElementById('detailView');
   const PROPS_PER_SLIDE_DESKTOP = 2;
-
-  function buildCard(p) {
-    const card = document.createElement('div');
-    card.className = 'prop-card';
-    const galeriaHtml = p.galeria.slice(0, 4).map(img => `
-      <div class="prop-galeria-img">
-        <img src="${img}" alt="Interior" loading="lazy">
-      </div>
-    `).join('');
-    card.innerHTML = `
-      <div class="prop-img-main">
-        <img src="${p.imagenPrincipal}" alt="${p.titulo}" loading="lazy">
-        <span class="prop-badge">${p.badge}</span>
-      </div>
-      <div class="prop-body">
-        <h3 class="prop-titulo">${p.titulo}</h3>
-        <p class="prop-ubicacion">${p.ubicacion}</p>
-        <div class="prop-detalles">${p.tags.map(t=>`<span class="prop-det-item">${t}</span>`).join('')}</div>
-        <div class="prop-precio">${p.precio}${p.precioNota ? `<br><small>${p.precioNota}</small>` : ''}</div>
-      </div>
-      ${p.galeria.length > 0 ? `<div class="prop-galeria">${galeriaHtml}</div>` : ''}
-      <div class="prop-footer">
-        <button class="btn-ver" data-id="${p.id}">VER DETALLES</button>
-      </div>
-    `;
-    card.querySelector('.btn-ver').addEventListener('click', () => openDetail(p.id));
-    return card;
-  }
-
-  function buildSlides() {
-    track.innerHTML = '';
-    dotsContainer.innerHTML = '';
-    const props = getPropiedades();
-    for (let i = 0; i < props.length; i += PROPS_PER_SLIDE_DESKTOP) {
-      const slide = document.createElement('div');
-      slide.className = 'carousel-slide';
-      const pair = props.slice(i, i + PROPS_PER_SLIDE_DESKTOP);
-      pair.forEach(p => slide.appendChild(buildCard(p)));
-      track.appendChild(slide);
-      const dot = document.createElement('button');
-      dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-      dot.dataset.slide = Math.floor(i / PROPS_PER_SLIDE_DESKTOP);
-      dot.addEventListener('click', () => goTo(+dot.dataset.slide));
-      dotsContainer.appendChild(dot);
-    }
-  }
-
-  let currentSlide = 0;
-  function goTo(index) {
-    const slides = track.querySelectorAll('.carousel-slide');
-    if (index < 0) index = slides.length - 1;
-    if (index >= slides.length) index = 0;
-    currentSlide = index;
-    track.style.transform = `translateX(calc(-${index * 100}% - ${index * 24}px))`;
-    document.querySelectorAll('.carousel-dot').forEach((d,i) => d.classList.toggle('active', i === index));
-  }
-
-  prevBtn.addEventListener('click', () => goTo(currentSlide - 1));
-  nextBtn.addEventListener('click', () => goTo(currentSlide + 1));
-
-  let autoTimer = setInterval(() => goTo(currentSlide + 1), 5500);
-  [prevBtn, nextBtn].forEach(b => b.addEventListener('click', () => { clearInterval(autoTimer); autoTimer = setInterval(() => goTo(currentSlide + 1), 5500); }));
-
-  buildSlides();
-
-  // ===== VISTA DETALLADA =====
-  function openDetail(id) {
-    const props = getPropiedades();
-    const p = props.find(x => x.id === id);
-    if (!p) return;
-
-    document.getElementById('detailMainImg').src = p.imagenPrincipal;
-    document.getElementById('detailMainImg').alt = p.titulo;
-
-    const galeriaEl = document.getElementById('detailGaleria');
-    galeriaEl.innerHTML = '';
-    const allImgs = [p.imagenPrincipal, ...p.galeria];
-    allImgs.forEach((img, idx) => {
-      const item = document.createElement('div');
-      item.className = 'detail-galeria-item' + (idx === 0 ? ' active' : '');
-      item.innerHTML = `<img src="${img}" alt="Foto ${idx+1}" loading="lazy">`;
-      item.addEventListener('click', () => {
-        document.getElementById('detailMainImg').src = img;
-        galeriaEl.querySelectorAll('.detail-galeria-item').forEach(el => el.classList.remove('active'));
-        item.classList.add('active');
-      });
-      galeriaEl.appendChild(item);
-    });
-
-    document.getElementById('detailTitulo').textContent = p.titulo;
-    document.getElementById('detailUbi').textContent = p.ubicacion;
-    document.getElementById('detailDesc').textContent = p.descripcion;
-    document.getElementById('detailPrecio').textContent = p.precio;
-    document.getElementById('detailPrecioNota').textContent = p.precioNota || '';
-
-    const tagsEl = document.getElementById('detailTags');
-    tagsEl.innerHTML = p.tags.map(t => `<span class="detail-tag">${t}</span>`).join('');
-
-    const caractEl = document.getElementById('detailCaract');
-    caractEl.innerHTML = p.caracteristicas.map(c => `<li>${c}</li>`).join('');
-
-    const waMsg = `Hola Bárbara, me interesa la propiedad: ${p.titulo} (${p.ubicacion}) - Precio: ${p.precio}. ¿Podría darme más información?`;
-    document.getElementById('detailWA').href = `https://wa.me/5493765409158?text=${encodeURIComponent(waMsg)}`;
-
-    carouselWrapper.style.transition = 'opacity 0.3s ease';
-    carouselWrapper.style.opacity = '0';
-    setTimeout(() => {
-      carouselWrapper.style.display = 'none';
-      detailView.classList.add('visible');
-      window.scrollTo({ top: document.getElementById('propiedades').offsetTop - 90, behavior: 'smooth' });
-    }, 300);
-  }
-
-  document.getElementById('detailBack').addEventListener('click', () => {
-    detailView.classList.remove('visible');
-    carouselWrapper.style.display = 'block';
-    setTimeout(() => { carouselWrapper.style.opacity = '1'; }, 30);
-  });
-
-  // ===== FORMULARIO → WHATSAPP =====
-  document.getElementById('contactForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const nombre = document.getElementById('nombre').value;
-    const email = document.getElementById('email').value;
-    const telefono = document.getElementById('telefono').value;
-    const mensaje = document.getElementById('mensaje').value;
-    const texto = `📋 *Nueva solicitud desde la web*\n\n👤 *Nombre:* ${nombre}\n📧 *Email:* ${email}\n📱 *Teléfono:* ${telefono}\n💬 *Mensaje:* ${mensaje}`;
-    window.open(`https://wa.me/5493765409158?text=${encodeURIComponent(texto)}`, '_blank');
-    this.reset();
-  });
-
+  function buildCard(p) { const card = document.createElement('div'); card.className = 'prop-card'; const galeriaHtml = p.galeria.slice(0,4).map(img => `<div class="prop-galeria-img"><img src="${img}" alt="Interior" loading="lazy"></div>`).join(''); card.innerHTML = `<div class="prop-img-main"><img src="${p.imagenPrincipal}" alt="${p.titulo}" loading="lazy"><span class="prop-badge">${p.badge}</span></div><div class="prop-body"><h3 class="prop-titulo">${p.titulo}</h3><p class="prop-ubicacion">${p.ubicacion}</p><div class="prop-detalles">${p.tags.map(t=>`<span class="prop-det-item">${t}</span>`).join('')}</div><div class="prop-precio">${p.precio}${p.precioNota ? `<br><small>${p.precioNota}</small>` : ''}</div></div>${p.galeria.length > 0 ? `<div class="prop-galeria">${galeriaHtml}</div>` : ''}<div class="prop-footer"><button class="btn-ver" data-id="${p.id}">VER DETALLES</button></div>`; card.querySelector('.btn-ver').addEventListener('click', () => openDetail(p.id)); return card; }
+  function buildSlides() { track.innerHTML = ''; dotsContainer.innerHTML = ''; const props = getPropiedades(); for (let i = 0; i < props.length; i += PROPS_PER_SLIDE_DESKTOP) { const slide = document.createElement('div'); slide.className = 'carousel-slide'; const pair = props.slice(i, i + PROPS_PER_SLIDE_DESKTOP); pair.forEach(p => slide.appendChild(buildCard(p))); track.appendChild(slide); const dot = document.createElement('button'); dot.className = 'carousel-dot' + (i === 0 ? ' active' : ''); dot.dataset.slide = Math.floor(i / PROPS_PER_SLIDE_DESKTOP); dot.addEventListener('click', () => goTo(+dot.dataset.slide)); dotsContainer.appendChild(dot); } }
+  let currentSlide = 0; function goTo(index) { const slides = track.querySelectorAll('.carousel-slide'); if (index < 0) index = slides.length - 1; if (index >= slides.length) index = 0; currentSlide = index; track.style.transform = `translateX(calc(-${index * 100}% - ${index * 24}px))`; document.querySelectorAll('.carousel-dot').forEach((d,i) => d.classList.toggle('active', i === index)); }
+  prevBtn.addEventListener('click', () => goTo(currentSlide - 1)); nextBtn.addEventListener('click', () => goTo(currentSlide + 1)); let autoTimer = setInterval(() => goTo(currentSlide + 1), 5500); [prevBtn, nextBtn].forEach(b => b.addEventListener('click', () => { clearInterval(autoTimer); autoTimer = setInterval(() => goTo(currentSlide + 1), 5500); })); buildSlides();
+  function openDetail(id) { const props = getPropiedades(); const p = props.find(x => x.id === id); if (!p) return; document.getElementById('detailMainImg').src = p.imagenPrincipal; document.getElementById('detailMainImg').alt = p.titulo; const galeriaEl = document.getElementById('detailGaleria'); galeriaEl.innerHTML = ''; const allImgs = [p.imagenPrincipal, ...p.galeria]; allImgs.forEach((img, idx) => { const item = document.createElement('div'); item.className = 'detail-galeria-item' + (idx === 0 ? ' active' : ''); item.innerHTML = `<img src="${img}" alt="Foto ${idx+1}" loading="lazy">`; item.addEventListener('click', () => { document.getElementById('detailMainImg').src = img; galeriaEl.querySelectorAll('.detail-galeria-item').forEach(el => el.classList.remove('active')); item.classList.add('active'); }); galeriaEl.appendChild(item); }); document.getElementById('detailTitulo').textContent = p.titulo; document.getElementById('detailUbi').textContent = p.ubicacion; document.getElementById('detailDesc').textContent = p.descripcion; document.getElementById('detailPrecio').textContent = p.precio; document.getElementById('detailPrecioNota').textContent = p.precioNota || ''; document.getElementById('detailTags').innerHTML = p.tags.map(t => `<span class="detail-tag">${t}</span>`).join(''); document.getElementById('detailCaract').innerHTML = p.caracteristicas.map(c => `<li>${c}</li>`).join(''); const waMsg = `Hola Bárbara, me interesa la propiedad: ${p.titulo} (${p.ubicacion}) - Precio: ${p.precio}. ¿Podría darme más información?`; document.getElementById('detailWA').href = `https://wa.me/5493765409158?text=${encodeURIComponent(waMsg)}`; carouselWrapper.style.transition = 'opacity 0.3s ease'; carouselWrapper.style.opacity = '0'; setTimeout(() => { carouselWrapper.style.display = 'none'; detailView.classList.add('visible'); window.scrollTo({ top: document.getElementById('propiedades').offsetTop - 90, behavior: 'smooth' }); }, 300); }
+  document.getElementById('detailBack').addEventListener('click', () => { detailView.classList.remove('visible'); carouselWrapper.style.display = 'block'; setTimeout(() => { carouselWrapper.style.opacity = '1'; }, 30); });
+  document.getElementById('contactForm').addEventListener('submit', function(e) { e.preventDefault(); const nombre = document.getElementById('nombre').value, email = document.getElementById('email').value, telefono = document.getElementById('telefono').value, mensaje = document.getElementById('mensaje').value; window.open(`https://wa.me/5493765409158?text=${encodeURIComponent(`📋 *Nueva solicitud desde la web*\n\n👤 *Nombre:* ${nombre}\n📧 *Email:* ${email}\n📱 *Teléfono:* ${telefono}\n💬 *Mensaje:* ${mensaje}`)}`, '_blank'); this.reset(); });
 })();
 </script>
 </body>
