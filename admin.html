@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Admin – Bárbara Insaurralde</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --verde-oscuro: #1e3a1e; --verde-medio: #2d472d;
+  --verde-oliva: #7fa073; --verde-claro: #9bb888;
+  --verde-palido: #d8e8cf; --verde-fondo: #f0f5ea;
+}
+body { font-family: 'DM Sans', sans-serif; background: #f5f7f5; color: #333; }
+
+/* ===== LOGIN ===== */
+.login-screen {
+  position: fixed; inset: 0; background: var(--verde-oscuro);
+  display: flex; align-items: center; justify-content: center; z-index: 9999;
+}
+.login-box {
+  background: white; border-radius: 24px; padding: 48px;
+  width: 100%; max-width: 400px; text-align: center;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+}
+.login-logo { font-size: 2.5rem; margin-bottom: 12px; }
+.login-box h1 { font-size: 1.6rem; color: var(--verde-oscuro); margin-bottom: 4px; }
+.login-box > p { color: #888; margin-bottom: 28px; font-size: 0.9rem; }
+.login-box input {
+  width: 100%; padding: 14px 18px; border: 2px solid var(--verde-palido);
+  border-radius: 12px; font-size: 1rem; font-family: 'DM Sans', sans-serif;
+  margin-bottom: 12px; background: var(--verde-fondo); transition: all 0.3s; display: block;
+}
+.login-box input:focus { outline: none; border-color: var(--verde-medio); background: white; }
+.login-btn {
+  width: 100%; padding: 14px; background: var(--verde-oscuro); color: white;
+  border: none; border-radius: 12px; font-weight: 700; font-size: 1rem;
+  font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.3s; margin-top: 4px;
+}
+.login-btn:hover { background: var(--verde-medio); }
+.login-error { color: #e74c3c; font-size: 0.85rem; margin-top: 10px; display: none; }
+
+/* ===== PANEL ===== */
+.admin-panel { display: none; min-height: 100vh; }
+.admin-panel.visible { display: flex; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 250px; background: var(--verde-oscuro); min-height: 100vh;
+  padding: 28px 16px; display: flex; flex-direction: column;
+  gap: 4px; position: sticky; top: 0; height: 100vh; overflow-y: auto; flex-shrink: 0;
+}
+.sidebar-logo { color: white; font-size: 1rem; font-weight: 700; margin-bottom: 6px; padding: 0 8px; }
+.sidebar-logo span { display: block; font-size: 0.72rem; font-weight: 400; opacity: 0.55; margin-top: 2px; }
+.sidebar-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0; }
+.sidebar-section-label {
+  font-size: 0.68rem; font-weight: 700; color: rgba(255,255,255,0.4);
+  text-transform: uppercase; letter-spacing: 1px; padding: 0 10px; margin: 6px 0 2px;
+}
+.sidebar a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; color: rgba(255,255,255,0.7);
+  text-decoration: none; border-radius: 10px; font-size: 0.88rem; font-weight: 500;
+  transition: all 0.2s ease; cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+}
+.sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.15); color: white; }
+.sidebar-icon { font-size: 1rem; width: 20px; text-align: center; }
+.sidebar-logout {
+  margin-top: auto; padding: 10px 12px; background: rgba(231,76,60,0.18);
+  color: rgba(255,150,150,0.9); border: none; border-radius: 10px;
+  font-size: 0.88rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s; display: flex; align-items: center; gap: 8px; width: 100%;
+}
+.sidebar-logout:hover { background: rgba(231,76,60,0.35); color: white; }
+
+/* ===== MAIN ===== */
+.main-content { flex: 1; padding: 32px; overflow-x: hidden; max-width: calc(100vw - 250px); }
+.page-header { margin-bottom: 24px; }
+.page-header h2 { font-size: 1.7rem; color: var(--verde-oscuro); font-weight: 700; }
+.page-header p { color: #888; margin-top: 4px; font-size: 0.9rem; }
+
+/* ===== STATS ===== */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+.stat-card {
+  background: white; border-radius: 16px; padding: 20px;
+  box-shadow: 0 4px 15px rgba(30,58,30,0.07); border: 1px solid rgba(194,212,181,0.3);
+}
+.stat-card .stat-n { font-size: 1.8rem; font-weight: 800; color: var(--verde-medio); }
+.stat-card .stat-l { font-size: 0.8rem; color: #888; margin-top: 4px; }
+
+/* ===== ADMIN CARD ===== */
+.admin-card {
+  background: white; border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(30,58,30,0.07); border: 1px solid rgba(194,212,181,0.3);
+  overflow: hidden; margin-bottom: 20px;
+}
+.admin-card-header {
+  padding: 18px 24px; border-bottom: 1px solid var(--verde-palido);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.admin-card-header h3 { font-size: 1rem; color: var(--verde-oscuro); font-weight: 700; }
+.admin-card-body { padding: 24px; }
+
+/* ===== FIELDS ===== */
+.field-group { margin-bottom: 18px; }
+.field-group label {
+  display: block; font-size: 0.78rem; font-weight: 700; color: var(--verde-medio);
+  text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 7px;
+}
+.field-group input,
+.field-group textarea,
+.field-group select {
+  width: 100%; padding: 12px 16px; border: 2px solid var(--verde-palido);
+  border-radius: 12px; font-size: 0.95rem; font-family: 'DM Sans', sans-serif;
+  background: var(--verde-fondo); transition: all 0.3s; color: #333;
+}
+.field-group input:focus,
+.field-group textarea:focus,
+.field-group select:focus { outline: none; border-color: var(--verde-medio); background: white; }
+.field-group textarea { resize: vertical; min-height: 80px; }
+.field-note { font-size: 0.75rem; color: #bbb; margin-top: 5px; }
+.field-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* ===== IMG PREVIEW ===== */
+.img-preview {
+  width: 100%; max-height: 160px; object-fit: cover; border-radius: 10px;
+  margin-top: 10px; display: none; border: 2px solid var(--verde-palido);
+}
+.img-preview.show { display: block; }
+
+/* ===== BOTONES ===== */
+.btn-primary {
+  padding: 11px 24px; background: var(--verde-oscuro); color: white;
+  border: none; border-radius: 50px; font-weight: 700; font-size: 0.88rem;
+  font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.3s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-primary:hover { background: var(--verde-medio); transform: translateY(-1px); }
+.btn-secondary {
+  padding: 11px 20px; background: var(--verde-fondo); color: var(--verde-medio);
+  border: 2px solid var(--verde-palido); border-radius: 50px; font-weight: 600;
+  font-size: 0.88rem; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-secondary:hover { background: var(--verde-palido); }
+.btn-danger {
+  padding: 7px 12px; background: rgba(231,76,60,0.1); color: #e74c3c;
+  border: none; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+  font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
+}
+.btn-danger:hover { background: #e74c3c; color: white; }
+.btn-edit-small {
+  padding: 7px 12px; background: var(--verde-palido); color: var(--verde-medio);
+  border: none; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+  font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
+}
+.btn-edit-small:hover { background: var(--verde-claro); color: white; }
+
+/* ===== PROP LIST ===== */
+.prop-list { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.prop-item {
+  display: grid; grid-template-columns: 75px 1fr auto;
+  gap: 14px; align-items: center; padding: 12px;
+  border-radius: 12px; border: 1px solid rgba(194,212,181,0.35);
+  background: var(--verde-fondo); transition: all 0.2s;
+}
+.prop-item:hover { border-color: var(--verde-claro); }
+.prop-item-img { width: 75px; height: 58px; border-radius: 8px; object-fit: cover; }
+.prop-item-info h4 { font-size: 0.9rem; color: var(--verde-oscuro); font-weight: 600; margin-bottom: 2px; }
+.prop-item-info p { font-size: 0.78rem; color: #888; }
+.prop-item-badge {
+  display: inline-block; padding: 3px 10px; border-radius: 50px;
+  font-size: 0.72rem; font-weight: 700; margin-top: 4px;
+}
+.badge-venta { background: rgba(45,71,45,0.12); color: var(--verde-medio); }
+.badge-alquiler { background: rgba(37,211,102,0.12); color: #1a8c45; }
+.prop-item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+/* ===== SERVICIOS ===== */
+.servicio-editor {
+  border: 2px solid var(--verde-palido); border-radius: 14px;
+  padding: 18px; margin-bottom: 14px; background: var(--verde-fondo);
+}
+.servicio-num { font-size: 0.75rem; font-weight: 800; color: var(--verde-claro); letter-spacing: 1px; margin-bottom: 12px; }
+
+/* ===== CHECK LIST ===== */
+.lista-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0; border-bottom: 1px solid var(--verde-palido);
+}
+.lista-item:last-child { border-bottom: none; }
+.lista-item input {
+  flex: 1; padding: 8px 14px; border: 2px solid var(--verde-palido);
+  border-radius: 50px; font-size: 0.9rem; font-family: 'DM Sans', sans-serif;
+  background: white; transition: all 0.3s;
+}
+.lista-item input:focus { outline: none; border-color: var(--verde-medio); }
+.btn-remove-item {
+  width: 28px; height: 28px; border-radius: 50%; background: rgba(231,76,60,0.1);
+  color: #e74c3c; border: none; cursor: pointer; font-size: 1rem;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: all 0.2s;
+}
+.btn-remove-item:hover { background: #e74c3c; color: white; }
+.btn-add-item {
+  padding: 8px 18px; background: rgba(45,71,45,0.08); color: var(--verde-medio);
+  border: 2px dashed var(--verde-claro); border-radius: 50px; font-size: 0.85rem;
+  font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer;
+  transition: all 0.2s; margin-top: 10px; display: inline-block;
+}
+.btn-add-item:hover { background: var(--verde-palido); }
+
+/* ===== MODAL ===== */
+.modal-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px); z-index: 9998;
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: white; border-radius: 24px; padding: 32px;
+  width: 100%; max-width: 660px; max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.25);
+}
+.modal-title { font-size: 1.3rem; color: var(--verde-oscuro); font-weight: 700; margin-bottom: 24px; }
+.modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+.modal-actions .btn-primary { flex: 1; justify-content: center; padding: 14px; font-size: 1rem; border-radius: 12px; }
+.modal-actions .btn-secondary { padding: 14px 22px; border-radius: 12px; }
+
+/* ===== MAPA ===== */
+.map-preview { width: 100%; height: 220px; border-radius: 14px; overflow: hidden; border: 2px solid var(--verde-palido); margin-bottom: 20px; }
+.map-preview iframe { width: 100%; height: 100%; border: none; }
+
+/* ===== CREDENCIALES ===== */
+.creds-box {
+  background: rgba(231,76,60,0.05); border: 2px solid rgba(231,76,60,0.2);
+  border-radius: 14px; padding: 16px; margin-bottom: 16px;
+}
+.creds-box h4 { color: #c0392b; font-size: 0.88rem; font-weight: 700; }
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
+  background: var(--verde-oscuro); color: white; padding: 13px 28px;
+  border-radius: 50px; font-size: 0.93rem; font-weight: 600; z-index: 99999;
+  transition: transform 0.4s ease; pointer-events: none; white-space: nowrap;
+  box-shadow: 0 8px 25px rgba(30,58,30,0.35);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.error { background: #e74c3c; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .admin-panel { flex-direction: column; }
+  .sidebar { width: 100%; min-height: auto; height: auto; position: static; flex-direction: row; flex-wrap: wrap; padding: 10px; }
+  .sidebar-logo, .sidebar-divider, .sidebar-section-label { display: none; }
+  .sidebar-logout { margin-top: 0; width: auto; }
+  .main-content { max-width: 100%; padding: 16px; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .field-grid-2 { grid-template-columns: 1fr; }
+  .prop-item { grid-template-columns: 60px 1fr; }
+  .prop-item-actions { grid-column: 1/-1; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">🏠</div>
+    <h1>Panel Admin</h1>
+    <p>Bárbara Insaurralde Inmobiliaria</p>
+    <input type="text" id="loginUser" placeholder="Usuario" autocomplete="username">
+    <input type="password" id="loginPass" placeholder="Contraseña" autocomplete="current-password">
+    <button class="login-btn" onclick="doLogin()">Ingresar</button>
+    <p class="login-error" id="loginError">⚠ Usuario o contraseña incorrectos</p>
+  </div>
+</div>
+
+<!-- ===== PANEL ===== -->
+<div class="admin-panel" id="adminPanel">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">Panel Admin<span>Bárbara Insaurralde</span></div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Contenido</div>
+    <a href="#" onclick="showSec('dashboard',this)" class="active"><span class="sidebar-icon">📊</span>Dashboard</a>
+    <a href="#" onclick="showSec('propiedades',this)"><span class="sidebar-icon">🏠</span>Propiedades</a>
+    <a href="#" onclick="showSec('servicios',this)"><span class="sidebar-icon">📋</span>Servicios</a>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Secciones del sitio</div>
+    <a href="#" onclick="showSec('hero',this)"><span class="sidebar-icon">🖼</span>Hero / Inicio</a>
+    <a href="#" onclick="showSec('sobremi',this)"><span class="sidebar-icon">👤</span>Sobre Mí</a>
+    <a href="#" onclick="showSec('contacto',this)"><span class="sidebar-icon">📬</span>Contacto</a>
+    <a href="#" onclick="showSec('ubicacion',this)"><span class="sidebar-icon">📍</span>Mapa</a>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Configuración</div>
+    <a href="#" onclick="showSec('config',this)"><span class="sidebar-icon">⚙️</span>General</a>
+    <a href="#" onclick="showSec('credenciales',this)"><span class="sidebar-icon">🔒</span>Contraseña</a>
+    <div class="sidebar-divider"></div>
+    <a href="index.html" target="_blank"><span class="sidebar-icon">🌐</span>Ver Sitio</a>
+    <button class="sidebar-logout" onclick="doLogout()">🚪 Cerrar sesión</button>
+  </aside>
+
+  <main class="main-content">
+
+    <!-- DASHBOARD -->
+    <section id="sec-dashboard">
+      <div class="page-header"><h2>📊 Dashboard</h2><p>Resumen general del sitio</p></div>
+      <div class="stats-row" id="statsRow"></div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>🏠 Propiedades recientes</h3><button class="btn-primary" onclick="showSec('propiedades',document.querySelector('.sidebar a:nth-child(5))'))">Ver todas</button></div>
+        <div class="prop-list" id="dashPropList"></div>
+      </div>
+    </section>
+
+    <!-- PROPIEDADES -->
+    <section id="sec-propiedades" style="display:none">
+      <div class="page-header"><h2>🏠 Propiedades</h2><p>Gestioná todas las propiedades del sitio</p></div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>Lista de propiedades</h3><button class="btn-primary" onclick="openPropModal()">+ Agregar</button></div>
+        <div class="prop-list" id="propList"></div>
+      </div>
+    </section>
+
+    <!-- SERVICIOS -->
+    <section id="sec-servicios" style="display:none">
+      <div class="page-header"><h2>📋 Servicios</h2><p>Editá los 3 servicios que aparecen en el sitio</p></div>
+      <div id="serviciosEditor"></div>
+      <button class="btn-primary" onclick="saveServicios()">💾 Guardar servicios</button>
+    </section>
+
+    <!-- HERO -->
+    <section id="sec-hero" style="display:none">
+      <div class="page-header"><h2>🖼 Hero / Inicio</h2><p>Lo primero que ve el visitante al entrar al sitio</p></div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>🖼 Contenido del Hero</h3></div>
+        <div class="admin-card-body">
+          <div class="field-grid-2">
+            <div class="field-group"><label>Título principal</label><input type="text" id="heroTitulo" placeholder="Bárbara Insaurralde"></div>
+            <div class="field-group"><label>Subtítulo</label><input type="text" id="heroSubtitulo" placeholder="Servicios Inmobiliarios"></div>
+          </div>
+          <div class="field-group"><label>Texto del botón</label><input type="text" id="heroBtnTxt" placeholder="CONTACTAR"></div>
+          <div class="field-group">
+            <label>URL imagen de fondo</label>
+            <input type="text" id="heroImg" placeholder="https://..." oninput="previewImg('heroImg','heroImgPreview')">
+            <p class="field-note">Usá Imgur, ibb.co o cualquier host de imágenes</p>
+            <img id="heroImgPreview" class="img-preview" alt="Preview">
+          </div>
+          <button class="btn-primary" onclick="saveHero()">💾 Guardar Hero</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOBRE MÍ -->
+    <section id="sec-sobremi" style="display:none">
+      <div class="page-header"><h2>👤 Sobre Mí</h2><p>Tu presentación personal en el sitio</p></div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>👤 Información personal</h3></div>
+        <div class="admin-card-body">
+          <div class="field-grid-2">
+            <div class="field-group"><label>Nombre completo</label><input type="text" id="smNombre" placeholder="Bárbara Insaurralde"></div>
+            <div class="field-group"><label>Matrícula / Cargo</label><input type="text" id="smCargo" placeholder="Martillera Pública – MP 243"></div>
+          </div>
+          <div class="field-group"><label>Tag (etiqueta verde)</label><input type="text" id="smTag" placeholder="Sobre Mí"></div>
+          <div class="field-group"><label>Párrafo 1</label><textarea id="smParrafo1" rows="3"></textarea></div>
+          <div class="field-group"><label>Párrafo 2</label><textarea id="smParrafo2" rows="3"></textarea></div>
+          <div class="field-group"><label>Frase firma (cursiva inferior)</label><input type="text" id="smFirma" placeholder="Compromiso y excelencia"></div>
+          <div class="field-group">
+            <label>URL foto de perfil (sección Sobre Mí)</label>
+            <input type="text" id="smFoto" placeholder="https://..." oninput="previewImg('smFoto','smFotoPreview')">
+            <img id="smFotoPreview" class="img-preview" alt="Preview">
+          </div>
+          <div class="field-group">
+            <label>URL logo (imagen del header/menú)</label>
+            <input type="text" id="smLogo" placeholder="https://..." oninput="previewImg('smLogo','smLogoPreview')">
+            <img id="smLogoPreview" class="img-preview" alt="Preview" style="max-height:80px;border-radius:50%;object-fit:cover">
+          </div>
+          <button class="btn-primary" onclick="saveSobreMi()">💾 Guardar Sobre Mí</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="sec-contacto" style="display:none">
+      <div class="page-header"><h2>📬 Contacto</h2><p>Editá los datos y textos de la sección de contacto</p></div>
+
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>📱 Datos de contacto</h3></div>
+        <div class="admin-card-body">
+          <div class="field-grid-2">
+            <div class="field-group">
+              <label>Número WhatsApp</label>
+              <input type="text" id="ctWA" placeholder="5493765409158">
+              <p class="field-note">Sin + ni espacios. Incluí código de país. Ej: 5493765409158</p>
+            </div>
+            <div class="field-group"><label>Email de contacto</label><input type="text" id="ctEmail" placeholder="barbara@email.com"></div>
+          </div>
+          <button class="btn-primary" onclick="saveContactoDatos()">💾 Guardar datos</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>✍️ Textos de la sección</h3></div>
+        <div class="admin-card-body">
+          <div class="field-group"><label>Tag superior</label><input type="text" id="ctTag" placeholder="¿Querés vender tu propiedad?"></div>
+          <div class="field-group"><label>Título</label><textarea id="ctTitulo" rows="2"></textarea></div>
+          <div class="field-group"><label>Párrafo 1</label><textarea id="ctParrafo1" rows="3"></textarea></div>
+          <div class="field-group"><label>Párrafo 2</label><textarea id="ctParrafo2" rows="3"></textarea></div>
+          <div class="field-group"><label>Texto del botón tasación</label><input type="text" id="ctBtnTxt" placeholder="Solicitar tasación"></div>
+          <div class="field-group"><label>Mensaje WhatsApp al pedir tasación</label><textarea id="ctWAMsg" rows="2"></textarea></div>
+          <button class="btn-primary" onclick="saveContactoTextos()">💾 Guardar textos</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>✅ Lista de servicios (checks)</h3></div>
+        <div class="admin-card-body">
+          <div id="checkListEditor"></div>
+          <button class="btn-add-item" onclick="addCheckItem()">+ Agregar ítem</button>
+          <br><br>
+          <button class="btn-primary" onclick="saveCheckList()">💾 Guardar lista</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAPA -->
+    <section id="sec-ubicacion" style="display:none">
+      <div class="page-header"><h2>📍 Mapa / Ubicación</h2><p>Editá la ubicación del mapa que aparece en el sitio</p></div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>📍 Configuración del mapa</h3></div>
+        <div class="admin-card-body">
+          <div class="map-preview">
+            <iframe id="mapIframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28740.26!2d-55.8969!3d-27.3666!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9457bd4a0c4fc35f%3A0x62e9e57e69c40a72!2sPosadas%2C+Misiones!5e0!3m2!1ses!2sar!4v1" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="field-grid-2">
+            <div class="field-group"><label>Latitud</label><input type="text" id="mapLat" value="-27.3666"></div>
+            <div class="field-group"><label>Longitud</label><input type="text" id="mapLng" value="-55.8969"></div>
+          </div>
+          <div class="field-group"><label>Dirección visible en el sitio</label><input type="text" id="mapDir" value="Posadas, Misiones, Argentina"></div>
+          <div class="field-group"><label>Texto del botón "Cómo llegar"</label><input type="text" id="mapBtnTxt" value="↗ Cómo llegar"></div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button class="btn-secondary" onclick="updateMapPreview()">👁 Previsualizar</button>
+            <button class="btn-primary" onclick="saveMap()">💾 Guardar mapa</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONFIG -->
+    <section id="sec-config" style="display:none">
+      <div class="page-header"><h2>⚙️ Configuración general</h2><p>Ajustes globales del sitio</p></div>
+
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>🔍 SEO / Metadatos</h3></div>
+        <div class="admin-card-body">
+          <div class="field-group"><label>Título de la pestaña (navegador)</label><input type="text" id="seoTitle" placeholder="Bárbara Insaurralde – Servicios Inmobiliarios"></div>
+          <div class="field-group"><label>Descripción (para Google)</label><textarea id="seoDesc" rows="2"></textarea></div>
+          <button class="btn-primary" onclick="saveSEO()">💾 Guardar SEO</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>🖼 Imagen de fondo – Sección Servicios</h3></div>
+        <div class="admin-card-body">
+          <div class="field-group">
+            <label>URL imagen de fondo</label>
+            <input type="text" id="serviciosFondo" placeholder="https://..." oninput="previewImg('serviciosFondo','serviciosFondoPreview')">
+            <img id="serviciosFondoPreview" class="img-preview" alt="Preview">
+          </div>
+          <button class="btn-primary" onclick="saveServiciosFondo()">💾 Guardar imagen</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>🏠 Textos sección Propiedades</h3></div>
+        <div class="admin-card-body">
+          <div class="field-group"><label>Título de la sección</label><input type="text" id="propSecTitulo" placeholder="Propiedades Destacadas"></div>
+          <div class="field-group"><label>Subtítulo</label><input type="text" id="propSecSub" placeholder="Encontrá tu próxima inversión o vivienda ideal"></div>
+          <button class="btn-primary" onclick="savePropSec()">💾 Guardar</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>📋 Formulario de contacto</h3></div>
+        <div class="admin-card-body">
+          <div class="field-group"><label>Título del formulario</label><input type="text" id="formTitulo" placeholder="Solicitar información"></div>
+          <div class="field-group"><label>Subtítulo</label><input type="text" id="formSubtitulo" placeholder="Te respondemos en menos de 1 hora"></div>
+          <div class="field-group"><label>Mensaje de éxito al enviar</label><input type="text" id="formExito" placeholder="¡Mensaje enviado! Te contactamos pronto."></div>
+          <button class="btn-primary" onclick="saveFormConfig()">💾 Guardar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CREDENCIALES -->
+    <section id="sec-credenciales" style="display:none">
+      <div class="page-header"><h2>🔒 Cambiar contraseña</h2><p>Actualizá tus credenciales de acceso al panel</p></div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>🔒 Credenciales de acceso</h3></div>
+        <div class="admin-card-body">
+          <div class="creds-box"><h4>⚠ Si olvidás la nueva contraseña, tenés que editar admin.html y buscar la línea con "barbara243"</h4></div>
+          <div class="field-group"><label>Contraseña actual</label><input type="password" id="credActual" placeholder="Contraseña actual"></div>
+          <div class="field-grid-2">
+            <div class="field-group"><label>Nueva contraseña</label><input type="password" id="credNueva" placeholder="Nueva contraseña"></div>
+            <div class="field-group"><label>Repetir nueva contraseña</label><input type="password" id="credRepetir" placeholder="Repetir contraseña"></div>
+          </div>
+          <button class="btn-primary" onclick="saveCredenciales()">🔒 Cambiar contraseña</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- MODAL PROPIEDAD -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h3 class="modal-title" id="modalTitle">Nueva propiedad</h3>
+    <input type="hidden" id="propId">
+    <div class="field-group"><label>Título</label><input type="text" id="fTitulo" placeholder="Ej: Departamento en Venta – Edificio X"></div>
+    <div class="field-grid-2">
+      <div class="field-group"><label>Estado (badge)</label><select id="fBadge"><option value="En Venta">En Venta</option><option value="En Alquiler">En Alquiler</option><option value="Vendido">Vendido</option><option value="Reservado">Reservado</option></select></div>
+      <div class="field-group"><label>Precio</label><input type="text" id="fPrecio" placeholder="Ej: USD 70.000"></div>
+    </div>
+    <div class="field-group"><label>Nota de precio (opcional)</label><input type="text" id="fPrecioNota" placeholder="Ej: Cochera incluida, Negociable"></div>
+    <div class="field-group"><label>Ubicación</label><input type="text" id="fUbi" placeholder="Ej: Posadas, Misiones"></div>
+    <div class="field-group"><label>Descripción completa</label><textarea id="fDesc" rows="4" placeholder="Descripción detallada..."></textarea></div>
+    <div class="field-group"><label>Tags / características cortas (separar con comas)</label><input type="text" id="fTags" placeholder="Ej: 2 dormitorios, 1 baño, 80 m²"></div>
+    <div class="field-group"><label>Características detalladas (una por línea)</label><textarea id="fCaract" rows="4" placeholder="Cocina integrada&#10;Living amplio&#10;Balcón"></textarea></div>
+    <div class="field-group">
+      <label>URL imagen principal</label>
+      <input type="text" id="fImgPrincipal" placeholder="https://..." oninput="previewImg('fImgPrincipal','fImgPreview')">
+      <img id="fImgPreview" class="img-preview" alt="Preview">
+    </div>
+    <div class="field-group"><label>URLs galería adicional (una por línea)</label><textarea id="fGaleria" rows="4" placeholder="https://...&#10;https://..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn-primary" onclick="saveProp()">💾 Guardar propiedad</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== CREDENCIALES =====
+let CREDS = { user: 'admin', pass: 'barbara243' };
+try { const s=localStorage.getItem('barbara_creds'); if(s) CREDS=JSON.parse(s); } catch(e){}
+
+// ===== DEFAULTS =====
+const PROPS_DEFAULT = [
+  {id:1,badge:'En Venta',titulo:'Departamento en Venta – Edificio Ysyry',ubicacion:'Planta baja – contrafrente, Posadas, Misiones',precio:'USD 70.000',precioNota:'',descripcion:'Excelente oportunidad en uno de los edificios más buscados de la ciudad, ubicado en zona estratégica con cercanía al centro, la costanera y principales accesos.',tags:['1 dormitorio','1 baño','40,74 m²'],caracteristicas:['Cocina integrada','Living-comedor luminoso','Lavadero','Diseño moderno','Ascensor','Entorno tranquilo'],imagenPrincipal:'https://i.ibb.co/Mk1M19JK/imagen1.jpg',galeria:['https://i.ibb.co/5WNk97S2/imagen2.jpg','https://i.ibb.co/DfVQxv6C/imagen3.jpg','https://i.ibb.co/209RJVGn/imagen4.jpg','https://i.ibb.co/twCqCtkC/imagen5.jpg']},
+  {id:2,badge:'En Venta',titulo:'Departamento en Venta – Edificio Citrino',ubicacion:'Séptimo piso con vista al río Paraná, Posadas, Misiones',precio:'USD 200.000',precioNota:'Cochera incluida',descripcion:'Excelente departamento con vista al río en uno de los edificios más destacados de Posadas.',tags:['2 dormitorios','2 baños','Cochera incluida','Vista al río'],caracteristicas:['Living-comedor amplio','Lavadero independiente','Seguridad 24h','Ascensores','Calidad constructiva'],imagenPrincipal:'https://i.ibb.co/4ZRDzRVN/imagen1.jpg',galeria:['https://i.ibb.co/0RGkthtm/imagen2.jpg','https://i.ibb.co/ym30xhJL/imagen3.jpg','https://i.ibb.co/1tDTgY3K/imagen4.jpg','https://i.ibb.co/Vpx0v1DW/imagen5.jpg']},
+  {id:3,badge:'En Venta',titulo:'Terreno en Venta – Av. Las Heras',ubicacion:'Avenida Las Heras, Posadas, Misiones',precio:'USD 50.000',precioNota:'Negociable',descripcion:'Excelente oportunidad sobre una de las avenidas principales de Posadas con gran proyección.',tags:['433 m²','Frente sobre avenida','Zona consolidada'],caracteristicas:['433 m² de superficie','Frente sobre avenida','Construcción existente','Entorno consolidado'],imagenPrincipal:'https://i.ibb.co/GvrGyvdZ/terreno1.jpg',galeria:['https://i.ibb.co/DfbM1Tdx/terreno2.jpg','https://i.ibb.co/qF0Nd1Q6/terreno3.jpg']},
+  {id:4,badge:'En Alquiler',titulo:'Inmueble de Destino Mixto en Alquiler – Ruta 12',ubicacion:'Ruta Nacional 12 frente al Hospital Baliña, Posadas',precio:'$1.250.000/mes',precioNota:'Antes $1.500.000',descripcion:'Propiedad de destino mixto en zona de alto tránsito vehicular y gran visibilidad.',tags:['45x45 m','3 dormitorios','Uso mixto'],caracteristicas:['Terreno 45x45 m','Galería techada','Predio cerrado','Muros perimetrales','Sistema de alarma'],imagenPrincipal:'https://i.ibb.co/wNNdMn8S/inmueble1.jpg',galeria:['https://i.ibb.co/prfy2HJy/inmueble2.jpg','https://i.ibb.co/nqV8KLtr/inmueble3.jpg','https://i.ibb.co/RpLmdGLz/inmueble4.jpg']}
+];
+const SERVS_DEFAULT = [
+  {num:'01',titulo:'Venta de propiedades',descripcion:'Asesoramiento integral para la comercialización de inmuebles, incluyendo tasación, estrategia de difusión y acompañamiento hasta la concreción de la operación.'},
+  {num:'02',titulo:'Tasaciones inmobiliarias',descripcion:'Valoración profesional de propiedades basada en análisis de mercado, ubicación y características del inmueble para determinar su valor real.'},
+  {num:'03',titulo:'Alquileres y administración',descripcion:'Gestión integral de alquileres, redacción de contratos, selección de inquilinos y seguimiento administrativo durante toda la relación locativa.'}
+];
+
+// ===== STORAGE =====
+function get(k,d){try{const s=localStorage.getItem(k);return s?JSON.parse(s):d;}catch(e){return d;}}
+function set(k,v){localStorage.setItem(k,JSON.stringify(v));}
+function getProps(){return get('barbara_propiedades',PROPS_DEFAULT);}
+function getServs(){return get('barbara_servicios',SERVS_DEFAULT);}
+
+// ===== AUTH =====
+function doLogin(){
+  const u=document.getElementById('loginUser').value.trim();
+  const p=document.getElementById('loginPass').value;
+  if(u===CREDS.user&&p===CREDS.pass){
+    sessionStorage.setItem('admin_auth','1');
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminPanel').classList.add('visible');
+    renderAll();
+  } else {
+    document.getElementById('loginError').style.display='block';
+  }
+}
+document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+function doLogout(){sessionStorage.removeItem('admin_auth');location.reload();}
+if(sessionStorage.getItem('admin_auth')==='1'){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('adminPanel').classList.add('visible');
+  renderAll();
+}
+
+// ===== NAV =====
+function showSec(name,el){
+  document.querySelectorAll('.main-content > section').forEach(s=>s.style.display='none');
+  document.getElementById('sec-'+name).style.display='block';
+  document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active'));
+  if(el)el.classList.add('active');
+  return false;
+}
+
+// ===== RENDER ALL =====
+function renderAll(){
+  renderStats();renderDashProps();renderPropList();renderServiciosEditor();
+  loadHero();loadSobreMi();loadContacto();loadMap();loadConfig();
+}
+
+// ===== STATS =====
+function renderStats(){
+  const p=getProps();
+  const v=p.filter(x=>x.badge==='En Venta').length;
+  const a=p.filter(x=>x.badge==='En Alquiler').length;
+  document.getElementById('statsRow').innerHTML=`
+    <div class="stat-card"><div class="stat-n">${p.length}</div><div class="stat-l">Total propiedades</div></div>
+    <div class="stat-card"><div class="stat-n">${v}</div><div class="stat-l">En Venta</div></div>
+    <div class="stat-card"><div class="stat-n">${a}</div><div class="stat-l">En Alquiler</div></div>
+    <div class="stat-card"><div class="stat-n">${getServs().length}</div><div class="stat-l">Servicios</div></div>`;
+}
+function renderDashProps(){document.getElementById('dashPropList').innerHTML=getProps().slice(0,3).map(propHTML).join('');}
+function renderPropList(){
+  const el=document.getElementById('propList');
+  const p=getProps();
+  el.innerHTML=p.length?p.map(propHTML).join(''):'<p style="padding:20px;color:#aaa">No hay propiedades.</p>';
+}
+function propHTML(p){return `
+  <div class="prop-item">
+    <img src="${p.imagenPrincipal}" class="prop-item-img" onerror="this.src='https://placehold.co/75x58?text=IMG'" alt="">
+    <div class="prop-item-info">
+      <h4>${p.titulo}</h4><p>${p.ubicacion}</p>
+      <span class="prop-item-badge ${p.badge==='En Alquiler'?'badge-alquiler':'badge-venta'}">${p.badge} • ${p.precio}</span>
+    </div>
+    <div class="prop-item-actions">
+      <button class="btn-edit-small" onclick="openPropModal(${p.id})">✏️ Editar</button>
+      <button class="btn-danger" onclick="deleteProp(${p.id})">🗑</button>
+    </div>
+  </div>`;}
+
+// ===== PROP MODAL =====
+function openPropModal(id){
+  document.getElementById('modalBg').classList.add('open');
+  if(id){
+    const p=getProps().find(x=>x.id===id);if(!p)return;
+    document.getElementById('modalTitle').textContent='Editar propiedad';
+    document.getElementById('propId').value=p.id;
+    document.getElementById('fTitulo').value=p.titulo;
+    document.getElementById('fBadge').value=p.badge;
+    document.getElementById('fPrecio').value=p.precio;
+    document.getElementById('fPrecioNota').value=p.precioNota||'';
+    document.getElementById('fUbi').value=p.ubicacion;
+    document.getElementById('fDesc').value=p.descripcion;
+    document.getElementById('fTags').value=p.tags.join(', ');
+    document.getElementById('fCaract').value=p.caracteristicas.join('\n');
+    document.getElementById('fImgPrincipal').value=p.imagenPrincipal;
+    document.getElementById('fGaleria').value=p.galeria.join('\n');
+    previewImg('fImgPrincipal','fImgPreview');
+  } else {
+    document.getElementById('modalTitle').textContent='Nueva propiedad';
+    document.getElementById('propId').value='';
+    ['fTitulo','fPrecio','fPrecioNota','fUbi','fDesc','fTags','fCaract','fImgPrincipal','fGaleria'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('fBadge').value='En Venta';
+    document.getElementById('fImgPreview').classList.remove('show');
+  }
+}
+function closeModal(){document.getElementById('modalBg').classList.remove('open');}
+document.getElementById('modalBg').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+
+function saveProp(){
+  const titulo=document.getElementById('fTitulo').value.trim();
+  if(!titulo){showToast('El título es obligatorio','error');return;}
+  const props=getProps();
+  const editId=document.getElementById('propId').value;
+  const np={
+    id:editId?+editId:Date.now(),
+    badge:document.getElementById('fBadge').value,titulo,
+    ubicacion:document.getElementById('fUbi').value.trim(),
+    precio:document.getElementById('fPrecio').value.trim(),
+    precioNota:document.getElementById('fPrecioNota').value.trim(),
+    descripcion:document.getElementById('fDesc').value.trim(),
+    tags:document.getElementById('fTags').value.split(',').map(s=>s.trim()).filter(Boolean),
+    caracteristicas:document.getElementById('fCaract').value.split('\n').map(s=>s.trim()).filter(Boolean),
+    imagenPrincipal:document.getElementById('fImgPrincipal').value.trim(),
+    galeria:document.getElementById('fGaleria').value.split('\n').map(s=>s.trim()).filter(Boolean)
+  };
+  if(editId){const i=props.findIndex(p=>p.id===+editId);if(i!==-1)props[i]=np;}
+  else props.push(np);
+  set('barbara_propiedades',props);
+  closeModal();renderStats();renderDashProps();renderPropList();
+  showToast(editId?'Propiedad actualizada ✓':'Propiedad agregada ✓');
+}
+function deleteProp(id){
+  if(!confirm('¿Eliminar esta propiedad?'))return;
+  set('barbara_propiedades',getProps().filter(p=>p.id!==id));
+  renderStats();renderDashProps();renderPropList();showToast('Propiedad eliminada');
+}
+
+// ===== SERVICIOS =====
+function renderServiciosEditor(){
+  const s=getServs();
+  document.getElementById('serviciosEditor').innerHTML=s.map((sv,i)=>`
+    <div class="servicio-editor">
+      <div class="servicio-num">SERVICIO ${sv.num}</div>
+      <div class="field-group"><label>Título</label><input type="text" id="sv_t_${i}" value="${sv.titulo}"></div>
+      <div class="field-group"><label>Descripción</label><textarea id="sv_d_${i}" rows="3">${sv.descripcion}</textarea></div>
+    </div>`).join('');
+}
+function saveServicios(){
+  const s=getServs();
+  const upd=s.map((sv,i)=>({...sv,titulo:document.getElementById(`sv_t_${i}`).value.trim(),descripcion:document.getElementById(`sv_d_${i}`).value.trim()}));
+  set('barbara_servicios',upd);showToast('Servicios guardados ✓');
+}
+
+// ===== HERO =====
+function loadHero(){
+  const d=get('barbara_hero',{titulo:'Bárbara Insaurralde',subtitulo:'Servicios Inmobiliarios',btnTxt:'CONTACTAR',img:'https://i.imgur.com/kvBk8Go.png'});
+  document.getElementById('heroTitulo').value=d.titulo;
+  document.getElementById('heroSubtitulo').value=d.subtitulo;
+  document.getElementById('heroBtnTxt').value=d.btnTxt;
+  document.getElementById('heroImg').value=d.img;
+  previewImg('heroImg','heroImgPreview');
+}
+function saveHero(){
+  set('barbara_hero',{titulo:document.getElementById('heroTitulo').value.trim(),subtitulo:document.getElementById('heroSubtitulo').value.trim(),btnTxt:document.getElementById('heroBtnTxt').value.trim(),img:document.getElementById('heroImg').value.trim()});
+  showToast('Hero guardado ✓');
+}
+
+// ===== SOBRE MÍ =====
+function loadSobreMi(){
+  const d=get('barbara_sobremi',{nombre:'Bárbara Insaurralde',cargo:'Martillera Pública y Corredora de Comercio – MP 243',tag:'Sobre Mí',parrafo1:'Soy Bárbara Insaurralde, Martillera Pública y Corredora de Comercio con matrícula profesional MP 243, especializada en operaciones inmobiliarias en la ciudad de Posadas, Misiones.',parrafo2:'Brindo asesoramiento profesional en compra, venta, alquiler y tasaciones inmobiliarias, acompañando a cada cliente durante todo el proceso con transparencia, compromiso y conocimiento del mercado local.',firma:'Compromiso y excelencia',foto:'https://i.imgur.com/Gr3SWOi.png',logo:'https://i.imgur.com/FqChLBS.png'});
+  document.getElementById('smNombre').value=d.nombre;
+  document.getElementById('smCargo').value=d.cargo;
+  document.getElementById('smTag').value=d.tag;
+  document.getElementById('smParrafo1').value=d.parrafo1;
+  document.getElementById('smParrafo2').value=d.parrafo2;
+  document.getElementById('smFirma').value=d.firma;
+  document.getElementById('smFoto').value=d.foto;
+  document.getElementById('smLogo').value=d.logo;
+  previewImg('smFoto','smFotoPreview');previewImg('smLogo','smLogoPreview');
+}
+function saveSobreMi(){
+  set('barbara_sobremi',{nombre:document.getElementById('smNombre').value.trim(),cargo:document.getElementById('smCargo').value.trim(),tag:document.getElementById('smTag').value.trim(),parrafo1:document.getElementById('smParrafo1').value.trim(),parrafo2:document.getElementById('smParrafo2').value.trim(),firma:document.getElementById('smFirma').value.trim(),foto:document.getElementById('smFoto').value.trim(),logo:document.getElementById('smLogo').value.trim()});
+  showToast('Sobre Mí guardado ✓');
+}
+
+// ===== CONTACTO =====
+const CT_DEF={wa:'5493765409158',email:'',tag:'¿Querés vender tu propiedad?',titulo:'Vendé tu propiedad con asesoramiento profesional',parrafo1:'Vender una propiedad requiere conocimiento del mercado, una correcta valoración y una estrategia de comercialización adecuada.',parrafo2:'Te acompaño durante todo el proceso con asesoramiento profesional y difusión estratégica para lograr una operación segura y exitosa.',btnTxt:'Solicitar tasación',waMsg:'Hola Bárbara, quiero solicitar una tasación de mi propiedad.',checkList:['Tasación profesional','Publicación en portales inmobiliarios','Difusión en redes sociales','Asesoramiento legal y comercial','Acompañamiento hasta la firma']};
+
+function loadContacto(){
+  const d=get('barbara_contacto',CT_DEF);
+  document.getElementById('ctWA').value=d.wa||'';
+  document.getElementById('ctEmail').value=d.email||'';
+  document.getElementById('ctTag').value=d.tag||'';
+  document.getElementById('ctTitulo').value=d.titulo||'';
+  document.getElementById('ctParrafo1').value=d.parrafo1||'';
+  document.getElementById('ctParrafo2').value=d.parrafo2||'';
+  document.getElementById('ctBtnTxt').value=d.btnTxt||'';
+  document.getElementById('ctWAMsg').value=d.waMsg||'';
+  renderCheckList(d.checkList||[]);
+}
+function renderCheckList(items){
+  document.getElementById('checkListEditor').innerHTML=items.map((item,i)=>`
+    <div class="lista-item">
+      <input type="text" id="chk_${i}" value="${item}" placeholder="Ítem de la lista">
+      <button class="btn-remove-item" onclick="removeCheckItem(${i})">×</button>
+    </div>`).join('');
+}
+function getCheckItems(){const a=[];document.querySelectorAll('#checkListEditor .lista-item input').forEach(inp=>{if(inp.value.trim())a.push(inp.value.trim());});return a;}
+function addCheckItem(){renderCheckList([...getCheckItems(),'Nuevo ítem']);}
+function removeCheckItem(idx){const a=getCheckItems();a.splice(idx,1);renderCheckList(a);}
+function saveContactoDatos(){const d=get('barbara_contacto',CT_DEF);d.wa=document.getElementById('ctWA').value.trim();d.email=document.getElementById('ctEmail').value.trim();set('barbara_contacto',d);showToast('Datos de contacto guardados ✓');}
+function saveContactoTextos(){const d=get('barbara_contacto',CT_DEF);d.tag=document.getElementById('ctTag').value.trim();d.titulo=document.getElementById('ctTitulo').value.trim();d.parrafo1=document.getElementById('ctParrafo1').value.trim();d.parrafo2=document.getElementById('ctParrafo2').value.trim();d.btnTxt=document.getElementById('ctBtnTxt').value.trim();d.waMsg=document.getElementById('ctWAMsg').value.trim();set('barbara_contacto',d);showToast('Textos guardados ✓');}
+function saveCheckList(){const d=get('barbara_contacto',CT_DEF);d.checkList=getCheckItems();set('barbara_contacto',d);showToast('Lista guardada ✓');}
+
+// ===== MAPA =====
+function loadMap(){
+  const d=get('barbara_mapa',{lat:'-27.3666',lng:'-55.8969',dir:'Posadas, Misiones, Argentina',btnTxt:'↗ Cómo llegar'});
+  document.getElementById('mapLat').value=d.lat;
+  document.getElementById('mapLng').value=d.lng;
+  document.getElementById('mapDir').value=d.dir;
+  document.getElementById('mapBtnTxt').value=d.btnTxt||'↗ Cómo llegar';
+}
+function updateMapPreview(){
+  const lat=document.getElementById('mapLat').value;
+  const lng=document.getElementById('mapLng').value;
+  document.getElementById('mapIframe').src=`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28740.26!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9457bd4a0c4fc35f%3A0x62e9e57e69c40a72!2sPosadas%2C+Misiones!5e0!3m2!1ses!2sar!4v1`;
+}
+function saveMap(){set('barbara_mapa',{lat:document.getElementById('mapLat').value.trim(),lng:document.getElementById('mapLng').value.trim(),dir:document.getElementById('mapDir').value.trim(),btnTxt:document.getElementById('mapBtnTxt').value.trim()});updateMapPreview();showToast('Mapa guardado ✓');}
+
+// ===== CONFIG =====
+const CFG_DEF={serviciosFondo:'https://i.imgur.com/I6J8uv2.png',propSecTitulo:'Propiedades Destacadas',propSecSub:'Encontrá tu próxima inversión o vivienda ideal',formTitulo:'Solicitar información',formSubtitulo:'Te respondemos en menos de 1 hora',formExito:'¡Mensaje enviado! Te contactamos pronto.'};
+function loadConfig(){
+  const seo=get('barbara_seo',{title:'Bárbara Insaurralde – Servicios Inmobiliarios',desc:'Martillera Pública y Corredora de Comercio en Posadas, Misiones.'});
+  document.getElementById('seoTitle').value=seo.title;
+  document.getElementById('seoDesc').value=seo.desc;
+  const c=get('barbara_config',CFG_DEF);
+  document.getElementById('serviciosFondo').value=c.serviciosFondo||'';
+  document.getElementById('propSecTitulo').value=c.propSecTitulo||'';
+  document.getElementById('propSecSub').value=c.propSecSub||'';
+  document.getElementById('formTitulo').value=c.formTitulo||'';
+  document.getElementById('formSubtitulo').value=c.formSubtitulo||'';
+  document.getElementById('formExito').value=c.formExito||'';
+  previewImg('serviciosFondo','serviciosFondoPreview');
+}
+function saveSEO(){set('barbara_seo',{title:document.getElementById('seoTitle').value.trim(),desc:document.getElementById('seoDesc').value.trim()});showToast('SEO guardado ✓');}
+function saveServiciosFondo(){const c=get('barbara_config',CFG_DEF);c.serviciosFondo=document.getElementById('serviciosFondo').value.trim();set('barbara_config',c);showToast('Imagen guardada ✓');}
+function savePropSec(){const c=get('barbara_config',CFG_DEF);c.propSecTitulo=document.getElementById('propSecTitulo').value.trim();c.propSecSub=document.getElementById('propSecSub').value.trim();set('barbara_config',c);showToast('Guardado ✓');}
+function saveFormConfig(){const c=get('barbara_config',CFG_DEF);c.formTitulo=document.getElementById('formTitulo').value.trim();c.formSubtitulo=document.getElementById('formSubtitulo').value.trim();c.formExito=document.getElementById('formExito').value.trim();set('barbara_config',c);showToast('Formulario guardado ✓');}
+
+// ===== CREDENCIALES =====
+function saveCredenciales(){
+  const actual=document.getElementById('credActual').value;
+  const nueva=document.getElementById('credNueva').value;
+  const rep=document.getElementById('credRepetir').value;
+  if(actual!==CREDS.pass){showToast('Contraseña actual incorrecta','error');return;}
+  if(!nueva||nueva.length<4){showToast('Mínimo 4 caracteres','error');return;}
+  if(nueva!==rep){showToast('Las contraseñas no coinciden','error');return;}
+  CREDS.pass=nueva;set('barbara_creds',CREDS);
+  document.getElementById('credActual').value='';document.getElementById('credNueva').value='';document.getElementById('credRepetir').value='';
+  showToast('Contraseña cambiada ✓');
+}
+
+// ===== IMG PREVIEW =====
+function previewImg(inputId,previewId){
+  const url=document.getElementById(inputId).value.trim();
+  const prev=document.getElementById(previewId);
+  if(url){prev.src=url;prev.classList.add('show');}else{prev.classList.remove('show');}
+}
+
+// ===== TOAST =====
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast'+(type==='error'?' error':'');
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>
