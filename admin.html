@@ -3,562 +3,567 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Bárbara Insaurralde Inmobiliaria</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS -->
+    <title>Panel Admin - Bárbara Inmobiliaria</title>
+    <!-- Librería Oficial de Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f3f4f6; }
-        .login-card { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.95); }
-        .btn-arrow { transition: transform 0.2s; }
-        .btn-arrow:hover { transform: translateX(4px); }
-        /* Ocultar secciones hasta login */
-        .hidden-section { display: none; }
-        .loader { border-top-color: #1e3a1e; -webkit-animation: spinner 1.5s linear infinite; animation: spinner 1.5s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        :root {
+            --primary: #1e3a1e;
+            --secondary: #2d5a2d;
+            --accent: #d4af37;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --danger: #dc3545;
+            --success: #28a745;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        
+        body { background-color: #f0f2f5; color: var(--dark); }
+
+        /* Login Styles */
+        #login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .login-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-card h2 { color: var(--primary); margin-bottom: 1.5rem; }
+        
+        .form-group { margin-bottom: 1.2rem; text-align: left; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555; }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus { border-color: var(--primary); outline: none; }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.3s;
+        }
+        .btn-login:hover { background-color: var(--secondary); }
+        .btn-login svg { width: 20px; height: 20px; }
+
+        .error-msg { color: var(--danger); margin-top: 1rem; font-size: 0.9rem; display: none; }
+
+        /* Dashboard Styles */
+        #dashboard { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .nav-tabs { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .tab-btn {
+            padding: 10px 20px;
+            background: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+        .tab-btn.active { background: var(--primary); color: white; }
+
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Cards & Tables */
+        .card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 1.5rem; }
+        .card h3 { color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
+
+        .prop-item {
+            display: grid;
+            grid-template-columns: 100px 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .prop-img-thumb { width: 100px; height: 70px; object-fit: cover; border-radius: 6px; }
+        
+        .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: opacity 0.2s; }
+        .btn-edit { background: var(--accent); color: white; }
+        .btn-delete { background: var(--danger); color: white; }
+        .btn-save { background: var(--success); color: white; padding: 10px 24px; font-size: 1rem; }
+        .btn-cancel { background: #6c757d; color: white; padding: 10px 24px; font-size: 1rem; }
+        .btn:hover { opacity: 0.9; }
+
+        /* Modal Form */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } .prop-item { grid-template-columns: 1fr; } }
+
+        textarea.form-control { min-height: 100px; resize: vertical; }
+        
+        .loading { text-align: center; padding: 2rem; color: #666; }
     </style>
 </head>
-<body class="text-gray-800">
+<body>
 
-    <!-- ================= LOGIN SCREEN ================= -->
-    <div id="login-screen" class="min-h-screen flex items-center justify-center p-4 bg-[url('https://i.imgur.com/zRse9TK.jpeg')] bg-cover bg-center">
-        <div class="absolute inset-0 bg-black bg-opacity-60"></div>
-        
-        <div class="login-card relative w-full max-w-md p-8 rounded-3xl shadow-2xl border border-white/20">
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-[#1e3a1e] mb-2">Panel Administrativo</h1>
-                <p class="text-gray-600">Gestión de Propiedades y Contenido</p>
+    <!-- PANTALLA DE LOGIN -->
+    <div id="login-screen">
+        <div class="login-card">
+            <h2>Admin Panel</h2>
+            <p style="margin-bottom: 20px; color: #666;">Bárbara Inmobiliaria</p>
+            
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" class="form-control" value="admin@local.com" placeholder="tu@email.com">
+            </div>
+            
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" id="password" class="form-control" placeholder="••••••••">
             </div>
 
-            <form id="login-form" class="space-y-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Correo Electrónico</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                            <i class="fas fa-user"></i>
-                        </span>
-                        <input type="email" id="email" value="admin@local.com" 
-                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1e3a1e] focus:border-transparent outline-none transition" 
-                            placeholder="tu@email.com" required>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                            <i class="fas fa-lock"></i>
-                        </span>
-                        <input type="password" id="password" 
-                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1e3a1e] focus:border-transparent outline-none transition" 
-                            placeholder="••••••••" required>
-                    </div>
-                </div>
-
-                <div id="login-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl text-sm"></div>
-
-                <button type="submit" 
-                    class="w-full bg-[#1e3a1e] hover:bg-[#2c522c] text-white font-bold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group">
-                    <span>Ingresar al Panel</span>
-                    <i class="fas fa-arrow-right btn-arrow group-hover:text-green-200"></i>
-                </button>
-            </form>
+            <button onclick="handleLogin()" class="btn-login">
+                Ingresar al Panel
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
             
-            <div class="mt-6 text-center text-xs text-gray-500">
-                <p>Sistema seguro conectado a Supabase</p>
+            <p id="login-error" class="error-msg">Credenciales incorrectas. Verifica tu usuario en Supabase.</p>
+        </div>
+    </div>
+
+    <!-- PANEL DE CONTROL -->
+    <div id="dashboard">
+        <div class="header">
+            <h2>Panel de Administración</h2>
+            <button onclick="handleLogout()" class="btn btn-delete">Cerrar Sesión</button>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('properties')">Propiedades</button>
+            <button class="tab-btn" onclick="showTab('config')">Textos & Configuración</button>
+            <button class="tab-btn" onclick="showTab('services')">Servicios</button>
+        </div>
+
+        <!-- SECCIÓN PROPIEDADES -->
+        <div id="properties" class="section active">
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                    <h3>Listado de Propiedades</h3>
+                    <button onclick="openPropertyModal()" class="btn btn-save">+ Nueva Propiedad</button>
+                </div>
+                <div id="properties-list" class="loading">Cargando propiedades...</div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN CONFIGURACIÓN -->
+        <div id="config" class="section">
+            <div class="card">
+                <h3>Configuración General</h3>
+                <div id="config-form" class="loading">Cargando configuración...</div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN SERVICIOS -->
+        <div id="services" class="section">
+            <div class="card">
+                <h3>Servicios</h3>
+                <div id="services-list" class="loading">Cargando servicios...</div>
             </div>
         </div>
     </div>
 
-    <!-- ================= DASHBOARD (Oculto hasta login) ================= -->
-    <div id="dashboard" class="hidden-section min-h-screen">
-        <!-- Navbar -->
-        <nav class="bg-white shadow-md sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-16">
-                    <div class="flex items-center">
-                        <i class="fas fa-building text-[#1e3a1e] text-2xl mr-3"></i>
-                        <span class="font-bold text-xl text-gray-800">Admin Inmobiliaria</span>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <span id="user-email-display" class="text-sm text-gray-600 hidden sm:block"></span>
-                        <button onclick="logout()" class="text-red-600 hover:text-red-800 font-medium text-sm flex items-center gap-2">
-                            <i class="fas fa-sign-out-alt"></i> Salir
-                        </button>
-                    </div>
-                </div>
+    <!-- MODAL PROPIEDAD -->
+    <div id="property-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Editar Propiedad</h3>
+                <button class="close-modal" onclick="closeModal('property-modal')">&times;</button>
             </div>
-        </nav>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            
-            <!-- Pestañas de Navegación -->
-            <div class="flex flex-wrap gap-2 mb-8 border-b border-gray-200 pb-2">
-                <button onclick="showTab('propiedades')" class="tab-btn px-4 py-2 rounded-lg bg-[#1e3a1e] text-white font-medium">🏠 Propiedades</button>
-                <button onclick="showTab('configuracion')" class="tab-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 font-medium">⚙️ Configuración Textos</button>
-                <button onclick="showTab('servicios')" class="tab-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 font-medium">🤝 Servicios</button>
-            </div>
-
-            <!-- SECCIÓN PROPIEDADES -->
-            <div id="tab-propiedades" class="tab-content">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800">Gestión de Propiedades</h2>
-                    <button onclick="openPropertyModal()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow">
-                        <i class="fas fa-plus"></i> Nueva Propiedad
-                    </button>
-                </div>
-                
-                <div id="properties-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Loader -->
-                    <div class="col-span-full flex justify-center py-12">
-                        <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECCIÓN CONFIGURACIÓN -->
-            <div id="tab-configuracion" class="tab-content hidden-section">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">Editar Textos del Sitio</h2>
-                <div class="bg-white p-6 rounded-2xl shadow-md space-y-6">
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Título Principal (Hero)</label>
-                        <input type="text" id="conf-hero-titulo" class="w-full p-3 border rounded-lg">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Subtítulo (Hero)</label>
-                        <input type="text" id="conf-hero-subtitulo" class="w-full p-3 border rounded-lg">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Texto Sobre Mí (JSON String simplificado)</label>
-                        <textarea id="conf-sobre-mi" rows="4" class="w-full p-3 border rounded-lg font-mono text-sm"></textarea>
-                        <p class="text-xs text-gray-500 mt-1">Formato: {"titulo": "...", "subtitulo": "..."}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Embed Mapa (Google Maps iframe src)</label>
-                        <input type="text" id="conf-mapa" class="w-full p-3 border rounded-lg font-mono text-xs">
-                    </div>
-                    
-                    <button onclick="saveConfig()" class="bg-[#1e3a1e] text-white px-6 py-3 rounded-lg hover:bg-[#2c522c] w-full font-bold shadow">
-                        💾 Guardar Cambios de Texto
-                    </button>
-                    <div id="config-msg" class="text-center text-green-600 font-bold hidden">¡Guardado correctamente!</div>
-                </div>
-            </div>
-
-            <!-- SECCIÓN SERVICIOS -->
-            <div id="tab-servicios" class="tab-content hidden-section">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">Editar Servicios</h2>
-                <div id="services-list" class="space-y-4">
-                    <!-- Se llena dinámicamente -->
-                </div>
-                <button onclick="saveServices()" class="mt-6 bg-[#1e3a1e] text-white px-6 py-3 rounded-lg hover:bg-[#2c522c] w-full font-bold shadow">
-                    💾 Guardar Servicios
-                </button>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- MODAL PROPIEDAD (Crear/Editar) -->
-    <div id="property-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 relative">
-            <button onclick="closePropertyModal()" class="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-2xl">&times;</button>
-            
-            <h3 id="modal-title" class="text-2xl font-bold text-[#1e3a1e] mb-6">Nueva Propiedad</h3>
-            
-            <form id="property-form" class="space-y-4">
+            <form id="property-form" onsubmit="saveProperty(event)">
                 <input type="hidden" id="prop-id">
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-bold mb-1">Badge (Ej: En Venta)</label>
-                        <input type="text" id="prop-badge" class="w-full p-2 border rounded">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Título</label>
+                        <input type="text" id="prop-titulo" class="form-control" required>
                     </div>
-                    <div>
-                        <label class="block text-sm font-bold mb-1">Orden (Número)</label>
-                        <input type="number" id="prop-orden" class="w-full p-2 border rounded" value="0">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-bold mb-1">Título</label>
-                    <input type="text" id="prop-titulo" class="w-full p-2 border rounded" required>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-bold mb-1">Ubicación</label>
-                    <input type="text" id="prop-ubicacion" class="w-full p-2 border rounded">
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-bold mb-1">Precio</label>
-                        <input type="text" id="prop-precio" class="w-full p-2 border rounded">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold mb-1">Nota de Precio</label>
-                        <input type="text" id="prop-precio-nota" class="w-full p-2 border rounded">
+                    <div class="form-group">
+                        <label>Badge (Ej: En Venta)</label>
+                        <input type="text" id="prop-badge" class="form-control">
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-bold mb-1">Descripción Corta</label>
-                    <textarea id="prop-descripcion" rows="3" class="w-full p-2 border rounded"></textarea>
+                <div class="form-group">
+                    <label>Ubicación</label>
+                    <input type="text" id="prop-ubicacion" class="form-control">
                 </div>
 
-                <div>
-                    <label class="block text-sm font-bold mb-1">URL Imagen Principal</label>
-                    <input type="text" id="prop-img" class="w-full p-2 border rounded" placeholder="https://...">
-                    <p class="text-xs text-gray-500">Usa las URLs de Imgur o IbB</p>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Precio</label>
+                        <input type="text" id="prop-precio" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Nota de Precio</label>
+                        <input type="text" id="prop-precio-nota" class="form-control">
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-bold mb-1">Tags (Separados por coma)</label>
-                    <input type="text" id="prop-tags" class="w-full p-2 border rounded" placeholder="3 dormitorios, 2 baños, Cochera">
+                <div class="form-group">
+                    <label>Descripción Corta</label>
+                    <textarea id="prop-descripcion" class="form-control"></textarea>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-bold mb-1">Características (Separadas por coma)</label>
-                    <textarea id="prop-caract" rows="3" class="w-full p-2 border rounded" placeholder="Cocina integrada, Aire acondicionado..."></textarea>
+                <div class="form-group">
+                    <label>Imagen Principal (URL)</label>
+                    <input type="text" id="prop-img" class="form-control" placeholder="https://...">
+                    <small style="color:#666">Usa las URLs de Imgur proporcionadas</small>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-bold mb-1">Galería (URLs separadas por coma)</label>
-                    <textarea id="prop-galeria" rows="3" class="w-full p-2 border rounded font-mono text-xs"></textarea>
+                <div class="form-group">
+                    <label>Tags (Separados por coma)</label>
+                    <input type="text" id="prop-tags" class="form-control" placeholder="3 dorm, 2 baños, Cochera">
                 </div>
 
-                <div class="pt-4 flex gap-3">
-                    <button type="button" onclick="closePropertyModal()" class="flex-1 bg-gray-300 text-gray-800 py-3 rounded-lg font-bold">Cancelar</button>
-                    <button type="submit" class="flex-1 bg-[#1e3a1e] text-white py-3 rounded-lg font-bold hover:bg-[#2c522c]">Guardar Propiedad</button>
+                <div class="form-group">
+                    <label>Características (Separadas por coma)</label>
+                    <textarea id="prop-caract" class="form-control" placeholder="Cocina integrada, Living amplio..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Galería (URLs separadas por coma)</label>
+                    <textarea id="prop-galeria" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:1rem;">
+                    <button type="button" class="btn btn-cancel" onclick="closeModal('property-modal')">Cancelar</button>
+                    <button type="submit" class="btn btn-save">Guardar Cambios</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        // ================= CONFIGURACIÓN SUPABASE =================
+        // CONFIGURACIÓN DE SUPABASE
         const SUPABASE_URL = 'https://zkndttzivjzrcjhlcvgb.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprbmR0dHppdmp6cmNqaGxjdmdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNjUzMTAsImV4cCI6MjA5MDg0MTMxMH0.2RcCCA75NRnhWk-UTSpURKsWqo-ID3j-Rr-0aG_DbNo';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprbmR0dHppdmp6cmNqaGxjdmdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNjUzMTAsImV4cCI6MjA5MDg0MTMxMH0.2RcCCA75NRnhWk-UTSpURKsWqo-ID3j-Rr-0aG_DbNo';
         
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // ================= LÓGICA DE LOGIN =================
-        const loginForm = document.getElementById('login-form');
-        const loginError = document.getElementById('login-error');
-        const loginScreen = document.getElementById('login-screen');
-        const dashboard = document.getElementById('dashboard');
+        let currentUser = null;
 
-        // Verificar sesión al cargar
-        async function checkSession() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                showDashboard(session.user.email);
-            } else {
-                loginScreen.classList.remove('hidden');
-                dashboard.classList.add('hidden-section');
-            }
-        }
-
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // --- AUTENTICACIÓN ---
+        async function handleLogin() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            
-            loginError.classList.add('hidden');
-            
+            const errorMsg = document.getElementById('login-error');
+
+            errorMsg.style.display = 'none';
+
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password
             });
 
             if (error) {
-                loginError.textContent = "Error: " + error.message;
-                loginError.classList.remove('hidden');
-            } else {
-                showDashboard(data.user.email);
+                errorMsg.textContent = "Error: " + error.message;
+                errorMsg.style.display = 'block';
+                return;
             }
-        });
 
-        function showDashboard(email) {
-            loginScreen.classList.add('hidden'); // Ocultar login completamente
-            dashboard.classList.remove('hidden-section'); // Mostrar dashboard
-            document.getElementById('user-email-display').textContent = email;
+            currentUser = data.user;
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            loadAllData();
+        }
+
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            location.reload();
+        }
+
+        // --- NAVEGACIÓN ---
+        function showTab(tabId) {
+            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // --- CARGA DE DATOS ---
+        async function loadAllData() {
             loadProperties();
             loadConfig();
             loadServices();
         }
 
-        async function logout() {
-            await supabase.auth.signOut();
-            window.location.reload();
-        }
-
-        // ================= NAVEGACIÓN TABS =================
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden-section'));
-            document.querySelectorAll('.tab-btn').forEach(el => {
-                el.classList.remove('bg-[#1e3a1e]', 'text-white');
-                el.classList.add('bg-gray-200', 'text-gray-700');
-            });
-            
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden-section');
-            event.target.classList.remove('bg-gray-200', 'text-gray-700');
-            event.target.classList.add('bg-[#1e3a1e]', 'text-white');
-        }
-
-        // ================= GESTIÓN PROPIEDADES =================
+        // 1. PROPIEDADES
         async function loadProperties() {
             const list = document.getElementById('properties-list');
-            list.innerHTML = '<div class="col-span-full text-center py-10">Cargando propiedades...</div>';
+            list.innerHTML = '<div class="loading">Cargando...</div>';
 
-            const { data, error } = await supabase
-                .from('propiedades')
-                .select('*')
-                .order('orden', { ascending: true });
+            const { data, error } = await supabase.from('propiedades').select('*').order('orden', { ascending: true });
 
             if (error) {
-                list.innerHTML = `<div class="col-span-full text-red-600">Error al cargar: ${error.message}</div>`;
+                list.innerHTML = `<p style="color:red">Error: ${error.message}</p>`;
                 return;
             }
 
-            list.innerHTML = '';
             if (data.length === 0) {
-                list.innerHTML = '<div class="col-span-full text-center text-gray-500">No hay propiedades cargadas.</div>';
+                list.innerHTML = '<p>No hay propiedades cargadas.</p>';
                 return;
             }
 
-            data.forEach(prop => {
-                const tagsArray = Array.isArray(prop.tags) ? prop.tags : (prop.tags ? JSON.parse(prop.tags) : []);
-                const card = document.createElement('div');
-                card.className = "bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 flex flex-col";
-                card.innerHTML = `
-                    <div class="h-48 overflow-hidden relative">
-                        <img src="${prop.imagen_principal}" class="w-full h-full object-cover" alt="${prop.titulo}">
-                        <span class="absolute top-2 left-2 bg-[#1e3a1e] text-white text-xs px-2 py-1 rounded">${prop.badge || 'Destacado'}</span>
+            list.innerHTML = data.map(p => `
+                <div class="prop-item">
+                    <img src="${p.imagen_principal}" class="prop-img-thumb" alt="img">
+                    <div>
+                        <strong>${p.titulo}</strong><br>
+                        <small>${p.ubicacion} | ${p.precio}</small>
                     </div>
-                    <div class="p-4 flex-1 flex flex-col">
-                        <h3 class="font-bold text-lg mb-1 line-clamp-2">${prop.titulo}</h3>
-                        <p class="text-gray-500 text-sm mb-2"><i class="fas fa-map-marker-alt mr-1"></i> ${prop.ubicacion}</p>
-                        <p class="text-[#1e3a1e] font-bold text-xl mb-3">${prop.precio}</p>
-                        <div class="flex flex-wrap gap-1 mb-4">
-                            ${tagsArray.slice(0, 3).map(t => `<span class="bg-gray-100 text-xs px-2 py-1 rounded">${t}</span>`).join('')}
-                        </div>
-                        <div class="mt-auto flex gap-2">
-                            <button onclick='editProperty(${JSON.stringify(prop).replace(/'/g, "&#39;")})' class="flex-1 bg-blue-600 text-white py-2 rounded text-sm hover:bg-blue-700">Editar</button>
-                            <button onclick="deleteProperty(${prop.id})" class="px-3 bg-red-100 text-red-600 rounded hover:bg-red-200"><i class="fas fa-trash"></i></button>
-                        </div>
+                    <div style="display:flex; gap:10px;">
+                        <button onclick="editProperty(${p.id})" class="btn btn-edit">Editar</button>
+                        <button onclick="deleteProperty(${p.id})" class="btn btn-delete">Eliminar</button>
                     </div>
-                `;
-                list.appendChild(card);
-            });
+                </div>
+            `).join('');
         }
 
-        // Modal Functions
-        const modal = document.getElementById('property-modal');
-        
+        // 2. CONFIGURACIÓN
+        async function loadConfig() {
+            const container = document.getElementById('config-form');
+            const { data, error } = await supabase.from('configuracion').select('*');
+
+            if (error) {
+                container.innerHTML = `<p style="color:red">Error: ${error.message}</p>`;
+                return;
+            }
+
+            // Convertir array de objetos a objeto clave-valor
+            const configObj = {};
+            data.forEach(item => configObj[item.clave] = item.valor);
+
+            container.innerHTML = `
+                <form onsubmit="saveConfig(event)">
+                    <div class="form-group">
+                        <label>Título Hero</label>
+                        <input type="text" name="hero_titulo" class="form-control" value="${configObj['hero_titulo'] || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>Subtítulo Hero</label>
+                        <input type="text" name="hero_subtitulo" class="form-control" value="${configObj['hero_subtitulo'] || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>Embed Mapa (Google Maps iframe src)</label>
+                        <input type="text" name="mapa_embed" class="form-control" value="${configObj['mapa_embed'] || ''}">
+                    </div>
+                    <button type="submit" class="btn btn-save">Guardar Configuración</button>
+                </form>
+            `;
+        }
+
+        // 3. SERVICIOS
+        async function loadServices() {
+            const list = document.getElementById('services-list');
+            const { data, error } = await supabase.from('servicios').select('*').order('orden');
+
+            if (error) {
+                list.innerHTML = `<p style="color:red">Error: ${error.message}</p>`;
+                return;
+            }
+
+            list.innerHTML = data.map(s => `
+                <div class="prop-item">
+                    <div style="font-weight:bold; color:var(--accent);">${s.numero}</div>
+                    <div>
+                        <strong>${s.titulo}</strong><br>
+                        <small>${s.descripcion.substring(0, 50)}...</small>
+                    </div>
+                    <button onclick="alert('Función de editar servicios pendiente')" class="btn btn-edit">Editar</button>
+                </div>
+            `).join('');
+        }
+
+        // --- ACCIONES CRUD PROPIEDADES ---
         function openPropertyModal() {
             document.getElementById('property-form').reset();
             document.getElementById('prop-id').value = '';
             document.getElementById('modal-title').textContent = 'Nueva Propiedad';
-            modal.classList.remove('hidden');
+            document.getElementById('property-modal').style.display = 'flex';
         }
 
-        function closePropertyModal() {
-            modal.classList.add('hidden');
-        }
+        async function editProperty(id) {
+            const { data, error } = await supabase.from('propiedades').select('*').eq('id', id).single();
+            if (error) return alert('Error al cargar datos');
 
-        function editProperty(prop) {
-            document.getElementById('prop-id').value = prop.id;
-            document.getElementById('prop-badge').value = prop.badge || '';
-            document.getElementById('prop-orden').value = prop.orden || 0;
-            document.getElementById('prop-titulo').value = prop.titulo;
-            document.getElementById('prop-ubicacion').value = prop.ubicacion || '';
-            document.getElementById('prop-precio').value = prop.precio || '';
-            document.getElementById('prop-precio-nota').value = prop.precio_nota || '';
-            document.getElementById('prop-descripcion').value = prop.descripcion || '';
-            document.getElementById('prop-img').value = prop.imagen_principal || '';
+            document.getElementById('prop-id').value = data.id;
+            document.getElementById('prop-titulo').value = data.titulo;
+            document.getElementById('prop-badge').value = data.badge || '';
+            document.getElementById('prop-ubicacion').value = data.ubicacion || '';
+            document.getElementById('prop-precio').value = data.precio || '';
+            document.getElementById('prop-precio-nota').value = data.precio_nota || '';
+            document.getElementById('prop-descripcion').value = data.descripcion || '';
+            document.getElementById('prop-img').value = data.imagen_principal || '';
             
-            // Convertir arrays a strings comma-separated para facilitar edición
-            const tags = Array.isArray(prop.tags) ? prop.tags.join(', ') : (prop.tags ? JSON.parse(prop.tags).join(', ') : '');
-            const caracts = Array.isArray(prop.caracteristicas) ? prop.caracteristicas.join(', ') : (prop.caracteristicas ? JSON.parse(prop.caracteristicas).join(', ') : '');
-            const gallery = Array.isArray(prop.galeria) ? prop.galeria.join(', ') : (prop.galeria ? JSON.parse(prop.galeria).join(', ') : '');
-
-            document.getElementById('prop-tags').value = tags;
-            document.getElementById('prop-caract').value = caracts;
-            document.getElementById('prop-galeria').value = gallery;
+            // Convertir arrays JSON a strings para el input
+            document.getElementById('prop-tags').value = Array.isArray(data.tags) ? data.tags.join(', ') : '';
+            document.getElementById('prop-caract').value = Array.isArray(data.caracteristicas) ? data.caracteristicas.join(', ') : '';
+            document.getElementById('prop-galeria').value = Array.isArray(data.galeria) ? data.galeria.join(', ') : '';
 
             document.getElementById('modal-title').textContent = 'Editar Propiedad';
-            modal.classList.remove('hidden');
+            document.getElementById('property-modal').style.display = 'flex';
         }
 
-        document.getElementById('property-form').addEventListener('submit', async (e) => {
+        async function saveProperty(e) {
             e.preventDefault();
-            
             const id = document.getElementById('prop-id').value;
-            const tagsStr = document.getElementById('prop-tags').value;
-            const caractsStr = document.getElementById('prop-caract').value;
-            const galleryStr = document.getElementById('prop-galeria').value;
-
-            // Convertir strings a arrays JSON
-            const tagsArr = tagsStr.split(',').map(s => s.trim()).filter(s => s);
-            const caractsArr = caractsStr.split(',').map(s => s.trim()).filter(s => s);
-            const galleryArr = galleryStr.split(',').map(s => s.trim()).filter(s => s);
+            
+            // Preparar datos
+            const tagsArr = document.getElementById('prop-tags').value.split(',').map(s => s.trim()).filter(s => s);
+            const caractArr = document.getElementById('prop-caract').value.split(',').map(s => s.trim()).filter(s => s);
+            const galeriaArr = document.getElementById('prop-galeria').value.split(',').map(s => s.trim()).filter(s => s);
 
             const propData = {
-                badge: document.getElementById('prop-badge').value,
-                orden: parseInt(document.getElementById('prop-orden').value),
                 titulo: document.getElementById('prop-titulo').value,
+                badge: document.getElementById('prop-badge').value,
                 ubicacion: document.getElementById('prop-ubicacion').value,
                 precio: document.getElementById('prop-precio').value,
                 precio_nota: document.getElementById('prop-precio-nota').value,
                 descripcion: document.getElementById('prop-descripcion').value,
                 imagen_principal: document.getElementById('prop-img').value,
                 tags: tagsArr,
-                caracteristicas: caractsArr,
-                galeria: galleryArr,
+                caracteristicas: caractArr,
+                galeria: galeriaArr,
                 updated_at: new Date()
             };
 
-            let error;
+            let result;
             if (id) {
                 // Update
-                const res = await supabase.from('propiedades').update(propData).eq('id', id);
-                error = res.error;
+                result = await supabase.from('propiedades').update(propData).eq('id', id);
             } else {
-                // Insert (Generar ID único basado en timestamp si es nuevo)
+                // Insert (Generar ID único basado en timestamp)
                 propData.id = Date.now(); 
-                const res = await supabase.from('propiedades').insert([propData]);
-                error = res.error;
+                result = await supabase.from('propiedades').insert([propData]);
             }
 
-            if (error) {
-                alert('Error al guardar: ' + error.message);
+            if (result.error) {
+                alert('Error al guardar: ' + result.error.message);
             } else {
-                closePropertyModal();
+                closeModal('property-modal');
                 loadProperties();
                 alert('Propiedad guardada correctamente');
             }
-        });
+        }
 
         async function deleteProperty(id) {
-            if(!confirm('¿Seguro que deseas eliminar esta propiedad?')) return;
+            if(!confirm('¿Estás seguro de eliminar esta propiedad?')) return;
             
             const { error } = await supabase.from('propiedades').delete().eq('id', id);
-            if (error) {
-                alert('Error: ' + error.message);
-            } else {
-                loadProperties();
-            }
+            if (error) alert('Error: ' + error.message);
+            else loadProperties();
         }
 
-        // ================= GESTIÓN CONFIGURACIÓN =================
-        async function loadConfig() {
-            const { data, error } = await supabase.from('configuracion').select('*');
-            if (error) return console.error(error);
+        // --- GUARDAR CONFIGURACIÓN ---
+        async function saveConfig(e) {
+            e.preventDefault();
+            const form = e.target;
+            const updates = [];
 
-            const getConfig = (key) => data.find(d => d.clave === key)?.valor || '';
-
-            document.getElementById('conf-hero-titulo').value = getConfig('hero_titulo');
-            document.getElementById('conf-hero-subtitulo').value = getConfig('hero_subtitulo');
-            document.getElementById('conf-sobre-mi').value = getConfig('sobre_mi_texto');
-            document.getElementById('conf-mapa').value = getConfig('mapa_embed');
-        }
-
-        async function saveConfig() {
-            const updates = [
-                { clave: 'hero_titulo', valor: document.getElementById('conf-hero-titulo').value },
-                { clave: 'hero_subtitulo', valor: document.getElementById('conf-hero-subtitulo').value },
-                { clave: 'sobre_mi_texto', valor: document.getElementById('conf-sobre-mi').value },
-                { clave: 'mapa_embed', valor: document.getElementById('conf-mapa').value }
-            ];
-
-            let hasError = false;
-            for (const item of updates) {
-                // Upsert: intenta actualizar, si no existe, inserta
-                const { error } = await supabase.from('configuracion').upsert(item);
-                if (error) {
-                    console.error(error);
-                    hasError = true;
+            // Iterar sobre los inputs del formulario
+            for (let i = 0; i < form.elements.length; i++) {
+                const input = form.elements[i];
+                if (input.name && input.tagName !== 'BUTTON') {
+                    updates.push({
+                        clave: input.name,
+                        valor: input.value,
+                        updated_at: new Date()
+                    });
                 }
             }
 
-            const msg = document.getElementById('config-msg');
-            if (!hasError) {
-                msg.classList.remove('hidden');
-                setTimeout(() => msg.classList.add('hidden'), 3000);
-            } else {
-                alert('Hubo un error al guardar algunos campos. Revisa la consola.');
-            }
-        }
-
-        // ================= GESTIÓN SERVICIOS =================
-        async function loadServices() {
-            const { data, error } = await supabase.from('servicios').select('*').order('orden');
-            if (error) return;
-
-            const container = document.getElementById('services-list');
-            container.innerHTML = '';
-            
-            data.forEach(serv => {
-                const div = document.createElement('div');
-                div.className = "bg-white p-4 rounded-lg border border-gray-200";
-                div.innerHTML = `
-                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-                        <div class="md:col-span-1">
-                            <label class="text-xs font-bold">Nº</label>
-                            <input type="text" class="w-full p-2 border rounded svc-num" value="${serv.numero || ''}" data-id="${serv.id}">
-                        </div>
-                        <div class="md:col-span-3">
-                            <label class="text-xs font-bold">Título</label>
-                            <input type="text" class="w-full p-2 border rounded svc-title" value="${serv.titulo || ''}" data-id="${serv.id}">
-                        </div>
-                        <div class="md:col-span-7">
-                            <label class="text-xs font-bold">Descripción</label>
-                            <input type="text" class="w-full p-2 border rounded svc-desc" value="${serv.descripcion || ''}" data-id="${serv.id}">
-                        </div>
-                        <div class="md:col-span-1">
-                             <label class="text-xs font-bold">Orden</label>
-                            <input type="number" class="w-full p-2 border rounded svc-orden" value="${serv.orden || 0}" data-id="${serv.id}">
-                        </div>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        async function saveServices() {
-            const nums = document.querySelectorAll('.svc-num');
-            const updates = [];
-            
-            nums.forEach(input => {
-                const id = parseInt(input.dataset.id);
-                const titleEl = document.querySelector(`.svc-title[data-id="${id}"]`);
-                const descEl = document.querySelector(`.svc-desc[data-id="${id}"]`);
-                const ordenEl = document.querySelector(`.svc-orden[data-id="${id}"]`);
-
-                updates.push({
-                    id: id,
-                    numero: input.value,
-                    titulo: titleEl.value,
-                    descripcion: descEl.value,
-                    orden: parseInt(ordenEl.value)
-                });
-            });
-
-            // Actualizar uno por uno
+            // Actualizar uno por uno (Upsert)
             for (const item of updates) {
-                await supabase.from('servicios').update(item).eq('id', item.id);
+                await supabase.from('configuracion').upsert(item);
             }
-            alert('Servicios actualizados');
-            loadServices();
+
+            alert('Configuración actualizada correctamente');
+            loadConfig();
         }
 
-        // Iniciar
-        checkSession();
+        // Verificar sesión al cargar
+        (async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                loadAllData();
+            }
+        })();
     </script>
 </body>
 </html>
