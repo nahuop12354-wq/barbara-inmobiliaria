@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Panel Admin – Bárbara Insaurralde</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -14,440 +15,161 @@
   --red: #e74c3c; --red-l: rgba(231,76,60,0.12);
   --shadow: 0 4px 24px rgba(30,58,30,0.08);
   --shadow-md: 0 8px 32px rgba(30,58,30,0.12);
-  --shadow-lg: 0 20px 60px rgba(30,58,30,0.18);
   --radius: 18px; --radius-sm: 12px;
   --trans: all 0.28s cubic-bezier(0.4,0,0.2,1);
 }
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--v8); color: #2a2a2a;
-  min-height: 100vh; overflow-x: hidden;
-}
+body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a; min-height: 100vh; }
 
-/* ===== ANIMACIONES GLOBALES ===== */
-@keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: none; }
-}
-@keyframes fadeIn {
-  from { opacity: 0; } to { opacity: 1; }
-}
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.04); }
-}
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(-16px); }
-  to   { opacity: 1; transform: none; }
-}
-@keyframes bounceIn {
-  0%   { opacity: 0; transform: scale(0.85); }
-  60%  { transform: scale(1.04); }
-  100% { opacity: 1; transform: scale(1); }
-}
-
-/* ===== LOGIN ===== */
+/* Login */
 .login-screen {
   position: fixed; inset: 0;
   background: linear-gradient(135deg, var(--v0) 0%, var(--v2) 100%);
   display: flex; align-items: center; justify-content: center; z-index: 9999;
   padding: 20px;
 }
-.login-screen::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 30% 20%, rgba(155,184,136,0.15) 0%, transparent 60%),
-              radial-gradient(ellipse at 80% 80%, rgba(127,160,115,0.1) 0%, transparent 50%);
-  pointer-events: none;
-}
 .login-box {
   background: white; border-radius: 28px; padding: 48px 44px;
   width: 100%; max-width: 420px; text-align: center;
-  box-shadow: var(--shadow-lg);
-  animation: bounceIn 0.6s ease both;
-  position: relative; overflow: hidden;
+  box-shadow: 0 20px 60px rgba(30,58,30,0.18);
 }
-.login-box::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 5px;
-  background: linear-gradient(90deg, var(--v1), var(--v4), var(--v5));
-}
-.login-logo {
-  width: 72px; height: 72px; border-radius: 50%; background: var(--v7);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 2rem; margin: 0 auto 20px;
-  border: 3px solid var(--v5);
-  box-shadow: 0 8px 24px rgba(30,58,30,0.15);
-  transition: var(--trans);
-}
-.login-logo:hover { transform: rotate(6deg) scale(1.05); }
+.login-logo { width: 72px; height: 72px; border-radius: 50%; background: var(--v7); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 20px; border: 3px solid var(--v5); }
 .login-box h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--v1); margin-bottom: 4px; }
 .login-box > p { color: #999; margin-bottom: 32px; font-size: 0.9rem; }
-.login-field {
-  position: relative; margin-bottom: 14px;
-}
+.login-field { position: relative; margin-bottom: 14px; }
 .login-field input {
   width: 100%; padding: 15px 18px; border: 2px solid var(--v5);
   border-radius: 14px; font-size: 1rem; font-family: 'DM Sans', sans-serif;
-  background: var(--v7); transition: var(--trans); display: block;
-  -webkit-appearance: none;
+  background: var(--v7); transition: var(--trans);
 }
-.login-field input:focus {
-  outline: none; border-color: var(--v2); background: white;
-  box-shadow: 0 0 0 4px rgba(45,71,45,0.08);
-}
+.login-field input:focus { outline: none; border-color: var(--v2); background: white; box-shadow: 0 0 0 4px rgba(45,71,45,0.08); }
 .login-btn {
   width: 100%; padding: 15px; background: linear-gradient(135deg, var(--v1), var(--v2));
   color: white; border: none; border-radius: 14px; font-weight: 700; font-size: 1rem;
-  font-family: 'DM Sans', sans-serif; cursor: pointer; transition: var(--trans);
-  margin-top: 6px; position: relative; overflow: hidden;
-  box-shadow: 0 6px 20px rgba(30,58,30,0.28);
-  min-height: 52px;
+  cursor: pointer; transition: var(--trans); margin-top: 6px;
 }
-.login-btn::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-  background-size: 200% 100%;
-  opacity: 0; transition: opacity 0.3s;
-}
-.login-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(30,58,30,0.38); }
-.login-btn:hover::after { opacity: 1; animation: shimmer 1.5s infinite; }
-.login-btn:active { transform: translateY(0); }
-.login-error { color: var(--red); font-size: 0.85rem; margin-top: 12px; display: none; animation: fadeSlideUp 0.3s ease; }
+.login-btn:hover { transform: translateY(-2px); }
+.login-error { color: var(--red); font-size: 0.85rem; margin-top: 12px; display: none; }
 
-/* ===== PANEL ===== */
+/* Panel */
 .admin-panel { display: none; min-height: 100vh; }
 .admin-panel.visible { display: flex; }
 
-/* ===== SIDEBAR ===== */
+/* Sidebar */
 .sidebar {
   width: 260px; background: linear-gradient(180deg, var(--v0) 0%, var(--v1) 100%);
   min-height: 100vh; padding: 24px 14px 20px;
   display: flex; flex-direction: column; gap: 2px;
-  position: sticky; top: 0; height: 100vh; overflow-y: auto; flex-shrink: 0;
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
   box-shadow: 4px 0 24px rgba(0,0,0,0.25);
 }
 .sidebar-brand {
   display: flex; align-items: center; gap: 12px;
   padding: 10px 10px 8px; margin-bottom: 4px;
 }
-.sidebar-brand-icon {
-  width: 42px; height: 42px; border-radius: 12px;
-  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
-  display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
-  flex-shrink: 0;
-}
-.sidebar-brand-text { flex: 1; min-width: 0; }
-.sidebar-brand-text strong { display: block; color: white; font-size: 0.92rem; font-weight: 700; line-height: 1.2; }
+.sidebar-brand-icon { width: 42px; height: 42px; border-radius: 12px; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+.sidebar-brand-text strong { display: block; color: white; font-size: 0.92rem; font-weight: 700; }
 .sidebar-brand-text span { color: rgba(255,255,255,0.45); font-size: 0.72rem; }
 .sidebar-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 8px 0; }
-.sidebar-label {
-  font-size: 0.65rem; font-weight: 800; color: rgba(255,255,255,0.3);
-  text-transform: uppercase; letter-spacing: 1.5px; padding: 0 10px; margin: 6px 0 2px;
-}
+.sidebar-label { font-size: 0.65rem; font-weight: 800; color: rgba(255,255,255,0.3); text-transform: uppercase; padding: 0 10px; margin: 6px 0 2px; }
 .sidebar a, .sidebar-link {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 12px; color: rgba(255,255,255,0.65);
   text-decoration: none; border-radius: 12px; font-size: 0.88rem; font-weight: 500;
-  transition: var(--trans); cursor: pointer; border: none; background: none;
+  transition: var(--trans); cursor: pointer; background: none; border: none;
   width: 100%; text-align: left; font-family: 'DM Sans', sans-serif;
-  position: relative; overflow: hidden;
-  min-height: 44px;
 }
-.sidebar a::before, .sidebar-link::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-  background: var(--v4); border-radius: 2px;
-  transform: scaleY(0); transition: transform 0.2s ease; transform-origin: center;
-}
-.sidebar a:hover, .sidebar-link:hover {
-  background: rgba(255,255,255,0.1); color: white;
-  transform: translateX(2px);
-}
-.sidebar a:hover::before, .sidebar-link:hover::before { transform: scaleY(1); }
-.sidebar a.active, .sidebar-link.active {
-  background: rgba(255,255,255,0.15); color: white; font-weight: 600;
-}
-.sidebar a.active::before, .sidebar-link.active::before { transform: scaleY(1); }
-.sidebar-icon { font-size: 1rem; width: 20px; text-align: center; flex-shrink: 0; }
+.sidebar a:hover, .sidebar-link:hover { background: rgba(255,255,255,0.1); color: white; }
+.sidebar a.active, .sidebar-link.active { background: rgba(255,255,255,0.15); color: white; font-weight: 600; }
+.sidebar-icon { font-size: 1rem; width: 20px; text-align: center; }
 .sidebar-logout {
   margin-top: auto; padding: 11px 14px; background: var(--red-l);
   color: rgba(255,150,150,0.9); border: 1px solid rgba(231,76,60,0.2);
   border-radius: 12px; font-size: 0.88rem; font-weight: 600;
-  cursor: pointer; font-family: 'DM Sans', sans-serif; transition: var(--trans);
-  display: flex; align-items: center; gap: 8px; width: 100%; min-height: 44px;
+  cursor: pointer; display: flex; align-items: center; gap: 8px;
 }
-.sidebar-logout:hover { background: rgba(231,76,60,0.3); color: white; border-color: rgba(231,76,60,0.4); }
+.sidebar-logout:hover { background: rgba(231,76,60,0.3); color: white; }
 
-/* Mobile top nav */
-.mobile-topbar {
-  display: none; position: sticky; top: 0; z-index: 900;
-  background: linear-gradient(135deg, var(--v0), var(--v1));
-  padding: 12px 16px; align-items: center; justify-content: space-between;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-}
-.mobile-brand { color: white; font-weight: 700; font-size: 1rem; }
-.mobile-brand small { display: block; font-size: 0.7rem; opacity: 0.5; font-weight: 400; }
-.mobile-menu-btn {
-  width: 44px; height: 44px; border-radius: 10px;
-  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
-  color: white; font-size: 1.3rem; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; transition: var(--trans);
-}
-.mobile-menu-btn:hover { background: rgba(255,255,255,0.2); }
-.mobile-sidebar-overlay {
-  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(4px); z-index: 998;
-}
+/* Mobile */
+.mobile-topbar { display: none; position: sticky; top: 0; background: linear-gradient(135deg, var(--v0), var(--v1)); padding: 12px 16px; align-items: center; justify-content: space-between; }
+.mobile-brand { color: white; font-weight: 700; }
+.mobile-menu-btn { width: 44px; height: 44px; border-radius: 10px; background: rgba(255,255,255,0.12); border: none; color: white; font-size: 1.3rem; cursor: pointer; }
+.mobile-sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 998; }
 .mobile-sidebar-overlay.open { display: block; }
 
-/* ===== MAIN ===== */
+/* Main */
 .main-content { flex: 1; padding: 28px 32px; overflow-x: hidden; max-width: calc(100vw - 260px); }
-
-/* ===== PAGE HEADER ===== */
-.page-header {
-  margin-bottom: 28px;
-  animation: fadeSlideUp 0.4s ease both;
-}
-.page-header h2 {
-  font-family: 'Playfair Display', serif; font-size: 1.9rem;
-  color: var(--v1); font-weight: 800; line-height: 1.2;
-}
+.page-header { margin-bottom: 28px; }
+.page-header h2 { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: var(--v1); font-weight: 800; }
 .page-header p { color: #999; margin-top: 5px; font-size: 0.9rem; }
 
-/* ===== STATS ===== */
-.stats-row {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px;
-}
-.stat-card {
-  background: white; border-radius: var(--radius); padding: 22px;
-  box-shadow: var(--shadow); border: 1px solid rgba(194,212,181,0.3);
-  transition: var(--trans); position: relative; overflow: hidden;
-  animation: fadeSlideUp 0.4s ease both;
-}
-.stat-card:nth-child(1) { animation-delay: 0.05s; }
-.stat-card:nth-child(2) { animation-delay: 0.1s; }
-.stat-card:nth-child(3) { animation-delay: 0.15s; }
-.stat-card:nth-child(4) { animation-delay: 0.2s; }
-.stat-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--v2), var(--v4));
-  transform: scaleX(0); transition: transform 0.4s ease; transform-origin: left;
-}
-.stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
-.stat-card:hover::before { transform: scaleX(1); }
-.stat-icon { font-size: 1.6rem; margin-bottom: 10px; }
+/* Stats */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+.stat-card { background: white; border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); border: 1px solid rgba(194,212,181,0.3); }
 .stat-n { font-size: 2.2rem; font-weight: 800; color: var(--v1); line-height: 1; }
-.stat-l { font-size: 0.78rem; color: #aaa; margin-top: 5px; font-weight: 500; }
+.stat-l { font-size: 0.78rem; color: #aaa; margin-top: 5px; }
 
-/* ===== CARDS ===== */
-.admin-card {
-  background: white; border-radius: var(--radius);
-  box-shadow: var(--shadow); border: 1px solid rgba(194,212,181,0.25);
-  overflow: hidden; margin-bottom: 22px;
-  animation: fadeSlideUp 0.4s ease both;
-  transition: box-shadow 0.3s ease;
-}
-.admin-card:hover { box-shadow: var(--shadow-md); }
-.admin-card-header {
-  padding: 18px 24px; border-bottom: 1px solid var(--v6);
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  background: linear-gradient(135deg, var(--v8), white);
-}
+/* Cards */
+.admin-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid rgba(194,212,181,0.25); overflow: hidden; margin-bottom: 22px; }
+.admin-card-header { padding: 18px 24px; border-bottom: 1px solid var(--v6); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, var(--v8), white); }
 .admin-card-header h3 { font-size: 0.98rem; color: var(--v1); font-weight: 700; }
 .admin-card-body { padding: 24px; }
 
-/* ===== FIELDS ===== */
+/* Forms */
 .field-group { margin-bottom: 18px; }
-.field-group label {
-  display: block; font-size: 0.75rem; font-weight: 700; color: var(--v2);
-  text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 7px;
-}
-.field-group input,
-.field-group textarea,
-.field-group select {
+.field-group label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--v2); text-transform: uppercase; margin-bottom: 7px; }
+.field-group input, .field-group textarea, .field-group select {
   width: 100%; padding: 12px 16px; border: 2px solid var(--v5);
   border-radius: var(--radius-sm); font-size: 0.95rem; font-family: 'DM Sans', sans-serif;
-  background: var(--v7); transition: var(--trans); color: #2a2a2a;
-  -webkit-appearance: none;
+  background: var(--v7); transition: var(--trans);
 }
-.field-group input:focus,
-.field-group textarea:focus,
-.field-group select:focus {
-  outline: none; border-color: var(--v2); background: white;
-  box-shadow: 0 0 0 4px rgba(45,71,45,0.08);
-}
+.field-group input:focus, .field-group textarea:focus { outline: none; border-color: var(--v2); background: white; }
 .field-group textarea { resize: vertical; min-height: 82px; }
-.field-note { font-size: 0.74rem; color: #c0c0c0; margin-top: 6px; }
 .field-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
-/* ===== IMG PREVIEW ===== */
-.img-preview {
-  width: 100%; max-height: 160px; object-fit: cover; border-radius: 10px;
-  margin-top: 10px; display: none; border: 2px solid var(--v5);
-  animation: fadeIn 0.3s ease;
-}
+/* Images */
+.img-preview { width: 100%; max-height: 160px; object-fit: cover; border-radius: 10px; margin-top: 10px; display: none; border: 2px solid var(--v5); }
 .img-preview.show { display: block; }
 
-/* ===== BOTONES ===== */
-.btn-primary {
-  padding: 11px 24px; background: linear-gradient(135deg, var(--v1), var(--v2));
-  color: white; border: none; border-radius: 50px; font-weight: 700; font-size: 0.88rem;
-  font-family: 'DM Sans', sans-serif; cursor: pointer; transition: var(--trans);
-  display: inline-flex; align-items: center; gap: 7px; position: relative; overflow: hidden;
-  box-shadow: 0 4px 14px rgba(30,58,30,0.25); min-height: 44px;
-}
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(30,58,30,0.35); }
-.btn-primary:active { transform: translateY(0); }
-.btn-secondary {
-  padding: 11px 20px; background: var(--v7); color: var(--v2);
-  border: 2px solid var(--v5); border-radius: 50px; font-weight: 600;
-  font-size: 0.88rem; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: var(--trans);
-  display: inline-flex; align-items: center; gap: 6px; min-height: 44px;
-}
-.btn-secondary:hover { background: var(--v5); transform: translateY(-1px); }
-.btn-danger {
-  padding: 8px 14px; background: var(--red-l); color: var(--red);
-  border: none; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
-  font-family: 'DM Sans', sans-serif; cursor: pointer; transition: var(--trans);
-  display: inline-flex; align-items: center; gap: 4px; min-height: 36px;
-}
-.btn-danger:hover { background: var(--red); color: white; transform: translateY(-1px); }
-.btn-edit-small {
-  padding: 8px 14px; background: var(--v6); color: var(--v2);
-  border: none; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
-  font-family: 'DM Sans', sans-serif; cursor: pointer; transition: var(--trans);
-  display: inline-flex; align-items: center; gap: 4px; min-height: 36px;
-}
-.btn-edit-small:hover { background: var(--v4); color: white; transform: translateY(-1px); }
+/* Buttons */
+.btn-primary { padding: 11px 24px; background: linear-gradient(135deg, var(--v1), var(--v2)); color: white; border: none; border-radius: 50px; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: var(--trans); display: inline-flex; align-items: center; gap: 7px; }
+.btn-primary:hover { transform: translateY(-2px); }
+.btn-secondary { padding: 11px 20px; background: var(--v7); color: var(--v2); border: 2px solid var(--v5); border-radius: 50px; font-weight: 600; font-size: 0.88rem; cursor: pointer; transition: var(--trans); }
+.btn-secondary:hover { background: var(--v5); }
+.btn-danger { padding: 8px 14px; background: var(--red-l); color: var(--red); border: none; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
+.btn-danger:hover { background: var(--red); color: white; }
+.btn-edit-small { padding: 8px 14px; background: var(--v6); color: var(--v2); border: none; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
 
-/* ===== PROP LIST ===== */
+/* Prop list */
 .prop-list { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-.prop-item {
-  display: grid; grid-template-columns: 80px 1fr auto;
-  gap: 14px; align-items: center; padding: 14px;
-  border-radius: 14px; border: 1px solid rgba(194,212,181,0.3);
-  background: var(--v8); transition: var(--trans);
-  animation: slideIn 0.35s ease both;
-}
-.prop-item:hover { border-color: var(--v4); background: white; box-shadow: var(--shadow); transform: translateY(-1px); }
+.prop-item { display: grid; grid-template-columns: 80px 1fr auto; gap: 14px; align-items: center; padding: 14px; border-radius: 14px; border: 1px solid rgba(194,212,181,0.3); background: var(--v8); }
 .prop-item-img { width: 80px; height: 62px; border-radius: 10px; object-fit: cover; }
-.prop-item-info h4 { font-size: 0.88rem; color: var(--v1); font-weight: 600; margin-bottom: 3px; line-height: 1.3; }
+.prop-item-info h4 { font-size: 0.88rem; color: var(--v1); font-weight: 600; }
 .prop-item-info p { font-size: 0.76rem; color: #aaa; }
-.prop-item-badge {
-  display: inline-block; padding: 3px 10px; border-radius: 50px;
-  font-size: 0.7rem; font-weight: 700; margin-top: 5px;
-}
-.badge-venta { background: rgba(45,71,45,0.1); color: var(--v2); }
-.badge-alquiler { background: rgba(37,211,102,0.12); color: #1a8c45; }
-.prop-item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.prop-item-badge { display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; background: rgba(45,71,45,0.1); color: var(--v2); }
+.prop-item-actions { display: flex; gap: 6px; }
 
-/* ===== SERVICIOS ===== */
-.servicio-editor {
-  border: 2px solid var(--v5); border-radius: 16px;
-  padding: 20px; margin-bottom: 14px; background: var(--v8);
-  transition: var(--trans);
-}
-.servicio-editor:hover { border-color: var(--v4); background: white; }
-.servicio-num { font-size: 0.7rem; font-weight: 800; color: var(--v4); letter-spacing: 1.5px; margin-bottom: 14px; }
-
-/* ===== CHECKLIST ===== */
-.lista-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 0; border-bottom: 1px solid var(--v6);
-  animation: slideIn 0.25s ease both;
-}
-.lista-item:last-child { border-bottom: none; }
-.lista-item input {
-  flex: 1; padding: 10px 16px; border: 2px solid var(--v5);
-  border-radius: 50px; font-size: 0.9rem; font-family: 'DM Sans', sans-serif;
-  background: white; transition: var(--trans); min-height: 44px;
-}
-.lista-item input:focus { outline: none; border-color: var(--v2); box-shadow: 0 0 0 3px rgba(45,71,45,0.08); }
-.btn-remove-item {
-  width: 32px; height: 32px; border-radius: 50%; background: var(--red-l);
-  color: var(--red); border: none; cursor: pointer; font-size: 1.1rem;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  transition: var(--trans);
-}
-.btn-remove-item:hover { background: var(--red); color: white; transform: scale(1.1); }
-.btn-add-item {
-  padding: 9px 20px; background: rgba(45,71,45,0.06); color: var(--v2);
-  border: 2px dashed var(--v4); border-radius: 50px; font-size: 0.85rem;
-  font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer;
-  transition: var(--trans); margin-top: 12px; display: inline-block; min-height: 44px;
-}
-.btn-add-item:hover { background: var(--v5); transform: translateY(-1px); }
-
-/* ===== MODAL ===== */
-.modal-bg {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px); z-index: 9998;
-  display: none; align-items: center; justify-content: center; padding: 20px;
-}
+/* Modal */
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); z-index: 9998; display: none; align-items: center; justify-content: center; padding: 20px; }
 .modal-bg.open { display: flex; }
-.modal {
-  background: white; border-radius: 28px; padding: 36px;
-  width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.3);
-  animation: bounceIn 0.4s ease both;
-  position: relative;
-}
-.modal::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-  background: linear-gradient(90deg, var(--v1), var(--v4), var(--v5)); border-radius: 28px 28px 0 0;
-}
+.modal { background: white; border-radius: 28px; padding: 36px; width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; }
 .modal-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--v1); font-weight: 800; margin-bottom: 28px; }
 .modal-actions { display: flex; gap: 12px; margin-top: 28px; }
 .modal-actions .btn-primary { flex: 1; justify-content: center; padding: 15px; font-size: 1rem; border-radius: 14px; }
 .modal-actions .btn-secondary { padding: 15px 24px; border-radius: 14px; }
 
-/* ===== MAPA ===== */
-.map-preview { width: 100%; height: 240px; border-radius: 16px; overflow: hidden; border: 2px solid var(--v5); margin-bottom: 22px; }
-.map-preview iframe { width: 100%; height: 100%; border: none; }
-
-/* ===== CREDENCIALES ===== */
-.creds-box {
-  background: rgba(231,76,60,0.05); border: 2px solid rgba(231,76,60,0.2);
-  border-radius: 14px; padding: 16px; margin-bottom: 18px;
-  display: flex; align-items: flex-start; gap: 10px;
-}
-.creds-box h4 { color: #c0392b; font-size: 0.86rem; font-weight: 700; line-height: 1.4; }
-
-/* ===== TOAST ===== */
-.toast {
-  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(100px);
-  background: linear-gradient(135deg, var(--v1), var(--v2)); color: white;
-  padding: 14px 32px; border-radius: 50px; font-size: 0.93rem; font-weight: 600;
-  z-index: 99999; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
-  pointer-events: none; white-space: nowrap;
-  box-shadow: 0 10px 30px rgba(30,58,30,0.4); display: flex; align-items: center; gap: 8px;
-}
+/* Toast */
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(100px); background: linear-gradient(135deg, var(--v1), var(--v2)); color: white; padding: 14px 32px; border-radius: 50px; font-size: 0.93rem; font-weight: 600; z-index: 99999; transition: transform 0.4s; pointer-events: none; }
 .toast.show { transform: translateX(-50%) translateY(0); }
 .toast.error { background: linear-gradient(135deg, #c0392b, var(--red)); }
 
-/* ===== EMPTY STATE ===== */
-.empty-state {
-  padding: 48px 24px; text-align: center; color: #ccc;
-  animation: fadeIn 0.3s ease;
-}
-.empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; }
-.empty-state p { font-size: 0.95rem; }
+/* Servicios editor */
+.servicio-editor { border: 2px solid var(--v5); border-radius: 16px; padding: 20px; margin-bottom: 14px; background: var(--v8); }
+.servicio-num { font-size: 0.7rem; font-weight: 800; color: var(--v4); margin-bottom: 14px; }
 
-/* ===================================================
-   RESPONSIVE
-   =================================================== */
+/* Responsive */
 @media (max-width: 900px) {
   .mobile-topbar { display: flex; }
-  .sidebar {
-    position: fixed; left: -280px; top: 0; z-index: 999;
-    transition: left 0.35s cubic-bezier(0.4,0,0.2,1);
-    height: 100vh; width: 260px;
-  }
+  .sidebar { position: fixed; left: -280px; top: 0; z-index: 999; transition: left 0.35s; height: 100vh; width: 260px; }
   .sidebar.mobile-open { left: 0; }
   .admin-panel { flex-direction: column; }
   .main-content { max-width: 100%; padding: 20px 16px; }
@@ -456,287 +178,93 @@ body {
 }
 @media (max-width: 600px) {
   .main-content { padding: 16px 12px; }
-  .stats-row { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .stat-card { padding: 16px; }
-  .stat-n { font-size: 1.8rem; }
-  .admin-card-header { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
-  .admin-card-body { padding: 16px; }
-  .prop-item { grid-template-columns: 68px 1fr; gap: 10px; padding: 12px; }
-  .prop-item-actions { grid-column: 1 / -1; display: flex; gap: 8px; }
-  .prop-item-actions .btn-edit-small,
-  .prop-item-actions .btn-danger { flex: 1; justify-content: center; }
-  .modal { padding: 24px 18px; border-radius: 20px; }
-  .modal-actions { flex-direction: column; }
-  .modal-actions .btn-secondary { order: 2; }
-  .map-preview { height: 200px; }
-  .page-header h2 { font-size: 1.5rem; }
-}
-@media (max-width: 380px) {
   .stats-row { grid-template-columns: 1fr; }
-  .stat-card { padding: 14px; }
+  .prop-item { grid-template-columns: 68px 1fr; }
+  .prop-item-actions { grid-column: 1 / -1; display: flex; gap: 8px; }
+  .modal { padding: 24px 18px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ===== LOGIN ===== -->
+<!-- LOGIN -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <div class="login-logo">🏠</div>
     <h1>Panel Admin</h1>
     <p>Bárbara Insaurralde Inmobiliaria</p>
-    <div class="login-field">
-      <input type="text" id="loginUser" placeholder="Usuario" autocomplete="username">
-    </div>
-    <div class="login-field">
-      <input type="password" id="loginPass" placeholder="Contraseña" autocomplete="current-password">
-    </div>
+    <div class="login-field"><input type="text" id="loginUser" placeholder="Usuario"></div>
+    <div class="login-field"><input type="password" id="loginPass" placeholder="Contraseña"></div>
     <button class="login-btn" onclick="doLogin()">Ingresar al panel →</button>
     <p class="login-error" id="loginError">⚠ Usuario o contraseña incorrectos</p>
   </div>
 </div>
 
-<!-- ===== PANEL ===== -->
+<!-- PANEL -->
 <div class="admin-panel" id="adminPanel">
-
-  <!-- MOBILE TOPBAR -->
-  <div class="mobile-topbar" id="mobileTopbar">
-    <div class="mobile-brand">Panel Admin <small>Bárbara Insaurralde</small></div>
-    <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileSidebar()">☰</button>
+  <div class="mobile-topbar">
+    <div class="mobile-brand">Panel Admin</div>
+    <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">☰</button>
   </div>
   <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay" onclick="closeMobileSidebar()"></div>
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
       <div class="sidebar-brand-icon">🏠</div>
-      <div class="sidebar-brand-text">
-        <strong>Panel Admin</strong>
-        <span>Bárbara Insaurralde</span>
-      </div>
+      <div class="sidebar-brand-text"><strong>Panel Admin</strong><span>Bárbara Insaurralde</span></div>
     </div>
     <div class="sidebar-divider"></div>
     <div class="sidebar-label">Contenido</div>
-    <a href="#" onclick="showSec('dashboard',this);closeMobileSidebar()" class="active"><span class="sidebar-icon">📊</span>Dashboard</a>
-    <a href="#" onclick="showSec('propiedades',this);closeMobileSidebar()"><span class="sidebar-icon">🏠</span>Propiedades</a>
-    <a href="#" onclick="showSec('servicios',this);closeMobileSidebar()"><span class="sidebar-icon">📋</span>Servicios</a>
-    <div class="sidebar-divider"></div>
-    <div class="sidebar-label">Secciones del sitio</div>
-    <a href="#" onclick="showSec('hero',this);closeMobileSidebar()"><span class="sidebar-icon">🖼</span>Hero / Inicio</a>
-    <a href="#" onclick="showSec('sobremi',this);closeMobileSidebar()"><span class="sidebar-icon">👤</span>Sobre Mí</a>
-    <a href="#" onclick="showSec('contacto',this);closeMobileSidebar()"><span class="sidebar-icon">📬</span>Contacto</a>
-    <a href="#" onclick="showSec('ubicacion',this);closeMobileSidebar()"><span class="sidebar-icon">📍</span>Mapa</a>
+    <a href="#" onclick="showSec('dashboard',this)"><span class="sidebar-icon">📊</span>Dashboard</a>
+    <a href="#" onclick="showSec('propiedades',this)"><span class="sidebar-icon">🏠</span>Propiedades</a>
+    <a href="#" onclick="showSec('servicios',this)"><span class="sidebar-icon">📋</span>Servicios</a>
     <div class="sidebar-divider"></div>
     <div class="sidebar-label">Configuración</div>
-    <a href="#" onclick="showSec('config',this);closeMobileSidebar()"><span class="sidebar-icon">⚙️</span>General</a>
-    <a href="#" onclick="showSec('credenciales',this);closeMobileSidebar()"><span class="sidebar-icon">🔒</span>Contraseña</a>
+    <a href="#" onclick="showSec('credenciales',this)"><span class="sidebar-icon">🔒</span>Contraseña</a>
     <div class="sidebar-divider"></div>
-    <a href="index.html" target="_blank"><span class="sidebar-icon">🌐</span>Ver sitio</a>
     <button class="sidebar-logout" onclick="doLogout()">🚪 Cerrar sesión</button>
   </aside>
 
   <main class="main-content">
-
-    <!-- DASHBOARD -->
+    <!-- Dashboard -->
     <section id="sec-dashboard">
-      <div class="page-header"><h2>📊 Dashboard</h2><p>Resumen general del sitio</p></div>
+      <div class="page-header"><h2>📊 Dashboard</h2><p>Resumen general</p></div>
       <div class="stats-row" id="statsRow"></div>
       <div class="admin-card">
-        <div class="admin-card-header"><h3>🏠 Propiedades recientes</h3><button class="btn-primary" onclick="showSec('propiedades',document.querySelectorAll('.sidebar a')[1])">Ver todas</button></div>
+        <div class="admin-card-header"><h3>🏠 Propiedades</h3><button class="btn-primary" onclick="showSec('propiedades',document.querySelectorAll('.sidebar a')[1])">Ver todas</button></div>
         <div class="prop-list" id="dashPropList"></div>
       </div>
     </section>
 
-    <!-- PROPIEDADES -->
+    <!-- Propiedades -->
     <section id="sec-propiedades" style="display:none">
-      <div class="page-header"><h2>🏠 Propiedades</h2><p>Gestioná todas las propiedades del sitio</p></div>
+      <div class="page-header"><h2>🏠 Propiedades</h2><p>Gestioná todas las propiedades</p></div>
       <div class="admin-card">
         <div class="admin-card-header"><h3>Lista de propiedades</h3><button class="btn-primary" onclick="openPropModal()">+ Agregar</button></div>
         <div class="prop-list" id="propList"></div>
       </div>
     </section>
 
-    <!-- SERVICIOS -->
+    <!-- Servicios -->
     <section id="sec-servicios" style="display:none">
-      <div class="page-header"><h2>📋 Servicios</h2><p>Editá los 3 servicios que aparecen en el sitio</p></div>
+      <div class="page-header"><h2>📋 Servicios</h2><p>Editá los 3 servicios</p></div>
       <div id="serviciosEditor"></div>
       <button class="btn-primary" onclick="saveServicios()">💾 Guardar servicios</button>
     </section>
 
-    <!-- HERO -->
-    <section id="sec-hero" style="display:none">
-      <div class="page-header"><h2>🖼 Hero / Inicio</h2><p>Lo primero que ve el visitante</p></div>
-      <div class="admin-card">
-        <div class="admin-card-header"><h3>Contenido del Hero</h3></div>
-        <div class="admin-card-body">
-          <div class="field-grid-2">
-            <div class="field-group"><label>Título principal</label><input type="text" id="heroTitulo" placeholder="Bárbara Insaurralde"></div>
-            <div class="field-group"><label>Subtítulo</label><input type="text" id="heroSubtitulo" placeholder="Servicios Inmobiliarios"></div>
-          </div>
-          <div class="field-group"><label>Texto del botón</label><input type="text" id="heroBtnTxt" placeholder="CONTACTAR"></div>
-          <div class="field-group">
-            <label>URL imagen de fondo</label>
-            <input type="text" id="heroImg" placeholder="https://..." oninput="previewImg('heroImg','heroImgPreview')">
-            <p class="field-note">Usá Imgur, ibb.co o cualquier host de imágenes</p>
-            <img id="heroImgPreview" class="img-preview" alt="Preview">
-          </div>
-          <button class="btn-primary" onclick="saveHero()">💾 Guardar Hero</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- SOBRE MÍ -->
-    <section id="sec-sobremi" style="display:none">
-      <div class="page-header"><h2>👤 Sobre Mí</h2><p>Tu presentación personal</p></div>
-      <div class="admin-card">
-        <div class="admin-card-header"><h3>Información personal</h3></div>
-        <div class="admin-card-body">
-          <div class="field-grid-2">
-            <div class="field-group"><label>Nombre completo</label><input type="text" id="smNombre"></div>
-            <div class="field-group"><label>Matrícula / Cargo</label><input type="text" id="smCargo"></div>
-          </div>
-          <div class="field-group"><label>Tag (etiqueta verde)</label><input type="text" id="smTag"></div>
-          <div class="field-group"><label>Párrafo 1</label><textarea id="smParrafo1" rows="3"></textarea></div>
-          <div class="field-group"><label>Párrafo 2</label><textarea id="smParrafo2" rows="3"></textarea></div>
-          <div class="field-group"><label>Frase firma</label><input type="text" id="smFirma"></div>
-          <div class="field-group">
-            <label>URL foto de perfil</label>
-            <input type="text" id="smFoto" placeholder="https://..." oninput="previewImg('smFoto','smFotoPreview')">
-            <img id="smFotoPreview" class="img-preview" alt="Preview">
-          </div>
-          <div class="field-group">
-            <label>URL logo (header/menú)</label>
-            <input type="text" id="smLogo" placeholder="https://..." oninput="previewImg('smLogo','smLogoPreview')">
-            <img id="smLogoPreview" class="img-preview" alt="Preview" style="max-height:80px;border-radius:50%;object-fit:cover">
-          </div>
-          <button class="btn-primary" onclick="saveSobreMi()">💾 Guardar Sobre Mí</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTACTO -->
-    <section id="sec-contacto" style="display:none">
-      <div class="page-header"><h2>📬 Contacto</h2><p>Datos y textos de contacto</p></div>
-      <div class="admin-card">
-        <div class="admin-card-header"><h3>📱 Datos de contacto</h3></div>
-        <div class="admin-card-body">
-          <div class="field-grid-2">
-            <div class="field-group">
-              <label>Número WhatsApp</label>
-              <input type="text" id="ctWA" placeholder="5493765409158">
-              <p class="field-note">Sin + ni espacios. Ej: 5493765409158</p>
-            </div>
-            <div class="field-group"><label>Email</label><input type="text" id="ctEmail" placeholder="barbara@email.com"></div>
-          </div>
-          <button class="btn-primary" onclick="saveContactoDatos()">💾 Guardar datos</button>
-        </div>
-      </div>
-      <div class="admin-card">
-        <div class="admin-card-header"><h3>✍️ Textos de la sección</h3></div>
-        <div class="admin-card-body">
-          <div class="field-group"><label>Tag superior</label><input type="text" id="ctTag"></div>
-          <div class="field-group"><label>Título</label><textarea id="ctTitulo" rows="2"></textarea></div>
-          <div class="field-group"><label>Párrafo 1</label><textarea id="ctParrafo1" rows="3"></textarea></div>
-          <div class="field-group"><label>Párrafo 2</label><textarea id="ctParrafo2" rows="3"></textarea></div>
-          <div class="field-group"><label>Texto del botón tasación</label><input type="text" id="ctBtnTxt"></div>
-          <div class="field-group"><label>Mensaje WhatsApp al pedir tasación</label><textarea id="ctWAMsg" rows="2"></textarea></div>
-          <button class="btn-primary" onclick="saveContactoTextos()">💾 Guardar textos</button>
-        </div>
-      </div>
-      <div class="admin-card">
-        <div class="admin-card-header"><h3>✅ Lista de servicios (checks)</h3></div>
-        <div class="admin-card-body">
-          <div id="checkListEditor"></div>
-          <button class="btn-add-item" onclick="addCheckItem()">+ Agregar ítem</button>
-          <br><br>
-          <button class="btn-primary" onclick="saveCheckList()">💾 Guardar lista</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- MAPA -->
-    <section id="sec-ubicacion" style="display:none">
-      <div class="page-header"><h2>📍 Mapa</h2><p>Ubicación en el mapa del sitio</p></div>
-      <div class="admin-card">
-        <div class="admin-card-header"><h3>Configuración del mapa</h3></div>
-        <div class="admin-card-body">
-          <div class="map-preview">
-            <iframe id="mapIframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28740.26!2d-55.8969!3d-27.3666!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9457bd4a0c4fc35f%3A0x62e9e57e69c40a72!2sPosadas%2C+Misiones!5e0!3m2!1ses!2sar!4v1" allowfullscreen loading="lazy"></iframe>
-          </div>
-          <div class="field-grid-2">
-            <div class="field-group"><label>Latitud</label><input type="text" id="mapLat" value="-27.3666"></div>
-            <div class="field-group"><label>Longitud</label><input type="text" id="mapLng" value="-55.8969"></div>
-          </div>
-          <div class="field-group"><label>Dirección visible</label><input type="text" id="mapDir" value="Posadas, Misiones, Argentina"></div>
-          <div class="field-group"><label>Texto botón "Cómo llegar"</label><input type="text" id="mapBtnTxt" value="↗ Cómo llegar"></div>
-          <div style="display:flex;gap:12px;flex-wrap:wrap">
-            <button class="btn-secondary" onclick="updateMapPreview()">👁 Previsualizar</button>
-            <button class="btn-primary" onclick="saveMap()">💾 Guardar mapa</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONFIG -->
-    <section id="sec-config" style="display:none">
-      <div class="page-header"><h2>⚙️ Configuración</h2><p>Ajustes globales del sitio</p></div>
-      <div class="admin-card">
-        <div class="admin-card-header"><h3>🔍 SEO / Metadatos</h3></div>
-        <div class="admin-card-body">
-          <div class="field-group"><label>Título de la pestaña</label><input type="text" id="seoTitle"></div>
-          <div class="field-group"><label>Descripción (Google)</label><textarea id="seoDesc" rows="2"></textarea></div>
-          <button class="btn-primary" onclick="saveSEO()">💾 Guardar SEO</button>
-        </div>
-      </div>
-      <div class="admin-card">
-        <div class="admin-card-header"><h3>🖼 Imagen de fondo – Servicios</h3></div>
-        <div class="admin-card-body">
-          <div class="field-group">
-            <label>URL imagen</label>
-            <input type="text" id="serviciosFondo" placeholder="https://..." oninput="previewImg('serviciosFondo','serviciosFondoPreview')">
-            <img id="serviciosFondoPreview" class="img-preview" alt="Preview">
-          </div>
-          <button class="btn-primary" onclick="saveServiciosFondo()">💾 Guardar imagen</button>
-        </div>
-      </div>
-      <div class="admin-card">
-        <div class="admin-card-header"><h3>🏠 Textos sección Propiedades</h3></div>
-        <div class="admin-card-body">
-          <div class="field-group"><label>Título</label><input type="text" id="propSecTitulo"></div>
-          <div class="field-group"><label>Subtítulo</label><input type="text" id="propSecSub"></div>
-          <button class="btn-primary" onclick="savePropSec()">💾 Guardar</button>
-        </div>
-      </div>
-      <div class="admin-card">
-        <div class="admin-card-header"><h3>📋 Formulario de contacto</h3></div>
-        <div class="admin-card-body">
-          <div class="field-group"><label>Título del formulario</label><input type="text" id="formTitulo"></div>
-          <div class="field-group"><label>Subtítulo</label><input type="text" id="formSubtitulo"></div>
-          <div class="field-group"><label>Mensaje de éxito</label><input type="text" id="formExito"></div>
-          <button class="btn-primary" onclick="saveFormConfig()">💾 Guardar</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- CREDENCIALES -->
+    <!-- Credenciales -->
     <section id="sec-credenciales" style="display:none">
-      <div class="page-header"><h2>🔒 Contraseña</h2><p>Actualizá tus credenciales de acceso</p></div>
+      <div class="page-header"><h2>🔒 Contraseña</h2><p>Actualizá tus credenciales</p></div>
       <div class="admin-card">
-        <div class="admin-card-header"><h3>Credenciales de acceso</h3></div>
+        <div class="admin-card-header"><h3>Cambiar contraseña</h3></div>
         <div class="admin-card-body">
-          <div class="creds-box">
-            <span>⚠️</span>
-            <h4>Si olvidás la nueva contraseña, editá admin.html y buscá "barbara243"</h4>
-          </div>
-          <div class="field-group"><label>Contraseña actual</label><input type="password" id="credActual" placeholder="Contraseña actual"></div>
-          <div class="field-grid-2">
-            <div class="field-group"><label>Nueva contraseña</label><input type="password" id="credNueva" placeholder="Nueva contraseña"></div>
-            <div class="field-group"><label>Repetir contraseña</label><input type="password" id="credRepetir" placeholder="Repetir"></div>
-          </div>
+          <div class="field-group"><label>Contraseña actual</label><input type="password" id="credActual"></div>
+          <div class="field-group"><label>Nueva contraseña</label><input type="password" id="credNueva"></div>
+          <div class="field-group"><label>Repetir contraseña</label><input type="password" id="credRepetir"></div>
           <button class="btn-primary" onclick="saveCredenciales()">🔒 Cambiar contraseña</button>
         </div>
       </div>
     </section>
-
   </main>
 </div>
 
@@ -745,25 +273,22 @@ body {
   <div class="modal">
     <h3 class="modal-title" id="modalTitle">Nueva propiedad</h3>
     <input type="hidden" id="propId">
-    <div class="field-group"><label>Título</label><input type="text" id="fTitulo" placeholder="Ej: Departamento en Venta – Edificio X"></div>
+    <div class="field-group"><label>Título</label><input type="text" id="fTitulo"></div>
     <div class="field-grid-2">
-      <div class="field-group"><label>Estado</label><select id="fBadge"><option value="En Venta">En Venta</option><option value="En Alquiler">En Alquiler</option><option value="Vendido">Vendido</option><option value="Reservado">Reservado</option></select></div>
-      <div class="field-group"><label>Precio</label><input type="text" id="fPrecio" placeholder="Ej: USD 70.000"></div>
+      <div class="field-group"><label>Estado</label><select id="fBadge"><option value="En Venta">En Venta</option><option value="En Alquiler">En Alquiler</option></select></div>
+      <div class="field-group"><label>Precio</label><input type="text" id="fPrecio"></div>
     </div>
-    <div class="field-group"><label>Nota de precio (opcional)</label><input type="text" id="fPrecioNota" placeholder="Ej: Cochera incluida"></div>
-    <div class="field-group"><label>Ubicación</label><input type="text" id="fUbi" placeholder="Ej: Posadas, Misiones"></div>
-    <div class="field-group"><label>Descripción</label><textarea id="fDesc" rows="4" placeholder="Descripción detallada..."></textarea></div>
-    <div class="field-group"><label>Tags (separar con comas)</label><input type="text" id="fTags" placeholder="2 dormitorios, 1 baño, 80 m²"></div>
-    <div class="field-group"><label>Características (una por línea)</label><textarea id="fCaract" rows="4" placeholder="Cocina integrada&#10;Living amplio&#10;Balcón"></textarea></div>
-    <div class="field-group">
-      <label>URL imagen principal</label>
-      <input type="text" id="fImgPrincipal" placeholder="https://..." oninput="previewImg('fImgPrincipal','fImgPreview')">
-      <img id="fImgPreview" class="img-preview" alt="Preview">
-    </div>
-    <div class="field-group"><label>URLs galería (una por línea)</label><textarea id="fGaleria" rows="4" placeholder="https://...&#10;https://..."></textarea></div>
+    <div class="field-group"><label>Nota de precio</label><input type="text" id="fPrecioNota"></div>
+    <div class="field-group"><label>Ubicación</label><input type="text" id="fUbi"></div>
+    <div class="field-group"><label>Descripción</label><textarea id="fDesc" rows="4"></textarea></div>
+    <div class="field-group"><label>Tags (separar con comas)</label><input type="text" id="fTags"></div>
+    <div class="field-group"><label>Características (una por línea)</label><textarea id="fCaract" rows="4"></textarea></div>
+    <div class="field-group"><label>URL imagen principal</label><input type="text" id="fImgPrincipal" oninput="previewImg('fImgPrincipal','fImgPreview')"></div>
+    <img id="fImgPreview" class="img-preview">
+    <div class="field-group"><label>URLs galería (una por línea)</label><textarea id="fGaleria" rows="4"></textarea></div>
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
-      <button class="btn-primary" onclick="saveProp()">💾 Guardar propiedad</button>
+      <button class="btn-primary" onclick="saveProp()">💾 Guardar</button>
     </div>
   </div>
 </div>
@@ -771,65 +296,99 @@ body {
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== CREDENCIALES =====
+// ============================================
+// CONFIGURACIÓN DE SUPABASE - SOLO CAMBIA ESTO
+// ============================================
+const SUPABASE_URL = 'https://TU_PROYECTO.supabase.co'
+const SUPABASE_KEY = 'TU_ANON_KEY'
+// ============================================
+
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Credenciales por defecto
 let CREDS = { user: 'admin', pass: 'barbara243' };
-try { const s = localStorage.getItem('barbara_creds'); if(s) CREDS = JSON.parse(s); } catch(e) {}
 
-// ===== DEFAULTS =====
-const PROPS_DEFAULT = [
-  {id:1,badge:'En Venta',titulo:'Departamento en Venta – Edificio Ysyry',ubicacion:'Planta baja – contrafrente, Posadas, Misiones',precio:'USD 70.000',precioNota:'',descripcion:'Excelente oportunidad.',tags:['1 dormitorio','1 baño','40,74 m²'],caracteristicas:['Cocina integrada','Living-comedor luminoso','Lavadero'],imagenPrincipal:'https://i.ibb.co/Mk1M19JK/imagen1.jpg',galeria:['https://i.ibb.co/5WNk97S2/imagen2.jpg']},
-  {id:2,badge:'En Venta',titulo:'Departamento en Venta – Edificio Citrino',ubicacion:'Séptimo piso con vista al río Paraná, Posadas, Misiones',precio:'USD 200.000',precioNota:'Cochera incluida',descripcion:'Excelente departamento.',tags:['2 dormitorios','2 baños','Vista al río'],caracteristicas:['Living amplio','Lavadero','Seguridad 24h'],imagenPrincipal:'https://i.ibb.co/4ZRDzRVN/imagen1.jpg',galeria:[]},
-  {id:3,badge:'En Venta',titulo:'Terreno en Venta – Av. Las Heras',ubicacion:'Avenida Las Heras, Posadas, Misiones',precio:'USD 50.000',precioNota:'Negociable',descripcion:'Excelente oportunidad.',tags:['433 m²','Zona consolidada'],caracteristicas:['433 m² de superficie','Frente sobre avenida'],imagenPrincipal:'https://i.ibb.co/GvrGyvdZ/terreno1.jpg',galeria:[]},
-  {id:4,badge:'En Alquiler',titulo:'Inmueble Mixto en Alquiler – Ruta 12',ubicacion:'Ruta Nacional 12, Posadas',precio:'$1.250.000/mes',precioNota:'Antes $1.500.000',descripcion:'Propiedad mixta.',tags:['45x45 m','Uso mixto'],caracteristicas:['Terreno 45x45 m','Sistema de alarma'],imagenPrincipal:'https://i.ibb.co/wNNdMn8S/inmueble1.jpg',galeria:[]}
-];
-const SERVS_DEFAULT = [
-  {num:'01',titulo:'Venta de propiedades',descripcion:'Asesoramiento integral para la comercialización de inmuebles, incluyendo tasación, estrategia de difusión y acompañamiento hasta la concreción de la operación.'},
-  {num:'02',titulo:'Tasaciones inmobiliarias',descripcion:'Valoración profesional de propiedades basada en análisis de mercado, ubicación y características del inmueble para determinar su valor real.'},
-  {num:'03',titulo:'Alquileres y administración',descripcion:'Gestión integral de alquileres, redacción de contratos, selección de inquilinos y seguimiento administrativo durante toda la relación locativa.'}
-];
+// ===== FUNCIONES SUPABASE =====
+async function cargarPropiedades() {
+  try {
+    const { data, error } = await supabase.from('propiedades').select('*').order('id');
+    if (error) throw error;
+    if (data && data.length > 0) return data;
+  } catch(e) { console.log('Error:', e); }
+  return [];
+}
 
-// ===== STORAGE =====
-function get(k,d){try{const s=localStorage.getItem(k);return s?JSON.parse(s):d;}catch(e){return d;}}
-function set(k,v){localStorage.setItem(k,JSON.stringify(v));}
-function getProps(){return get('barbara_propiedades',PROPS_DEFAULT);}
-function getServs(){return get('barbara_servicios',SERVS_DEFAULT);}
+async function guardarPropiedad(prop) {
+  const { error } = await supabase.from('propiedades').upsert({
+    id: prop.id,
+    badge: prop.badge,
+    titulo: prop.titulo,
+    ubicacion: prop.ubicacion,
+    precio: prop.precio,
+    precio_nota: prop.precioNota || '',
+    descripcion: prop.descripcion,
+    tags: prop.tags || [],
+    caracteristicas: prop.caracteristicas || [],
+    imagen_principal: prop.imagenPrincipal,
+    galeria: prop.galeria || []
+  });
+  if (error) throw error;
+}
+
+async function eliminarPropiedad(id) {
+  const { error } = await supabase.from('propiedades').delete().eq('id', id);
+  if (error) throw error;
+}
+
+async function cargarServicios() {
+  try {
+    const { data, error } = await supabase.from('servicios').select('*').order('orden');
+    if (error) throw error;
+    if (data && data.length > 0) return data;
+  } catch(e) {}
+  return [
+    { id: 1, numero: '01', titulo: 'Venta de propiedades', descripcion: 'Asesoramiento integral para la comercialización de inmuebles...', orden: 1 },
+    { id: 2, numero: '02', titulo: 'Tasaciones inmobiliarias', descripcion: 'Valoración profesional de propiedades...', orden: 2 },
+    { id: 3, numero: '03', titulo: 'Alquileres y administración', descripcion: 'Gestión integral de alquileres...', orden: 3 }
+  ];
+}
+
+async function guardarServicio(servicio) {
+  const { error } = await supabase.from('servicios').upsert(servicio);
+  if (error) throw error;
+}
 
 // ===== AUTH =====
-function doLogin() {
+async function doLogin() {
   const u = document.getElementById('loginUser').value.trim();
   const p = document.getElementById('loginPass').value;
-  const btn = document.querySelector('.login-btn');
-  btn.textContent = '...';
-  setTimeout(() => {
-    if (u === CREDS.user && p === CREDS.pass) {
-      sessionStorage.setItem('admin_auth','1');
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('adminPanel').classList.add('visible');
-      renderAll();
-    } else {
-      document.getElementById('loginError').style.display = 'block';
-      document.getElementById('loginPass').value = '';
-      document.getElementById('loginPass').classList.add('shake');
-      setTimeout(() => document.getElementById('loginPass').classList.remove('shake'), 500);
-    }
-    btn.textContent = 'Ingresar al panel →';
-  }, 400);
+  
+  if (u === CREDS.user && p === CREDS.pass) {
+    sessionStorage.setItem('admin_auth', '1');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminPanel').classList.add('visible');
+    await renderAll();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('loginPass').value = '';
+  }
 }
-document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
-document.getElementById('loginUser').addEventListener('keydown', e => { if(e.key === 'Enter') document.getElementById('loginPass').focus(); });
-function doLogout() { sessionStorage.removeItem('admin_auth'); location.reload(); }
+
+function doLogout() {
+  sessionStorage.removeItem('admin_auth');
+  location.reload();
+}
+
 if (sessionStorage.getItem('admin_auth') === '1') {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('adminPanel').classList.add('visible');
   renderAll();
 }
 
-// ===== MOBILE SIDEBAR =====
+// ===== MOBILE =====
 function toggleMobileSidebar() {
-  const s = document.getElementById('sidebar');
-  const o = document.getElementById('mobileSidebarOverlay');
-  s.classList.toggle('mobile-open');
-  o.classList.toggle('open');
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+  document.getElementById('mobileSidebarOverlay').classList.toggle('open');
 }
 function closeMobileSidebar() {
   document.getElementById('sidebar').classList.remove('mobile-open');
@@ -840,94 +399,116 @@ function closeMobileSidebar() {
 function showSec(name, el) {
   document.querySelectorAll('.main-content > section').forEach(s => s.style.display = 'none');
   const sec = document.getElementById('sec-' + name);
-  if (sec) { sec.style.display = 'block'; sec.style.animation = 'none'; void sec.offsetWidth; sec.style.animation = ''; }
+  if (sec) sec.style.display = 'block';
   document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
   if (el) el.classList.add('active');
+  closeMobileSidebar();
   return false;
 }
 
-// ===== RENDER ALL =====
-function renderAll() {
-  renderStats(); renderDashProps(); renderPropList(); renderServiciosEditor();
-  loadHero(); loadSobreMi(); loadContacto(); loadMap(); loadConfig();
+// ===== RENDER =====
+let propiedadesGlobal = [];
+let serviciosGlobal = [];
+
+async function renderAll() {
+  propiedadesGlobal = await cargarPropiedades();
+  serviciosGlobal = await cargarServicios();
+  renderStats();
+  renderDashProps();
+  renderPropList();
+  renderServiciosEditor();
 }
 
-// ===== STATS =====
-const STAT_ICONS = ['🏠','💰','🔑','📋'];
 function renderStats() {
-  const p = getProps();
-  const v = p.filter(x => x.badge === 'En Venta').length;
-  const a = p.filter(x => x.badge === 'En Alquiler').length;
-  const data = [
-    {n: p.length, l: 'Total propiedades', icon: '🏠'},
-    {n: v, l: 'En Venta', icon: '💰'},
-    {n: a, l: 'En Alquiler', icon: '🔑'},
-    {n: getServs().length, l: 'Servicios activos', icon: '📋'}
+  const stats = [
+    { n: propiedadesGlobal.length, l: 'Total propiedades', icon: '🏠' },
+    { n: propiedadesGlobal.filter(p => p.badge === 'En Venta').length, l: 'En Venta', icon: '💰' },
+    { n: propiedadesGlobal.filter(p => p.badge === 'En Alquiler').length, l: 'En Alquiler', icon: '🔑' },
+    { n: serviciosGlobal.length, l: 'Servicios activos', icon: '📋' }
   ];
-  document.getElementById('statsRow').innerHTML = data.map((d,i) => `
-    <div class="stat-card" style="animation-delay:${i*0.06}s">
-      <div class="stat-icon">${d.icon}</div>
-      <div class="stat-n">${d.n}</div>
-      <div class="stat-l">${d.l}</div>
-    </div>`).join('');
+  document.getElementById('statsRow').innerHTML = stats.map(s => `
+    <div class="stat-card"><div class="stat-n">${s.n}</div><div class="stat-l">${s.l}</div></div>
+  `).join('');
 }
 
-function renderDashProps() { document.getElementById('dashPropList').innerHTML = getProps().slice(0,3).map(propHTML).join('') || emptyState('No hay propiedades aún'); }
+function renderDashProps() {
+  document.getElementById('dashPropList').innerHTML = propiedadesGlobal.slice(0, 3).map(propHTML).join('') || '<div style="padding:20px;text-align:center">No hay propiedades</div>';
+}
+
 function renderPropList() {
-  const p = getProps();
-  document.getElementById('propList').innerHTML = p.length ? p.map(propHTML).join('') : emptyState('No hay propiedades. ¡Agregá la primera!');
+  document.getElementById('propList').innerHTML = propiedadesGlobal.map(propHTML).join('') || '<div style="padding:20px;text-align:center">No hay propiedades. ¡Agregá la primera!</div>';
 }
-function emptyState(msg) { return `<div class="empty-state"><div class="empty-icon">🏚</div><p>${msg}</p></div>`; }
-function propHTML(p) { return `
-  <div class="prop-item">
-    <img src="${p.imagenPrincipal}" class="prop-item-img" onerror="this.src='https://placehold.co/80x62?text=IMG'" alt="">
-    <div class="prop-item-info">
-      <h4>${p.titulo}</h4><p>${p.ubicacion}</p>
-      <span class="prop-item-badge ${p.badge==='En Alquiler'?'badge-alquiler':'badge-venta'}">${p.badge} · ${p.precio}</span>
-    </div>
-    <div class="prop-item-actions">
-      <button class="btn-edit-small" onclick="openPropModal(${p.id})">✏️ Editar</button>
-      <button class="btn-danger" onclick="deleteProp(${p.id})">🗑</button>
-    </div>
-  </div>`; }
 
-// ===== PROP MODAL =====
+function propHTML(p) {
+  return `
+    <div class="prop-item">
+      <img src="${p.imagen_principal}" class="prop-item-img" onerror="this.src='https://placehold.co/80x62?text=IMG'">
+      <div class="prop-item-info">
+        <h4>${p.titulo}</h4>
+        <p>${p.ubicacion}</p>
+        <span class="prop-item-badge">${p.badge} · ${p.precio}</span>
+      </div>
+      <div class="prop-item-actions">
+        <button class="btn-edit-small" onclick="openPropModal(${p.id})">✏️ Editar</button>
+        <button class="btn-danger" onclick="deleteProp(${p.id})">🗑</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderServiciosEditor() {
+  document.getElementById('serviciosEditor').innerHTML = serviciosGlobal.map((sv, i) => `
+    <div class="servicio-editor">
+      <div class="servicio-num">SERVICIO ${sv.numero}</div>
+      <div class="field-group"><label>Título</label><input type="text" id="sv_t_${i}" value="${sv.titulo.replace(/"/g, '&quot;')}"></div>
+      <div class="field-group"><label>Descripción</label><textarea id="sv_d_${i}" rows="3">${sv.descripcion.replace(/"/g, '&quot;')}</textarea></div>
+    </div>
+  `).join('');
+}
+
+// ===== PROPIEDADES CRUD =====
 function openPropModal(id) {
   document.getElementById('modalBg').classList.add('open');
   if (id) {
-    const p = getProps().find(x => x.id === id); if (!p) return;
-    document.getElementById('modalTitle').textContent = 'Editar propiedad';
-    document.getElementById('propId').value = p.id;
-    document.getElementById('fTitulo').value = p.titulo;
-    document.getElementById('fBadge').value = p.badge;
-    document.getElementById('fPrecio').value = p.precio;
-    document.getElementById('fPrecioNota').value = p.precioNota || '';
-    document.getElementById('fUbi').value = p.ubicacion;
-    document.getElementById('fDesc').value = p.descripcion;
-    document.getElementById('fTags').value = p.tags.join(', ');
-    document.getElementById('fCaract').value = p.caracteristicas.join('\n');
-    document.getElementById('fImgPrincipal').value = p.imagenPrincipal;
-    document.getElementById('fGaleria').value = p.galeria.join('\n');
-    previewImg('fImgPrincipal','fImgPreview');
+    const p = propiedadesGlobal.find(x => x.id === id);
+    if (p) {
+      document.getElementById('modalTitle').textContent = 'Editar propiedad';
+      document.getElementById('propId').value = p.id;
+      document.getElementById('fTitulo').value = p.titulo;
+      document.getElementById('fBadge').value = p.badge;
+      document.getElementById('fPrecio').value = p.precio;
+      document.getElementById('fPrecioNota').value = p.precio_nota || '';
+      document.getElementById('fUbi').value = p.ubicacion;
+      document.getElementById('fDesc').value = p.descripcion || '';
+      document.getElementById('fTags').value = (p.tags || []).join(', ');
+      document.getElementById('fCaract').value = (p.caracteristicas || []).join('\n');
+      document.getElementById('fImgPrincipal').value = p.imagen_principal;
+      document.getElementById('fGaleria').value = (p.galeria || []).join('\n');
+      previewImg('fImgPrincipal', 'fImgPreview');
+    }
   } else {
     document.getElementById('modalTitle').textContent = 'Nueva propiedad';
     document.getElementById('propId').value = '';
-    ['fTitulo','fPrecio','fPrecioNota','fUbi','fDesc','fTags','fCaract','fImgPrincipal','fGaleria'].forEach(id => document.getElementById(id).value = '');
+    ['fTitulo', 'fPrecio', 'fPrecioNota', 'fUbi', 'fDesc', 'fTags', 'fCaract', 'fImgPrincipal', 'fGaleria'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('fBadge').value = 'En Venta';
     document.getElementById('fImgPreview').classList.remove('show');
   }
 }
-function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
-document.getElementById('modalBg').addEventListener('click', e => { if(e.target === e.currentTarget) closeModal(); });
 
-function saveProp() {
+function closeModal() {
+  document.getElementById('modalBg').classList.remove('open');
+}
+document.getElementById('modalBg').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+
+async function saveProp() {
   const titulo = document.getElementById('fTitulo').value.trim();
   if (!titulo) { showToast('El título es obligatorio', 'error'); return; }
-  const props = getProps();
+  
   const editId = document.getElementById('propId').value;
-  const np = {
-    id: editId ? +editId : Date.now(),
-    badge: document.getElementById('fBadge').value, titulo,
+  const prop = {
+    id: editId ? parseInt(editId) : Date.now(),
+    badge: document.getElementById('fBadge').value,
+    titulo: titulo,
     ubicacion: document.getElementById('fUbi').value.trim(),
     precio: document.getElementById('fPrecio').value.trim(),
     precioNota: document.getElementById('fPrecioNota').value.trim(),
@@ -937,123 +518,64 @@ function saveProp() {
     imagenPrincipal: document.getElementById('fImgPrincipal').value.trim(),
     galeria: document.getElementById('fGaleria').value.split('\n').map(s => s.trim()).filter(Boolean)
   };
-  if (editId) { const i = props.findIndex(p => p.id === +editId); if (i !== -1) props[i] = np; }
-  else props.push(np);
-  set('barbara_propiedades', props);
-  closeModal(); renderStats(); renderDashProps(); renderPropList();
+  
+  await guardarPropiedad(prop);
+  propiedadesGlobal = await cargarPropiedades();
+  renderStats();
+  renderDashProps();
+  renderPropList();
+  closeModal();
   showToast(editId ? '✓ Propiedad actualizada' : '✓ Propiedad agregada');
 }
-function deleteProp(id) {
+
+async function deleteProp(id) {
   if (!confirm('¿Eliminar esta propiedad?')) return;
-  set('barbara_propiedades', getProps().filter(p => p.id !== id));
-  renderStats(); renderDashProps(); renderPropList(); showToast('Propiedad eliminada');
+  await eliminarPropiedad(id);
+  propiedadesGlobal = await cargarPropiedades();
+  renderStats();
+  renderDashProps();
+  renderPropList();
+  showToast('Propiedad eliminada');
 }
 
 // ===== SERVICIOS =====
-function renderServiciosEditor() {
-  const s = getServs();
-  document.getElementById('serviciosEditor').innerHTML = s.map((sv, i) => `
-    <div class="servicio-editor">
-      <div class="servicio-num">SERVICIO ${sv.num}</div>
-      <div class="field-group"><label>Título</label><input type="text" id="sv_t_${i}" value="${sv.titulo}"></div>
-      <div class="field-group"><label>Descripción</label><textarea id="sv_d_${i}" rows="3">${sv.descripcion}</textarea></div>
-    </div>`).join('');
+async function saveServicios() {
+  for (let i = 0; i < serviciosGlobal.length; i++) {
+    const nuevoTitulo = document.getElementById(`sv_t_${i}`).value.trim();
+    const nuevaDesc = document.getElementById(`sv_d_${i}`).value.trim();
+    if (nuevoTitulo) {
+      await guardarServicio({
+        id: serviciosGlobal[i].id,
+        numero: serviciosGlobal[i].numero,
+        titulo: nuevoTitulo,
+        descripcion: nuevaDesc,
+        orden: serviciosGlobal[i].orden
+      });
+    }
+  }
+  serviciosGlobal = await cargarServicios();
+  showToast('✓ Servicios guardados');
 }
-function saveServicios() {
-  const s = getServs();
-  const upd = s.map((sv, i) => ({...sv, titulo: document.getElementById(`sv_t_${i}`).value.trim(), descripcion: document.getElementById(`sv_d_${i}`).value.trim()}));
-  set('barbara_servicios', upd); showToast('✓ Servicios guardados');
-}
-
-// ===== HERO =====
-function loadHero() {
-  const d = get('barbara_hero',{titulo:'Bárbara Insaurralde',subtitulo:'Servicios Inmobiliarios',btnTxt:'CONTACTAR',img:'https://i.imgur.com/kvBk8Go.png'});
-  document.getElementById('heroTitulo').value = d.titulo;
-  document.getElementById('heroSubtitulo').value = d.subtitulo;
-  document.getElementById('heroBtnTxt').value = d.btnTxt;
-  document.getElementById('heroImg').value = d.img;
-  previewImg('heroImg','heroImgPreview');
-}
-function saveHero() {
-  set('barbara_hero',{titulo:document.getElementById('heroTitulo').value.trim(),subtitulo:document.getElementById('heroSubtitulo').value.trim(),btnTxt:document.getElementById('heroBtnTxt').value.trim(),img:document.getElementById('heroImg').value.trim()});
-  showToast('✓ Hero guardado');
-}
-
-// ===== SOBRE MÍ =====
-function loadSobreMi() {
-  const d = get('barbara_sobremi',{nombre:'Bárbara Insaurralde',cargo:'Martillera Pública y Corredora de Comercio – MP 243',tag:'Sobre Mí',parrafo1:'',parrafo2:'',firma:'Compromiso y excelencia',foto:'https://i.imgur.com/Gr3SWOi.png',logo:'https://i.imgur.com/FqChLBS.png'});
-  document.getElementById('smNombre').value = d.nombre;
-  document.getElementById('smCargo').value = d.cargo;
-  document.getElementById('smTag').value = d.tag;
-  document.getElementById('smParrafo1').value = d.parrafo1;
-  document.getElementById('smParrafo2').value = d.parrafo2;
-  document.getElementById('smFirma').value = d.firma;
-  document.getElementById('smFoto').value = d.foto;
-  document.getElementById('smLogo').value = d.logo;
-  previewImg('smFoto','smFotoPreview'); previewImg('smLogo','smLogoPreview');
-}
-function saveSobreMi() {
-  set('barbara_sobremi',{nombre:document.getElementById('smNombre').value.trim(),cargo:document.getElementById('smCargo').value.trim(),tag:document.getElementById('smTag').value.trim(),parrafo1:document.getElementById('smParrafo1').value.trim(),parrafo2:document.getElementById('smParrafo2').value.trim(),firma:document.getElementById('smFirma').value.trim(),foto:document.getElementById('smFoto').value.trim(),logo:document.getElementById('smLogo').value.trim()});
-  showToast('✓ Sobre Mí guardado');
-}
-
-// ===== CONTACTO =====
-const CT_DEF={wa:'5493765409158',email:'',tag:'¿Querés vender tu propiedad?',titulo:'Vendé tu propiedad con asesoramiento profesional',parrafo1:'',parrafo2:'',btnTxt:'Solicitar tasación',waMsg:'Hola Bárbara, quiero solicitar una tasación de mi propiedad.',checkList:['Tasación profesional','Publicación en portales inmobiliarios','Difusión en redes sociales','Asesoramiento legal y comercial','Acompañamiento hasta la firma']};
-function loadContacto(){
-  const d=get('barbara_contacto',CT_DEF);
-  document.getElementById('ctWA').value=d.wa||'';document.getElementById('ctEmail').value=d.email||'';
-  document.getElementById('ctTag').value=d.tag||'';document.getElementById('ctTitulo').value=d.titulo||'';
-  document.getElementById('ctParrafo1').value=d.parrafo1||'';document.getElementById('ctParrafo2').value=d.parrafo2||'';
-  document.getElementById('ctBtnTxt').value=d.btnTxt||'';document.getElementById('ctWAMsg').value=d.waMsg||'';
-  renderCheckList(d.checkList||[]);
-}
-function renderCheckList(items){document.getElementById('checkListEditor').innerHTML=items.map((item,i)=>`<div class="lista-item"><input type="text" id="chk_${i}" value="${item}" placeholder="Ítem"><button class="btn-remove-item" onclick="removeCheckItem(${i})">×</button></div>`).join('');}
-function getCheckItems(){const a=[];document.querySelectorAll('#checkListEditor .lista-item input').forEach(inp=>{if(inp.value.trim())a.push(inp.value.trim());});return a;}
-function addCheckItem(){renderCheckList([...getCheckItems(),'Nuevo ítem']);}
-function removeCheckItem(idx){const a=getCheckItems();a.splice(idx,1);renderCheckList(a);}
-function saveContactoDatos(){const d=get('barbara_contacto',CT_DEF);d.wa=document.getElementById('ctWA').value.trim();d.email=document.getElementById('ctEmail').value.trim();set('barbara_contacto',d);showToast('✓ Datos guardados');}
-function saveContactoTextos(){const d=get('barbara_contacto',CT_DEF);d.tag=document.getElementById('ctTag').value.trim();d.titulo=document.getElementById('ctTitulo').value.trim();d.parrafo1=document.getElementById('ctParrafo1').value.trim();d.parrafo2=document.getElementById('ctParrafo2').value.trim();d.btnTxt=document.getElementById('ctBtnTxt').value.trim();d.waMsg=document.getElementById('ctWAMsg').value.trim();set('barbara_contacto',d);showToast('✓ Textos guardados');}
-function saveCheckList(){const d=get('barbara_contacto',CT_DEF);d.checkList=getCheckItems();set('barbara_contacto',d);showToast('✓ Lista guardada');}
-
-// ===== MAPA =====
-function loadMap(){
-  const d=get('barbara_mapa',{lat:'-27.3666',lng:'-55.8969',dir:'Posadas, Misiones, Argentina',btnTxt:'↗ Cómo llegar'});
-  document.getElementById('mapLat').value=d.lat;document.getElementById('mapLng').value=d.lng;
-  document.getElementById('mapDir').value=d.dir;document.getElementById('mapBtnTxt').value=d.btnTxt||'↗ Cómo llegar';
-}
-function updateMapPreview(){const lat=document.getElementById('mapLat').value;const lng=document.getElementById('mapLng').value;document.getElementById('mapIframe').src=`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28740.26!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9457bd4a0c4fc35f%3A0x62e9e57e69c40a72!2sPosadas%2C+Misiones!5e0!3m2!1ses!2sar!4v1`;}
-function saveMap(){set('barbara_mapa',{lat:document.getElementById('mapLat').value.trim(),lng:document.getElementById('mapLng').value.trim(),dir:document.getElementById('mapDir').value.trim(),btnTxt:document.getElementById('mapBtnTxt').value.trim()});updateMapPreview();showToast('✓ Mapa guardado');}
-
-// ===== CONFIG =====
-const CFG_DEF={serviciosFondo:'https://i.imgur.com/I6J8uv2.png',propSecTitulo:'Propiedades Destacadas',propSecSub:'Encontrá tu próxima inversión o vivienda ideal',formTitulo:'Solicitar información',formSubtitulo:'Te respondemos en menos de 1 hora',formExito:'¡Mensaje enviado! Te contactamos pronto.'};
-function loadConfig(){
-  const seo=get('barbara_seo',{title:'Bárbara Insaurralde – Servicios Inmobiliarios',desc:'Martillera Pública y Corredora de Comercio en Posadas, Misiones.'});
-  document.getElementById('seoTitle').value=seo.title;document.getElementById('seoDesc').value=seo.desc;
-  const c=get('barbara_config',CFG_DEF);
-  document.getElementById('serviciosFondo').value=c.serviciosFondo||'';document.getElementById('propSecTitulo').value=c.propSecTitulo||'';
-  document.getElementById('propSecSub').value=c.propSecSub||'';document.getElementById('formTitulo').value=c.formTitulo||'';
-  document.getElementById('formSubtitulo').value=c.formSubtitulo||'';document.getElementById('formExito').value=c.formExito||'';
-  previewImg('serviciosFondo','serviciosFondoPreview');
-}
-function saveSEO(){set('barbara_seo',{title:document.getElementById('seoTitle').value.trim(),desc:document.getElementById('seoDesc').value.trim()});showToast('✓ SEO guardado');}
-function saveServiciosFondo(){const c=get('barbara_config',CFG_DEF);c.serviciosFondo=document.getElementById('serviciosFondo').value.trim();set('barbara_config',c);showToast('✓ Imagen guardada');}
-function savePropSec(){const c=get('barbara_config',CFG_DEF);c.propSecTitulo=document.getElementById('propSecTitulo').value.trim();c.propSecSub=document.getElementById('propSecSub').value.trim();set('barbara_config',c);showToast('✓ Guardado');}
-function saveFormConfig(){const c=get('barbara_config',CFG_DEF);c.formTitulo=document.getElementById('formTitulo').value.trim();c.formSubtitulo=document.getElementById('formSubtitulo').value.trim();c.formExito=document.getElementById('formExito').value.trim();set('barbara_config',c);showToast('✓ Guardado');}
 
 // ===== CREDENCIALES =====
-function saveCredenciales(){
-  const actual=document.getElementById('credActual').value;
-  const nueva=document.getElementById('credNueva').value;
-  const rep=document.getElementById('credRepetir').value;
-  if(actual!==CREDS.pass){showToast('Contraseña actual incorrecta','error');return;}
-  if(!nueva||nueva.length<4){showToast('Mínimo 4 caracteres','error');return;}
-  if(nueva!==rep){showToast('Las contraseñas no coinciden','error');return;}
-  CREDS.pass=nueva;set('barbara_creds',CREDS);
-  document.getElementById('credActual').value='';document.getElementById('credNueva').value='';document.getElementById('credRepetir').value='';
+function saveCredenciales() {
+  const actual = document.getElementById('credActual').value;
+  const nueva = document.getElementById('credNueva').value;
+  const rep = document.getElementById('credRepetir').value;
+  
+  if (actual !== CREDS.pass) { showToast('Contraseña actual incorrecta', 'error'); return; }
+  if (!nueva || nueva.length < 4) { showToast('Mínimo 4 caracteres', 'error'); return; }
+  if (nueva !== rep) { showToast('Las contraseñas no coinciden', 'error'); return; }
+  
+  CREDS.pass = nueva;
+  localStorage.setItem('barbara_creds_admin', JSON.stringify(CREDS));
+  document.getElementById('credActual').value = '';
+  document.getElementById('credNueva').value = '';
+  document.getElementById('credRepetir').value = '';
   showToast('✓ Contraseña cambiada');
 }
 
-// ===== IMG PREVIEW =====
+// ===== UTILS =====
 function previewImg(inputId, previewId) {
   const url = document.getElementById(inputId).value.trim();
   const prev = document.getElementById(previewId);
@@ -1061,13 +583,19 @@ function previewImg(inputId, previewId) {
   else { prev.classList.remove('show'); }
 }
 
-// ===== TOAST =====
 function showToast(msg, type = '') {
   const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast' + (type === 'error' ? ' error' : '');
+  t.textContent = msg;
+  t.className = 'toast' + (type === 'error' ? ' error' : '');
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3000);
 }
+
+// Cargar credenciales guardadas
+try {
+  const saved = localStorage.getItem('barbara_creds_admin');
+  if (saved) CREDS = JSON.parse(saved);
+} catch(e) {}
 </script>
 </body>
 </html>
