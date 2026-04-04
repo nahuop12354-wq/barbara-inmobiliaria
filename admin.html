@@ -71,9 +71,34 @@
             transition: background 0.3s;
         }
         .btn-login:hover { background-color: var(--secondary); }
+        .btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
         .btn-login svg { width: 20px; height: 20px; }
 
-        .error-msg { color: var(--danger); margin-top: 1rem; font-size: 0.9rem; display: none; }
+        .error-msg { 
+            color: var(--danger); 
+            margin-top: 1rem; 
+            font-size: 0.88rem; 
+            display: none; 
+            background: #fff0f0;
+            border: 1px solid #ffcccc;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .info-msg {
+            color: #333;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            background: #fffbe6;
+            border: 1px solid #ffe066;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: left;
+            line-height: 1.6;
+        }
+        .info-msg strong { color: var(--primary); }
 
         /* Dashboard Styles */
         #dashboard { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; }
@@ -160,6 +185,9 @@
         textarea.form-control { min-height: 100px; resize: vertical; }
         
         .loading { text-align: center; padding: 2rem; color: #666; }
+
+        .user-info { font-size: 0.9rem; color: #666; }
+        .user-info strong { color: var(--primary); }
     </style>
 </head>
 <body>
@@ -169,37 +197,46 @@
         <div class="login-card">
             <h2>Admin Panel</h2>
             <p style="margin-bottom: 20px; color: #666;">Bárbara Inmobiliaria</p>
+
+            <div class="info-msg">
+                💡 <strong>Recordá:</strong> Ingresá con el email y contraseña del usuario que creaste en <strong>Supabase → Authentication → Users</strong>.<br>
+                Si el email no fue confirmado, activá <em>"Confirm Email: OFF"</em> en <strong>Auth → Settings</strong>.
+            </div>
+            <br>
             
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" id="email" class="form-control" value="admin@local.com" placeholder="tu@email.com">
+                <input type="email" id="email" class="form-control" placeholder="tu@email.com" autocomplete="email">
             </div>
             
             <div class="form-group">
                 <label>Contraseña</label>
-                <input type="password" id="password" class="form-control" placeholder="••••••••">
+                <input type="password" id="password" class="form-control" placeholder="••••••••" autocomplete="current-password">
             </div>
 
-            <button onclick="handleLogin()" class="btn-login">
+            <button onclick="handleLogin()" class="btn-login" id="login-btn">
                 Ingresar al Panel
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </button>
             
-            <p id="login-error" class="error-msg">Credenciales incorrectas. Verifica tu usuario en Supabase.</p>
+            <p id="login-error" class="error-msg"></p>
         </div>
     </div>
 
     <!-- PANEL DE CONTROL -->
     <div id="dashboard">
         <div class="header">
-            <h2>Panel de Administración</h2>
+            <div>
+                <h2>Panel de Administración</h2>
+                <p class="user-info">Sesión: <strong id="user-email-display"></strong></p>
+            </div>
             <button onclick="handleLogout()" class="btn btn-delete">Cerrar Sesión</button>
         </div>
 
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="showTab('properties')">Propiedades</button>
-            <button class="tab-btn" onclick="showTab('config')">Textos & Configuración</button>
-            <button class="tab-btn" onclick="showTab('services')">Servicios</button>
+            <button class="tab-btn active" onclick="showTab('properties', this)">Propiedades</button>
+            <button class="tab-btn" onclick="showTab('config', this)">Textos & Configuración</button>
+            <button class="tab-btn" onclick="showTab('services', this)">Servicios</button>
         </div>
 
         <!-- SECCIÓN PROPIEDADES -->
@@ -310,26 +347,63 @@
 
         let currentUser = null;
 
+        // Permitir login con Enter
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') {
+                handleLogin();
+            }
+        });
+
         // --- AUTENTICACIÓN ---
         async function handleLogin() {
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const errorMsg = document.getElementById('login-error');
+            const loginBtn = document.getElementById('login-btn');
 
             errorMsg.style.display = 'none';
+
+            if (!email || !password) {
+                errorMsg.innerHTML = '⚠️ Completá el email y la contraseña.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Ingresando...';
 
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password
             });
 
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = 'Ingresar al Panel <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>';
+
             if (error) {
-                errorMsg.textContent = "Error: " + error.message;
+                let msg = '⛔ Error: ' + error.message;
+
+                // Mensajes más claros según el tipo de error
+                if (error.message.includes('Invalid login credentials')) {
+                    msg = `⛔ <strong>Credenciales incorrectas.</strong><br>
+                    Verificá que:<br>
+                    • El email exista en <em>Supabase → Authentication → Users</em><br>
+                    • La contraseña sea correcta<br>
+                    • Si el email no está confirmado, desactivá "Email Confirmation" en <em>Auth → Settings</em>`;
+                } else if (error.message.includes('Email not confirmed')) {
+                    msg = `⛔ <strong>Email no confirmado.</strong><br>
+                    Andá a <em>Supabase → Authentication → Settings</em> y desactivá la opción <strong>"Enable email confirmations"</strong>. Luego intentá de nuevo.`;
+                } else if (error.message.includes('signup')) {
+                    msg = `⛔ El usuario no existe. Crealo primero en <em>Supabase → Authentication → Users → Add user</em>.`;
+                }
+
+                errorMsg.innerHTML = msg;
                 errorMsg.style.display = 'block';
                 return;
             }
 
             currentUser = data.user;
+            document.getElementById('user-email-display').textContent = currentUser.email;
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
             loadAllData();
@@ -341,12 +415,11 @@
         }
 
         // --- NAVEGACIÓN ---
-        function showTab(tabId) {
+        function showTab(tabId, btn) {
             document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
             document.getElementById(tabId).classList.add('active');
-            event.target.classList.add('active');
+            if (btn) btn.classList.add('active');
         }
 
         function closeModal(id) {
@@ -372,17 +445,17 @@
                 return;
             }
 
-            if (data.length === 0) {
+            if (!data || data.length === 0) {
                 list.innerHTML = '<p>No hay propiedades cargadas.</p>';
                 return;
             }
 
             list.innerHTML = data.map(p => `
                 <div class="prop-item">
-                    <img src="${p.imagen_principal}" class="prop-img-thumb" alt="img">
+                    <img src="${p.imagen_principal || ''}" class="prop-img-thumb" alt="img" onerror="this.src='https://via.placeholder.com/100x70?text=Sin+img'">
                     <div>
-                        <strong>${p.titulo}</strong><br>
-                        <small>${p.ubicacion} | ${p.precio}</small>
+                        <strong>${p.titulo || 'Sin título'}</strong><br>
+                        <small>${p.ubicacion || ''} | ${p.precio || ''}</small>
                     </div>
                     <div style="display:flex; gap:10px;">
                         <button onclick="editProperty(${p.id})" class="btn btn-edit">Editar</button>
@@ -402,7 +475,6 @@
                 return;
             }
 
-            // Convertir array de objetos a objeto clave-valor
             const configObj = {};
             data.forEach(item => configObj[item.clave] = item.valor);
 
@@ -435,12 +507,17 @@
                 return;
             }
 
+            if (!data || data.length === 0) {
+                list.innerHTML = '<p>No hay servicios cargados.</p>';
+                return;
+            }
+
             list.innerHTML = data.map(s => `
                 <div class="prop-item">
                     <div style="font-weight:bold; color:var(--accent);">${s.numero}</div>
                     <div>
                         <strong>${s.titulo}</strong><br>
-                        <small>${s.descripcion.substring(0, 50)}...</small>
+                        <small>${(s.descripcion || '').substring(0, 50)}...</small>
                     </div>
                     <button onclick="alert('Función de editar servicios pendiente')" class="btn btn-edit">Editar</button>
                 </div>
@@ -457,10 +534,10 @@
 
         async function editProperty(id) {
             const { data, error } = await supabase.from('propiedades').select('*').eq('id', id).single();
-            if (error) return alert('Error al cargar datos');
+            if (error) return alert('Error al cargar datos: ' + error.message);
 
             document.getElementById('prop-id').value = data.id;
-            document.getElementById('prop-titulo').value = data.titulo;
+            document.getElementById('prop-titulo').value = data.titulo || '';
             document.getElementById('prop-badge').value = data.badge || '';
             document.getElementById('prop-ubicacion').value = data.ubicacion || '';
             document.getElementById('prop-precio').value = data.precio || '';
@@ -468,7 +545,6 @@
             document.getElementById('prop-descripcion').value = data.descripcion || '';
             document.getElementById('prop-img').value = data.imagen_principal || '';
             
-            // Convertir arrays JSON a strings para el input
             document.getElementById('prop-tags').value = Array.isArray(data.tags) ? data.tags.join(', ') : '';
             document.getElementById('prop-caract').value = Array.isArray(data.caracteristicas) ? data.caracteristicas.join(', ') : '';
             document.getElementById('prop-galeria').value = Array.isArray(data.galeria) ? data.galeria.join(', ') : '';
@@ -481,7 +557,6 @@
             e.preventDefault();
             const id = document.getElementById('prop-id').value;
             
-            // Preparar datos
             const tagsArr = document.getElementById('prop-tags').value.split(',').map(s => s.trim()).filter(s => s);
             const caractArr = document.getElementById('prop-caract').value.split(',').map(s => s.trim()).filter(s => s);
             const galeriaArr = document.getElementById('prop-galeria').value.split(',').map(s => s.trim()).filter(s => s);
@@ -502,10 +577,8 @@
 
             let result;
             if (id) {
-                // Update
                 result = await supabase.from('propiedades').update(propData).eq('id', id);
             } else {
-                // Insert (Generar ID único basado en timestamp)
                 propData.id = Date.now(); 
                 result = await supabase.from('propiedades').insert([propData]);
             }
@@ -533,7 +606,6 @@
             const form = e.target;
             const updates = [];
 
-            // Iterar sobre los inputs del formulario
             for (let i = 0; i < form.elements.length; i++) {
                 const input = form.elements[i];
                 if (input.name && input.tagName !== 'BUTTON') {
@@ -545,7 +617,6 @@
                 }
             }
 
-            // Actualizar uno por uno (Upsert)
             for (const item of updates) {
                 await supabase.from('configuracion').upsert(item);
             }
@@ -559,6 +630,7 @@
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
                 currentUser = session.user;
+                document.getElementById('user-email-display').textContent = currentUser.email;
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
                 loadAllData();
