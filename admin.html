@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Panel Admin – Bárbara Insaurralde</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -19,118 +18,62 @@
   --trans: all 0.28s cubic-bezier(0.4,0,0.2,1);
 }
 body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a; min-height: 100vh; }
-
-/* Login */
-.login-screen {
-  position: fixed; inset: 0;
-  background: linear-gradient(135deg, var(--v0) 0%, var(--v2) 100%);
-  display: flex; align-items: center; justify-content: center; z-index: 9999;
-  padding: 20px;
-}
-.login-box {
-  background: white; border-radius: 28px; padding: 48px 44px;
-  width: 100%; max-width: 420px; text-align: center;
-  box-shadow: 0 20px 60px rgba(30,58,30,0.18);
-}
+.login-screen { position: fixed; inset: 0; background: linear-gradient(135deg, var(--v0) 0%, var(--v2) 100%); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
+.login-box { background: white; border-radius: 28px; padding: 48px 44px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 20px 60px rgba(30,58,30,0.18); }
 .login-logo { width: 72px; height: 72px; border-radius: 50%; background: var(--v7); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 20px; border: 3px solid var(--v5); }
 .login-box h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--v1); margin-bottom: 4px; }
 .login-box > p { color: #999; margin-bottom: 32px; font-size: 0.9rem; }
 .login-field { position: relative; margin-bottom: 14px; }
-.login-field input {
-  width: 100%; padding: 15px 18px; border: 2px solid var(--v5);
-  border-radius: 14px; font-size: 1rem; font-family: 'DM Sans', sans-serif;
-  background: var(--v7); transition: var(--trans);
-}
+.login-field input { width: 100%; padding: 15px 18px; border: 2px solid var(--v5); border-radius: 14px; font-size: 1rem; font-family: 'DM Sans', sans-serif; background: var(--v7); transition: var(--trans); }
 .login-field input:focus { outline: none; border-color: var(--v2); background: white; box-shadow: 0 0 0 4px rgba(45,71,45,0.08); }
-.login-btn {
-  width: 100%; padding: 15px; background: linear-gradient(135deg, var(--v1), var(--v2));
-  color: white; border: none; border-radius: 14px; font-weight: 700; font-size: 1rem;
-  cursor: pointer; transition: var(--trans); margin-top: 6px;
-}
+.login-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--v1), var(--v2)); color: white; border: none; border-radius: 14px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: var(--trans); margin-top: 6px; }
 .login-btn:hover { transform: translateY(-2px); }
 .login-error { color: var(--red); font-size: 0.85rem; margin-top: 12px; display: none; }
-
-/* Panel */
 .admin-panel { display: none; min-height: 100vh; }
 .admin-panel.visible { display: flex; }
-
-/* Sidebar */
-.sidebar {
-  width: 260px; background: linear-gradient(180deg, var(--v0) 0%, var(--v1) 100%);
-  min-height: 100vh; padding: 24px 14px 20px;
-  display: flex; flex-direction: column; gap: 2px;
-  position: sticky; top: 0; height: 100vh; overflow-y: auto;
-  box-shadow: 4px 0 24px rgba(0,0,0,0.25);
-}
-.sidebar-brand {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 10px 8px; margin-bottom: 4px;
-}
+.sidebar { width: 260px; background: linear-gradient(180deg, var(--v0) 0%, var(--v1) 100%); min-height: 100vh; padding: 24px 14px 20px; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 0; height: 100vh; overflow-y: auto; box-shadow: 4px 0 24px rgba(0,0,0,0.25); }
+.sidebar-brand { display: flex; align-items: center; gap: 12px; padding: 10px 10px 8px; margin-bottom: 4px; }
 .sidebar-brand-icon { width: 42px; height: 42px; border-radius: 12px; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
 .sidebar-brand-text strong { display: block; color: white; font-size: 0.92rem; font-weight: 700; }
 .sidebar-brand-text span { color: rgba(255,255,255,0.45); font-size: 0.72rem; }
 .sidebar-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 8px 0; }
 .sidebar-label { font-size: 0.65rem; font-weight: 800; color: rgba(255,255,255,0.3); text-transform: uppercase; padding: 0 10px; margin: 6px 0 2px; }
-.sidebar a, .sidebar-link {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px; color: rgba(255,255,255,0.65);
-  text-decoration: none; border-radius: 12px; font-size: 0.88rem; font-weight: 500;
-  transition: var(--trans); cursor: pointer; background: none; border: none;
-  width: 100%; text-align: left; font-family: 'DM Sans', sans-serif;
-}
+.sidebar a, .sidebar-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: rgba(255,255,255,0.65); text-decoration: none; border-radius: 12px; font-size: 0.88rem; font-weight: 500; transition: var(--trans); cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; }
 .sidebar a:hover, .sidebar-link:hover { background: rgba(255,255,255,0.1); color: white; }
 .sidebar a.active, .sidebar-link.active { background: rgba(255,255,255,0.15); color: white; font-weight: 600; }
 .sidebar-icon { font-size: 1rem; width: 20px; text-align: center; }
-.sidebar-logout {
-  margin-top: auto; padding: 11px 14px; background: var(--red-l);
-  color: rgba(255,150,150,0.9); border: 1px solid rgba(231,76,60,0.2);
-  border-radius: 12px; font-size: 0.88rem; font-weight: 600;
-  cursor: pointer; display: flex; align-items: center; gap: 8px;
-}
+.sidebar-logout { margin-top: auto; padding: 11px 14px; background: var(--red-l); color: rgba(255,150,150,0.9); border: 1px solid rgba(231,76,60,0.2); border-radius: 12px; font-size: 0.88rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
 .sidebar-logout:hover { background: rgba(231,76,60,0.3); color: white; }
-
-/* Mobile */
-.mobile-topbar { display: none; position: sticky; top: 0; background: linear-gradient(135deg, var(--v0), var(--v1)); padding: 12px 16px; align-items: center; justify-content: space-between; }
+.mobile-topbar { display: none; position: sticky; top: 0; background: linear-gradient(135deg, var(--v0), var(--v1)); padding: 12px 16px; align-items: center; justify-content: space-between; z-index: 100; }
 .mobile-brand { color: white; font-weight: 700; }
 .mobile-menu-btn { width: 44px; height: 44px; border-radius: 10px; background: rgba(255,255,255,0.12); border: none; color: white; font-size: 1.3rem; cursor: pointer; }
 .mobile-sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 998; }
 .mobile-sidebar-overlay.open { display: block; }
-
-/* Main */
 .main-content { flex: 1; padding: 28px 32px; overflow-x: hidden; max-width: calc(100vw - 260px); }
 .page-header { margin-bottom: 28px; }
 .page-header h2 { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: var(--v1); font-weight: 800; }
 .page-header p { color: #999; margin-top: 5px; font-size: 0.9rem; }
-
-/* Stats */
 .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
 .stat-card { background: white; border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); border: 1px solid rgba(194,212,181,0.3); }
 .stat-n { font-size: 2.2rem; font-weight: 800; color: var(--v1); line-height: 1; }
 .stat-l { font-size: 0.78rem; color: #aaa; margin-top: 5px; }
-
-/* Cards */
 .admin-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid rgba(194,212,181,0.25); overflow: hidden; margin-bottom: 22px; }
 .admin-card-header { padding: 18px 24px; border-bottom: 1px solid var(--v6); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, var(--v8), white); }
 .admin-card-header h3 { font-size: 0.98rem; color: var(--v1); font-weight: 700; }
 .admin-card-body { padding: 24px; }
-
-/* Forms */
+/* Aviso cómo guardar */
+.aviso-json { background: linear-gradient(135deg, #fff8e1, #fff3cd); border: 1px solid #f0c040; border-radius: 14px; padding: 18px 22px; margin-bottom: 22px; }
+.aviso-json h4 { color: #856404; font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; }
+.aviso-json p { color: #856404; font-size: 0.83rem; line-height: 1.6; margin-bottom: 4px; }
+.aviso-json code { background: rgba(133,100,4,0.15); padding: 2px 7px; border-radius: 5px; font-size: 0.8rem; font-family: monospace; }
 .field-group { margin-bottom: 18px; }
 .field-group label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--v2); text-transform: uppercase; margin-bottom: 7px; }
-.field-group input, .field-group textarea, .field-group select {
-  width: 100%; padding: 12px 16px; border: 2px solid var(--v5);
-  border-radius: var(--radius-sm); font-size: 0.95rem; font-family: 'DM Sans', sans-serif;
-  background: var(--v7); transition: var(--trans);
-}
+.field-group input, .field-group textarea, .field-group select { width: 100%; padding: 12px 16px; border: 2px solid var(--v5); border-radius: var(--radius-sm); font-size: 0.95rem; font-family: 'DM Sans', sans-serif; background: var(--v7); transition: var(--trans); }
 .field-group input:focus, .field-group textarea:focus { outline: none; border-color: var(--v2); background: white; }
 .field-group textarea { resize: vertical; min-height: 82px; }
 .field-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-/* Images */
 .img-preview { width: 100%; max-height: 160px; object-fit: cover; border-radius: 10px; margin-top: 10px; display: none; border: 2px solid var(--v5); }
 .img-preview.show { display: block; }
-
-/* Buttons */
 .btn-primary { padding: 11px 24px; background: linear-gradient(135deg, var(--v1), var(--v2)); color: white; border: none; border-radius: 50px; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: var(--trans); display: inline-flex; align-items: center; gap: 7px; }
 .btn-primary:hover { transform: translateY(-2px); }
 .btn-secondary { padding: 11px 20px; background: var(--v7); color: var(--v2); border: 2px solid var(--v5); border-radius: 50px; font-weight: 600; font-size: 0.88rem; cursor: pointer; transition: var(--trans); }
@@ -138,8 +81,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
 .btn-danger { padding: 8px 14px; background: var(--red-l); color: var(--red); border: none; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
 .btn-danger:hover { background: var(--red); color: white; }
 .btn-edit-small { padding: 8px 14px; background: var(--v6); color: var(--v2); border: none; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
-
-/* Prop list */
+/* Exportar JSON */
+.export-area { background: var(--v7); border: 2px solid var(--v5); border-radius: 14px; padding: 18px; margin-top: 20px; }
+.export-area h4 { font-size: 0.82rem; font-weight: 700; color: var(--v2); margin-bottom: 10px; }
+.export-area textarea { width: 100%; height: 180px; font-family: monospace; font-size: 0.76rem; background: white; border: 1px solid var(--v5); border-radius: 8px; padding: 10px; resize: vertical; }
+.export-btns { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
 .prop-list { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
 .prop-item { display: grid; grid-template-columns: 80px 1fr auto; gap: 14px; align-items: center; padding: 14px; border-radius: 14px; border: 1px solid rgba(194,212,181,0.3); background: var(--v8); }
 .prop-item-img { width: 80px; height: 62px; border-radius: 10px; object-fit: cover; }
@@ -147,8 +93,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
 .prop-item-info p { font-size: 0.76rem; color: #aaa; }
 .prop-item-badge { display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; background: rgba(45,71,45,0.1); color: var(--v2); }
 .prop-item-actions { display: flex; gap: 6px; }
-
-/* Modal */
 .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); z-index: 9998; display: none; align-items: center; justify-content: center; padding: 20px; }
 .modal-bg.open { display: flex; }
 .modal { background: white; border-radius: 28px; padding: 36px; width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; }
@@ -156,17 +100,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
 .modal-actions { display: flex; gap: 12px; margin-top: 28px; }
 .modal-actions .btn-primary { flex: 1; justify-content: center; padding: 15px; font-size: 1rem; border-radius: 14px; }
 .modal-actions .btn-secondary { padding: 15px 24px; border-radius: 14px; }
-
-/* Toast */
 .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(100px); background: linear-gradient(135deg, var(--v1), var(--v2)); color: white; padding: 14px 32px; border-radius: 50px; font-size: 0.93rem; font-weight: 600; z-index: 99999; transition: transform 0.4s; pointer-events: none; }
 .toast.show { transform: translateX(-50%) translateY(0); }
 .toast.error { background: linear-gradient(135deg, #c0392b, var(--red)); }
-
-/* Servicios editor */
 .servicio-editor { border: 2px solid var(--v5); border-radius: 16px; padding: 20px; margin-bottom: 14px; background: var(--v8); }
 .servicio-num { font-size: 0.7rem; font-weight: 800; color: var(--v4); margin-bottom: 14px; }
-
-/* Responsive */
 @media (max-width: 900px) {
   .mobile-topbar { display: flex; }
   .sidebar { position: fixed; left: -280px; top: 0; z-index: 999; transition: left 0.35s; height: 100vh; width: 260px; }
@@ -193,8 +131,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
     <div class="login-logo">🏠</div>
     <h1>Panel Admin</h1>
     <p>Bárbara Insaurralde Inmobiliaria</p>
-    <div class="login-field"><input type="text" id="loginUser" placeholder="Usuario"></div>
-    <div class="login-field"><input type="password" id="loginPass" placeholder="Contraseña"></div>
+    <div class="login-field"><input type="text" id="loginUser" placeholder="Usuario" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="login-field"><input type="password" id="loginPass" placeholder="Contraseña" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button class="login-btn" onclick="doLogin()">Ingresar al panel →</button>
     <p class="login-error" id="loginError">⚠ Usuario o contraseña incorrectos</p>
   </div>
@@ -215,12 +153,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
     </div>
     <div class="sidebar-divider"></div>
     <div class="sidebar-label">Contenido</div>
-    <a href="#" onclick="showSec('dashboard',this)"><span class="sidebar-icon">📊</span>Dashboard</a>
-    <a href="#" onclick="showSec('propiedades',this)"><span class="sidebar-icon">🏠</span>Propiedades</a>
-    <a href="#" onclick="showSec('servicios',this)"><span class="sidebar-icon">📋</span>Servicios</a>
+    <a href="#" onclick="showSec('dashboard',this);return false;" class="active"><span class="sidebar-icon">📊</span>Dashboard</a>
+    <a href="#" onclick="showSec('propiedades',this);return false;"><span class="sidebar-icon">🏠</span>Propiedades</a>
+    <a href="#" onclick="showSec('servicios',this);return false;"><span class="sidebar-icon">📋</span>Servicios</a>
     <div class="sidebar-divider"></div>
     <div class="sidebar-label">Configuración</div>
-    <a href="#" onclick="showSec('credenciales',this)"><span class="sidebar-icon">🔒</span>Contraseña</a>
+    <a href="#" onclick="showSec('credenciales',this);return false;"><span class="sidebar-icon">🔒</span>Contraseña</a>
     <div class="sidebar-divider"></div>
     <button class="sidebar-logout" onclick="doLogout()">🚪 Cerrar sesión</button>
   </aside>
@@ -231,7 +169,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
       <div class="page-header"><h2>📊 Dashboard</h2><p>Resumen general</p></div>
       <div class="stats-row" id="statsRow"></div>
       <div class="admin-card">
-        <div class="admin-card-header"><h3>🏠 Propiedades</h3><button class="btn-primary" onclick="showSec('propiedades',document.querySelectorAll('.sidebar a')[1])">Ver todas</button></div>
+        <div class="admin-card-header"><h3>🏠 Propiedades recientes</h3><button class="btn-primary" onclick="showSec('propiedades',document.querySelectorAll('.sidebar a')[1])">Ver todas</button></div>
         <div class="prop-list" id="dashPropList"></div>
       </div>
     </section>
@@ -239,22 +177,51 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
     <!-- Propiedades -->
     <section id="sec-propiedades" style="display:none">
       <div class="page-header"><h2>🏠 Propiedades</h2><p>Gestioná todas las propiedades</p></div>
+
+      <div class="aviso-json">
+        <h4>⚠️ ¿Cómo guardar los cambios en el sitio?</h4>
+        <p>1. Editá o agregá propiedades usando los botones de abajo.</p>
+        <p>2. Cuando termines, hacé clic en <strong>"📋 Exportar datos.json"</strong> al pie de esta sección.</p>
+        <p>3. Copiá el JSON generado, pegalo en tu archivo <code>datos.json</code> y subilo a GitHub.</p>
+        <p>Vercel lo actualizará automáticamente en segundos. ✅</p>
+      </div>
+
       <div class="admin-card">
-        <div class="admin-card-header"><h3>Lista de propiedades</h3><button class="btn-primary" onclick="openPropModal()">+ Agregar</button></div>
+        <div class="admin-card-header"><h3>Lista de propiedades</h3><button class="btn-primary" onclick="openPropModal()">+ Agregar propiedad</button></div>
         <div class="prop-list" id="propList"></div>
+      </div>
+
+      <div class="export-area">
+        <h4>📋 Exportar datos.json actualizado</h4>
+        <textarea id="exportJson" readonly placeholder="Aparecerá el JSON aquí..."></textarea>
+        <div class="export-btns">
+          <button class="btn-primary" onclick="generarExport()">🔄 Generar JSON</button>
+          <button class="btn-secondary" onclick="copiarExport()">📋 Copiar al portapapeles</button>
+        </div>
       </div>
     </section>
 
     <!-- Servicios -->
     <section id="sec-servicios" style="display:none">
       <div class="page-header"><h2>📋 Servicios</h2><p>Editá los 3 servicios</p></div>
+      <div class="aviso-json">
+        <h4>⚠️ ¿Cómo guardar los cambios?</h4>
+        <p>Editá los servicios abajo → hacé clic en <strong>"💾 Guardar servicios"</strong> → el JSON se actualiza abajo → copialo y pegalo en <code>datos.json</code> → subilo a GitHub.</p>
+      </div>
       <div id="serviciosEditor"></div>
       <button class="btn-primary" onclick="saveServicios()">💾 Guardar servicios</button>
+      <div class="export-area" style="margin-top:20px">
+        <h4>📋 datos.json actualizado (con servicios guardados)</h4>
+        <textarea id="exportJsonServ" readonly placeholder="Aparecerá aquí después de guardar..."></textarea>
+        <div class="export-btns">
+          <button class="btn-secondary" onclick="copiarExportServ()">📋 Copiar al portapapeles</button>
+        </div>
+      </div>
     </section>
 
     <!-- Credenciales -->
     <section id="sec-credenciales" style="display:none">
-      <div class="page-header"><h2>🔒 Contraseña</h2><p>Actualizá tus credenciales</p></div>
+      <div class="page-header"><h2>🔒 Contraseña</h2><p>Actualizá tus credenciales de acceso</p></div>
       <div class="admin-card">
         <div class="admin-card-header"><h3>Cambiar contraseña</h3></div>
         <div class="admin-card-body">
@@ -278,17 +245,17 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
       <div class="field-group"><label>Estado</label><select id="fBadge"><option value="En Venta">En Venta</option><option value="En Alquiler">En Alquiler</option></select></div>
       <div class="field-group"><label>Precio</label><input type="text" id="fPrecio"></div>
     </div>
-    <div class="field-group"><label>Nota de precio</label><input type="text" id="fPrecioNota"></div>
+    <div class="field-group"><label>Nota de precio</label><input type="text" id="fPrecioNota" placeholder="Ej: Cochera incluida, Negociable..."></div>
     <div class="field-group"><label>Ubicación</label><input type="text" id="fUbi"></div>
     <div class="field-group"><label>Descripción</label><textarea id="fDesc" rows="4"></textarea></div>
-    <div class="field-group"><label>Tags (separar con comas)</label><input type="text" id="fTags"></div>
-    <div class="field-group"><label>Características (una por línea)</label><textarea id="fCaract" rows="4"></textarea></div>
-    <div class="field-group"><label>URL imagen principal</label><input type="text" id="fImgPrincipal" oninput="previewImg('fImgPrincipal','fImgPreview')"></div>
+    <div class="field-group"><label>Tags (separar con comas)</label><input type="text" id="fTags" placeholder="2 dormitorios, 1 baño, 80 m²"></div>
+    <div class="field-group"><label>Características (una por línea)</label><textarea id="fCaract" rows="4" placeholder="Cocina equipada&#10;Piscina&#10;Garaje"></textarea></div>
+    <div class="field-group"><label>URL imagen principal</label><input type="text" id="fImgPrincipal" oninput="previewImg('fImgPrincipal','fImgPreview')" placeholder="https://i.ibb.co/..."></div>
     <img id="fImgPreview" class="img-preview">
-    <div class="field-group"><label>URLs galería (una por línea)</label><textarea id="fGaleria" rows="4"></textarea></div>
+    <div class="field-group"><label>URLs galería (una por línea)</label><textarea id="fGaleria" rows="4" placeholder="https://i.ibb.co/foto2.jpg&#10;https://i.ibb.co/foto3.jpg"></textarea></div>
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
-      <button class="btn-primary" onclick="saveProp()">💾 Guardar</button>
+      <button class="btn-primary" onclick="saveProp()">💾 Guardar propiedad</button>
     </div>
   </div>
 </div>
@@ -296,78 +263,78 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
 <div class="toast" id="toast"></div>
 
 <script>
-// ============================================
-// CONFIGURACIÓN DE SUPABASE - SOLO CAMBIA ESTO
-// ============================================
-const SUPABASE_URL = 'https://TU_PROYECTO.supabase.co'
-const SUPABASE_KEY = 'TU_ANON_KEY'
-// ============================================
-
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// Credenciales por defecto
+// ===== CREDENCIALES =====
 let CREDS = { user: 'admin', pass: 'barbara243' };
+try { const saved = localStorage.getItem('barbara_creds_admin'); if (saved) CREDS = JSON.parse(saved); } catch(e) {}
 
-// ===== FUNCIONES SUPABASE =====
-async function cargarPropiedades() {
+// ===== DATOS EN MEMORIA (cargados desde datos.json) =====
+let propiedadesGlobal = [];
+let serviciosGlobal = [
+  { id: 1, numero: '01', titulo: 'Venta de propiedades', descripcion: 'Asesoramiento integral para la comercialización de inmuebles, incluyendo tasación, estrategia de difusión y acompañamiento hasta la concreción de la operación.' },
+  { id: 2, numero: '02', titulo: 'Tasaciones inmobiliarias', descripcion: 'Valoración profesional de propiedades basada en análisis de mercado, ubicación y características del inmueble para determinar su valor real.' },
+  { id: 3, numero: '03', titulo: 'Alquileres y administración', descripcion: 'Gestión integral de alquileres, redacción de contratos, selección de inquilinos y seguimiento administrativo durante toda la relación locativa.' }
+];
+
+// ===== CARGA datos.json =====
+async function cargarDatos() {
   try {
-    const { data, error } = await supabase.from('propiedades').select('*').order('id');
-    if (error) throw error;
-    if (data && data.length > 0) return data;
-  } catch(e) { console.log('Error:', e); }
-  return [];
+    const res = await fetch('./datos.json?v=' + Date.now());
+    if (!res.ok) throw new Error('Sin datos.json');
+    const datos = await res.json();
+    if (datos.propiedades) propiedadesGlobal = datos.propiedades;
+    if (datos.servicios) serviciosGlobal = datos.servicios;
+  } catch(e) {
+    // Fallback localStorage
+    try { const s = localStorage.getItem('barbara_propiedades'); if (s) propiedadesGlobal = JSON.parse(s); } catch(e2) {}
+    console.warn('Usando localStorage como fallback');
+  }
 }
 
-async function guardarPropiedad(prop) {
-  const { error } = await supabase.from('propiedades').upsert({
-    id: prop.id,
-    badge: prop.badge,
-    titulo: prop.titulo,
-    ubicacion: prop.ubicacion,
-    precio: prop.precio,
-    precio_nota: prop.precioNota || '',
-    descripcion: prop.descripcion,
-    tags: prop.tags || [],
-    caracteristicas: prop.caracteristicas || [],
-    imagen_principal: prop.imagenPrincipal,
-    galeria: prop.galeria || []
+// ===== GUARDAR EN LOCALSTORAGE (respaldo local) =====
+function guardarLocal() {
+  localStorage.setItem('barbara_propiedades', JSON.stringify(propiedadesGlobal));
+}
+
+// ===== GENERAR JSON PARA COPIAR =====
+function generarJsonCompleto() {
+  return JSON.stringify({ propiedades: propiedadesGlobal, servicios: serviciosGlobal }, null, 2);
+}
+
+function generarExport() {
+  document.getElementById('exportJson').value = generarJsonCompleto();
+  showToast('✓ JSON generado. Copialo y pegalo en datos.json');
+}
+
+function copiarExport() {
+  const txt = document.getElementById('exportJson').value;
+  if (!txt) { showToast('Primero generá el JSON', 'error'); return; }
+  navigator.clipboard.writeText(txt).then(() => showToast('✓ Copiado al portapapeles')).catch(() => {
+    document.getElementById('exportJson').select();
+    document.execCommand('copy');
+    showToast('✓ Copiado');
   });
-  if (error) throw error;
 }
 
-async function eliminarPropiedad(id) {
-  const { error } = await supabase.from('propiedades').delete().eq('id', id);
-  if (error) throw error;
-}
-
-async function cargarServicios() {
-  try {
-    const { data, error } = await supabase.from('servicios').select('*').order('orden');
-    if (error) throw error;
-    if (data && data.length > 0) return data;
-  } catch(e) {}
-  return [
-    { id: 1, numero: '01', titulo: 'Venta de propiedades', descripcion: 'Asesoramiento integral para la comercialización de inmuebles...', orden: 1 },
-    { id: 2, numero: '02', titulo: 'Tasaciones inmobiliarias', descripcion: 'Valoración profesional de propiedades...', orden: 2 },
-    { id: 3, numero: '03', titulo: 'Alquileres y administración', descripcion: 'Gestión integral de alquileres...', orden: 3 }
-  ];
-}
-
-async function guardarServicio(servicio) {
-  const { error } = await supabase.from('servicios').upsert(servicio);
-  if (error) throw error;
+function copiarExportServ() {
+  const txt = document.getElementById('exportJsonServ').value;
+  if (!txt) { showToast('Primero guardá los servicios', 'error'); return; }
+  navigator.clipboard.writeText(txt).then(() => showToast('✓ Copiado al portapapeles')).catch(() => {
+    document.getElementById('exportJsonServ').select();
+    document.execCommand('copy');
+    showToast('✓ Copiado');
+  });
 }
 
 // ===== AUTH =====
 async function doLogin() {
   const u = document.getElementById('loginUser').value.trim();
   const p = document.getElementById('loginPass').value;
-  
   if (u === CREDS.user && p === CREDS.pass) {
     sessionStorage.setItem('admin_auth', '1');
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('adminPanel').classList.add('visible');
-    await renderAll();
+    await cargarDatos();
+    renderAll();
   } else {
     document.getElementById('loginError').style.display = 'block';
     document.getElementById('loginPass').value = '';
@@ -379,10 +346,11 @@ function doLogout() {
   location.reload();
 }
 
+// Auto-login si ya estaba logueado
 if (sessionStorage.getItem('admin_auth') === '1') {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('adminPanel').classList.add('visible');
-  renderAll();
+  cargarDatos().then(() => renderAll());
 }
 
 // ===== MOBILE =====
@@ -407,12 +375,7 @@ function showSec(name, el) {
 }
 
 // ===== RENDER =====
-let propiedadesGlobal = [];
-let serviciosGlobal = [];
-
-async function renderAll() {
-  propiedadesGlobal = await cargarPropiedades();
-  serviciosGlobal = await cargarServicios();
+function renderAll() {
   renderStats();
   renderDashProps();
   renderPropList();
@@ -421,28 +384,32 @@ async function renderAll() {
 
 function renderStats() {
   const stats = [
-    { n: propiedadesGlobal.length, l: 'Total propiedades', icon: '🏠' },
-    { n: propiedadesGlobal.filter(p => p.badge === 'En Venta').length, l: 'En Venta', icon: '💰' },
-    { n: propiedadesGlobal.filter(p => p.badge === 'En Alquiler').length, l: 'En Alquiler', icon: '🔑' },
-    { n: serviciosGlobal.length, l: 'Servicios activos', icon: '📋' }
+    { n: propiedadesGlobal.length, l: 'Total propiedades' },
+    { n: propiedadesGlobal.filter(p => p.badge === 'En Venta').length, l: 'En Venta' },
+    { n: propiedadesGlobal.filter(p => p.badge === 'En Alquiler').length, l: 'En Alquiler' },
+    { n: serviciosGlobal.length, l: 'Servicios activos' }
   ];
-  document.getElementById('statsRow').innerHTML = stats.map(s => `
-    <div class="stat-card"><div class="stat-n">${s.n}</div><div class="stat-l">${s.l}</div></div>
-  `).join('');
+  document.getElementById('statsRow').innerHTML = stats.map(s =>
+    `<div class="stat-card"><div class="stat-n">${s.n}</div><div class="stat-l">${s.l}</div></div>`
+  ).join('');
 }
 
 function renderDashProps() {
-  document.getElementById('dashPropList').innerHTML = propiedadesGlobal.slice(0, 3).map(propHTML).join('') || '<div style="padding:20px;text-align:center">No hay propiedades</div>';
+  document.getElementById('dashPropList').innerHTML =
+    propiedadesGlobal.slice(0, 3).map(propHTML).join('') ||
+    '<div style="padding:20px;text-align:center;color:#aaa">No hay propiedades cargadas</div>';
 }
 
 function renderPropList() {
-  document.getElementById('propList').innerHTML = propiedadesGlobal.map(propHTML).join('') || '<div style="padding:20px;text-align:center">No hay propiedades. ¡Agregá la primera!</div>';
+  document.getElementById('propList').innerHTML =
+    propiedadesGlobal.map(propHTML).join('') ||
+    '<div style="padding:20px;text-align:center;color:#aaa">No hay propiedades. ¡Agregá la primera!</div>';
 }
 
 function propHTML(p) {
   return `
     <div class="prop-item">
-      <img src="${p.imagen_principal}" class="prop-item-img" onerror="this.src='https://placehold.co/80x62?text=IMG'">
+      <img src="${p.imagenPrincipal || 'https://placehold.co/80x62?text=IMG'}" class="prop-item-img" onerror="this.src='https://placehold.co/80x62?text=IMG'">
       <div class="prop-item-info">
         <h4>${p.titulo}</h4>
         <p>${p.ubicacion}</p>
@@ -452,18 +419,16 @@ function propHTML(p) {
         <button class="btn-edit-small" onclick="openPropModal(${p.id})">✏️ Editar</button>
         <button class="btn-danger" onclick="deleteProp(${p.id})">🗑</button>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
 function renderServiciosEditor() {
   document.getElementById('serviciosEditor').innerHTML = serviciosGlobal.map((sv, i) => `
     <div class="servicio-editor">
       <div class="servicio-num">SERVICIO ${sv.numero}</div>
-      <div class="field-group"><label>Título</label><input type="text" id="sv_t_${i}" value="${sv.titulo.replace(/"/g, '&quot;')}"></div>
-      <div class="field-group"><label>Descripción</label><textarea id="sv_d_${i}" rows="3">${sv.descripcion.replace(/"/g, '&quot;')}</textarea></div>
-    </div>
-  `).join('');
+      <div class="field-group"><label>Título</label><input type="text" id="sv_t_${i}" value="${sv.titulo.replace(/"/g,'&quot;')}"></div>
+      <div class="field-group"><label>Descripción</label><textarea id="sv_d_${i}" rows="3">${sv.descripcion}</textarea></div>
+    </div>`).join('');
 }
 
 // ===== PROPIEDADES CRUD =====
@@ -477,33 +442,30 @@ function openPropModal(id) {
       document.getElementById('fTitulo').value = p.titulo;
       document.getElementById('fBadge').value = p.badge;
       document.getElementById('fPrecio').value = p.precio;
-      document.getElementById('fPrecioNota').value = p.precio_nota || '';
+      document.getElementById('fPrecioNota').value = p.precioNota || '';
       document.getElementById('fUbi').value = p.ubicacion;
       document.getElementById('fDesc').value = p.descripcion || '';
       document.getElementById('fTags').value = (p.tags || []).join(', ');
       document.getElementById('fCaract').value = (p.caracteristicas || []).join('\n');
-      document.getElementById('fImgPrincipal').value = p.imagen_principal;
+      document.getElementById('fImgPrincipal').value = p.imagenPrincipal || '';
       document.getElementById('fGaleria').value = (p.galeria || []).join('\n');
       previewImg('fImgPrincipal', 'fImgPreview');
     }
   } else {
     document.getElementById('modalTitle').textContent = 'Nueva propiedad';
     document.getElementById('propId').value = '';
-    ['fTitulo', 'fPrecio', 'fPrecioNota', 'fUbi', 'fDesc', 'fTags', 'fCaract', 'fImgPrincipal', 'fGaleria'].forEach(id => document.getElementById(id).value = '');
+    ['fTitulo','fPrecio','fPrecioNota','fUbi','fDesc','fTags','fCaract','fImgPrincipal','fGaleria'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('fBadge').value = 'En Venta';
     document.getElementById('fImgPreview').classList.remove('show');
   }
 }
 
-function closeModal() {
-  document.getElementById('modalBg').classList.remove('open');
-}
+function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
 document.getElementById('modalBg').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
 
-async function saveProp() {
+function saveProp() {
   const titulo = document.getElementById('fTitulo').value.trim();
   if (!titulo) { showToast('El título es obligatorio', 'error'); return; }
-  
   const editId = document.getElementById('propId').value;
   const prop = {
     id: editId ? parseInt(editId) : Date.now(),
@@ -518,43 +480,37 @@ async function saveProp() {
     imagenPrincipal: document.getElementById('fImgPrincipal').value.trim(),
     galeria: document.getElementById('fGaleria').value.split('\n').map(s => s.trim()).filter(Boolean)
   };
-  
-  await guardarPropiedad(prop);
-  propiedadesGlobal = await cargarPropiedades();
-  renderStats();
-  renderDashProps();
-  renderPropList();
+
+  if (editId) {
+    const idx = propiedadesGlobal.findIndex(x => x.id === parseInt(editId));
+    if (idx >= 0) propiedadesGlobal[idx] = prop;
+  } else {
+    propiedadesGlobal.push(prop);
+  }
+
+  guardarLocal();
+  renderStats(); renderDashProps(); renderPropList();
   closeModal();
-  showToast(editId ? '✓ Propiedad actualizada' : '✓ Propiedad agregada');
+  showToast(editId ? '✓ Propiedad actualizada — ¡Exportá el JSON!' : '✓ Propiedad agregada — ¡Exportá el JSON!');
 }
 
-async function deleteProp(id) {
+function deleteProp(id) {
   if (!confirm('¿Eliminar esta propiedad?')) return;
-  await eliminarPropiedad(id);
-  propiedadesGlobal = await cargarPropiedades();
-  renderStats();
-  renderDashProps();
-  renderPropList();
-  showToast('Propiedad eliminada');
+  propiedadesGlobal = propiedadesGlobal.filter(x => x.id !== id);
+  guardarLocal();
+  renderStats(); renderDashProps(); renderPropList();
+  showToast('Propiedad eliminada — ¡Exportá el JSON!');
 }
 
 // ===== SERVICIOS =====
-async function saveServicios() {
+function saveServicios() {
   for (let i = 0; i < serviciosGlobal.length; i++) {
-    const nuevoTitulo = document.getElementById(`sv_t_${i}`).value.trim();
-    const nuevaDesc = document.getElementById(`sv_d_${i}`).value.trim();
-    if (nuevoTitulo) {
-      await guardarServicio({
-        id: serviciosGlobal[i].id,
-        numero: serviciosGlobal[i].numero,
-        titulo: nuevoTitulo,
-        descripcion: nuevaDesc,
-        orden: serviciosGlobal[i].orden
-      });
-    }
+    const t = document.getElementById(`sv_t_${i}`).value.trim();
+    const d = document.getElementById(`sv_d_${i}`).value.trim();
+    if (t) { serviciosGlobal[i].titulo = t; serviciosGlobal[i].descripcion = d; }
   }
-  serviciosGlobal = await cargarServicios();
-  showToast('✓ Servicios guardados');
+  document.getElementById('exportJsonServ').value = generarJsonCompleto();
+  showToast('✓ Servicios guardados — Copiá el JSON de abajo');
 }
 
 // ===== CREDENCIALES =====
@@ -562,16 +518,12 @@ function saveCredenciales() {
   const actual = document.getElementById('credActual').value;
   const nueva = document.getElementById('credNueva').value;
   const rep = document.getElementById('credRepetir').value;
-  
   if (actual !== CREDS.pass) { showToast('Contraseña actual incorrecta', 'error'); return; }
   if (!nueva || nueva.length < 4) { showToast('Mínimo 4 caracteres', 'error'); return; }
   if (nueva !== rep) { showToast('Las contraseñas no coinciden', 'error'); return; }
-  
   CREDS.pass = nueva;
   localStorage.setItem('barbara_creds_admin', JSON.stringify(CREDS));
-  document.getElementById('credActual').value = '';
-  document.getElementById('credNueva').value = '';
-  document.getElementById('credRepetir').value = '';
+  ['credActual','credNueva','credRepetir'].forEach(id => document.getElementById(id).value = '');
   showToast('✓ Contraseña cambiada');
 }
 
@@ -588,14 +540,8 @@ function showToast(msg, type = '') {
   t.textContent = msg;
   t.className = 'toast' + (type === 'error' ? ' error' : '');
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  setTimeout(() => t.classList.remove('show'), 3500);
 }
-
-// Cargar credenciales guardadas
-try {
-  const saved = localStorage.getItem('barbara_creds_admin');
-  if (saved) CREDS = JSON.parse(saved);
-} catch(e) {}
 </script>
 </body>
 </html>
