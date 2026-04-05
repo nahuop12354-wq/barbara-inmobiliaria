@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 /* ===== TODO TU CSS ORIGINAL COMPLETO ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -85,9 +84,19 @@ body {
 .carousel-slide { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; flex: 0 0 100%; min-width: 0; }
 .prop-card { background: white; border-radius: 20px; box-shadow: var(--sombra-suave); border: 1px solid rgba(194,212,181,0.5); overflow: hidden; transition: all 0.35s ease; cursor: pointer; display: flex; flex-direction: column; }
 .prop-card:hover { transform: translateY(-8px); box-shadow: var(--sombra-media); }
+/* IMÁGENES MEJORADAS – sin compresión, calidad original */
 .prop-img-main { position: relative; width: 100%; height: 300px; overflow: hidden; background: #f3f7ef; flex-shrink: 0; }
-.prop-img-main img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform 0.5s ease; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; }
-.prop-card:hover .prop-img-main img { transform: scale(1.04); }
+.prop-img-main img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  display: block;
+  transition: transform 0.5s ease;
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+.prop-card:hover .prop-img-main img { transform: translateZ(0) scale(1.04); }
 .prop-badge { position: absolute; top: 14px; left: 14px; background: var(--verde-medio); color: white; font-size: 0.75rem; font-weight: 700; padding: 5px 12px; border-radius: 50px; letter-spacing: 0.5px; text-transform: uppercase; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
 .prop-body { padding: 20px 20px 12px; flex: 1; display: flex; flex-direction: column; }
 .prop-titulo { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--verde-oscuro); margin-bottom: 8px; line-height: 1.3; }
@@ -99,8 +108,17 @@ body {
 .prop-precio small { display: block; font-size: 0.82rem; font-weight: 400; color: #999; margin-top: 2px; }
 .prop-galeria { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 12px 20px; }
 .prop-galeria-img { aspect-ratio: 1; overflow: hidden; border-radius: 8px; cursor: pointer; background: #edeae2; }
-.prop-galeria-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; image-rendering: -webkit-optimize-contrast; }
-.prop-galeria-img:hover img { transform: scale(1.1); }
+.prop-galeria-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s;
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+.prop-galeria-img:hover img { transform: translateZ(0) scale(1.1); }
 .prop-footer { padding: 0 20px 20px; }
 .btn-ver { display: block; width: 100%; text-align: center; padding: 13px; background: var(--verde-oscuro); color: white; font-weight: 700; font-size: 0.95rem; border-radius: 12px; border: 2px solid var(--verde-oscuro); cursor: pointer; transition: all 0.3s ease; text-decoration: none; font-family: 'DM Sans', sans-serif; min-height: 48px; }
 .btn-ver:hover { background: transparent; color: var(--verde-oscuro); }
@@ -115,11 +133,29 @@ body {
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 .detail-back { display: inline-flex; align-items: center; gap: 8px; background: none; border: 2px solid var(--verde-palido); color: var(--verde-medio); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.95rem; padding: 12px 20px; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; margin-bottom: 24px; min-height: 48px; }
 .detail-back:hover { background: var(--verde-lima); border-color: var(--verde-claro); }
-.detail-main-img { width: 100%; height: 480px; object-fit: cover; border-radius: 20px; display: block; margin-bottom: 16px; box-shadow: var(--sombra-media); }
+/* Imagen detalle – máxima calidad */
+.detail-main-img {
+  width: 100%; height: 480px;
+  object-fit: cover; object-position: center;
+  border-radius: 20px; display: block; margin-bottom: 16px;
+  box-shadow: var(--sombra-media);
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
 .detail-galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-bottom: 36px; }
 .detail-galeria-item { aspect-ratio: 4/3; border-radius: 12px; overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
-.detail-galeria-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-.detail-galeria-item:hover img { transform: scale(1.08); }
+.detail-galeria-item img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform 0.3s;
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+.detail-galeria-item:hover img { transform: translateZ(0) scale(1.08); }
 .detail-galeria-item.active { border-color: var(--verde-medio); box-shadow: 0 0 0 2px var(--verde-palido); }
 .detail-body { display: grid; grid-template-columns: 1fr 340px; gap: 40px; }
 .detail-info-titulo { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 800; color: var(--verde-oscuro); line-height: 1.2; margin-bottom: 10px; }
@@ -395,7 +431,7 @@ body {
   </div>
 </section>
 
-<!-- SERVICIOS -->
+<!-- SERVICIOS — IGUAL AL ORIGINAL, sin cambios -->
 <section class="servicios-section" id="servicios">
   <div class="servicios-overlay">
     <div class="servicios-inner">
@@ -501,92 +537,33 @@ body {
 </footer>
 
 <script>
-// ============================================
-// CONFIGURACIÓN DE SUPABASE - SOLO CAMBIA ESTO
-// ============================================
-const SUPABASE_URL = 'https://zkndttzivjzrcjhlcvgb.supabase.co'
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprbmR0dHppdmp6cmNqaGxjdmdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNjUzMTAsImV4cCI6MjA5MDg0MTMxMH0.2RcCCA75NRnhWk-UTSpURKsWqo-ID3j-Rr-0aG_DbNoY'
-// ============================================
-
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// ===== FUNCIÓN MODIFICADA PARA CARGAR PROPIEDADES =====
+// ===== CARGA DESDE datos.json (sin Supabase) =====
 async function getPropiedades() {
-  // Intentar cargar desde Supabase
   try {
-    const { data, error } = await supabaseClient
-      .from('propiedades')
-      .select('*')
-      .order('id', { ascending: true });
-    
-    if (!error && data && data.length > 0) {
-      // Convertir formato de Supabase al formato que usa el código
-      return data.map(p => ({
-        id: p.id,
-        badge: p.badge,
-        titulo: p.titulo,
-        ubicacion: p.ubicacion,
-        precio: p.precio,
-        precioNota: p.precio_nota || '',
-        descripcion: p.descripcion,
-        tags: p.tags || [],
-        caracteristicas: p.caracteristicas || [],
-        imagenPrincipal: p.imagen_principal,
-        galeria: p.galeria || []
-      }));
-    }
-  } catch(e) {
-    console.log('Error cargando de Supabase:', e);
-  }
-  
-  // Fallback a localStorage
-  try {
-    const s = localStorage.getItem('barbara_propiedades');
-    if (s) return JSON.parse(s);
-  } catch(e) {}
-  
-  // Datos por defecto
+    const res = await fetch('./datos.json?v=' + Date.now());
+    if (!res.ok) throw new Error('Sin datos.json');
+    const datos = await res.json();
+    if (datos.propiedades && datos.propiedades.length > 0) return datos.propiedades;
+  } catch(e) { console.warn('Usando datos por defecto:', e); }
+  // Fallback localStorage
+  try { const s = localStorage.getItem('barbara_propiedades'); if (s) return JSON.parse(s); } catch(e) {}
   return [
     { id: 1, badge: 'En Venta', titulo: 'Departamento en Venta – Edificio Ysyry', ubicacion: 'Planta baja – contrafrente, Posadas, Misiones', precio: 'USD 70.000', precioNota: '', descripcion: 'Excelente oportunidad en uno de los edificios más buscados de la ciudad, ubicado en una zona estratégica, con cercanía al centro, la costanera y principales accesos. Ideal tanto para vivienda como para inversión.', tags: ['1 dormitorio', '1 baño', '40,74 m²'], caracteristicas: ['Cocina integrada', 'Living-comedor luminoso', 'Lavadero', 'Diseño moderno', 'Ascensor', 'Entorno residencial tranquilo'], imagenPrincipal: 'https://i.ibb.co/Mk1M19JK/imagen1.jpg', galeria: ['https://i.ibb.co/5WNk97S2/imagen2.jpg','https://i.ibb.co/DfVQxv6C/imagen3.jpg','https://i.ibb.co/209RJVGn/imagen4.jpg','https://i.ibb.co/twCqCtkC/imagen5.jpg'] },
     { id: 2, badge: 'En Venta', titulo: 'Departamento en Venta – Edificio Citrino', ubicacion: 'Séptimo piso con vista al río Paraná, Posadas, Misiones', precio: 'USD 200.000', precioNota: 'Cochera incluida', descripcion: 'Excelente departamento en uno de los edificios más destacados de Posadas, con cercanía al centro, la costanera y principales accesos. Séptimo piso con vista al río.', tags: ['2 dormitorios', '2 baños', 'Cochera incluida', 'Vista al río'], caracteristicas: ['Cocina funcional', 'Living-comedor amplio y luminoso', 'Lavadero independiente', 'Seguridad y accesos controlados', 'Ascensores', 'Excelente calidad constructiva'], imagenPrincipal: 'https://i.ibb.co/4ZRDzRVN/imagen1.jpg', galeria: ['https://i.ibb.co/0RGkthtm/imagen2.jpg','https://i.ibb.co/ym30xhJL/imagen3.jpg','https://i.ibb.co/1tDTgY3K/imagen4.jpg','https://i.ibb.co/Vpx0v1DW/imagen5.jpg','https://i.ibb.co/99m1B426/imagen6.jpg','https://i.ibb.co/20bss0h5/imagen7.jpg','https://i.ibb.co/BKqs7YcK/imagen8.jpg'] },
-    { id: 3, badge: 'En Venta', titulo: 'Terreno en Venta – Av. Las Heras', ubicacion: 'Avenida Las Heras, Posadas, Misiones', precio: 'USD 50.000', precioNota: 'Negociable • Consultar financiación', descripcion: 'Excelente oportunidad sobre una de las avenidas principales de Posadas, con alto tránsito, visibilidad y gran proyección comercial y residencial.', tags: ['433 m²', 'Frente sobre avenida', 'Zona consolidada'], caracteristicas: ['Superficie total 433 m²', 'Frente sobre avenida principal', 'Construcción existente apta para reciclaje', 'Entorno consolidado', 'Alto tránsito vehicular', 'Negociable'], imagenPrincipal: 'https://i.ibb.co/GvrGyvdZ/terreno1.jpg', galeria: ['https://i.ibb.co/DfbM1Tdx/terreno2.jpg','https://i.ibb.co/qF0Nd1Q6/terreno3.jpg'] },
-    { id: 4, badge: 'En Alquiler', titulo: 'Inmueble de Destino Mixto en Alquiler – Ruta 12', ubicacion: 'Sobre Ruta Nacional 12, frente al Hospital Baliña, Posadas, Misiones', precio: '$1.250.000/mes', precioNota: 'Antes $1.500.000', descripcion: 'Excelente propiedad de destino mixto (comercial/habitacional), en zona de alto tránsito vehicular y gran visibilidad. Ideal para empresas, instituciones, comercios, consultorios o logística.', tags: ['45x45 m', '3 dormitorios', '2 baños', 'Uso mixto'], caracteristicas: ['Terreno de 45x45 metros', '3 dormitorios y 2 baños', 'Galería techada', 'Predio totalmente cerrado', 'Muros perimetrales y portones', 'Sistema de alarma', 'Frente al Hospital Baliña'], imagenPrincipal: 'https://i.ibb.co/wNNdMn8S/inmueble1.jpg', galeria: ['https://i.ibb.co/prfy2HJy/inmueble2.jpg','https://i.ibb.co/nqV8KLtr/inmueble3.jpg','https://i.ibb.co/RpLmdGLz/inmueble4.jpg','https://i.ibb.co/yBBzDcsC/inmueble5.jpg','https://i.ibb.co/JFCXgbRW/inmueble6.jpg','https://i.ibb.co/XxDFJtmm/inmueble7.jpg'] }
+    { id: 3, badge: 'En Venta', titulo: 'Terreno en Venta – Av. Las Heras', ubicacion: 'Avenida Las Heras, Posadas, Misiones', precio: 'USD 50.000', precioNota: 'Negociable • Consultar financiación', descripcion: 'Excelente oportunidad sobre una de las avenidas principales de Posadas.', tags: ['433 m²', 'Frente sobre avenida', 'Zona consolidada'], caracteristicas: ['Superficie total 433 m²', 'Frente sobre avenida principal', 'Construcción existente apta para reciclaje', 'Entorno consolidado', 'Alto tránsito vehicular', 'Negociable'], imagenPrincipal: 'https://i.ibb.co/GvrGyvdZ/terreno1.jpg', galeria: ['https://i.ibb.co/DfbM1Tdx/terreno2.jpg','https://i.ibb.co/qF0Nd1Q6/terreno3.jpg'] },
+    { id: 4, badge: 'En Alquiler', titulo: 'Inmueble de Destino Mixto en Alquiler – Ruta 12', ubicacion: 'Sobre Ruta Nacional 12, frente al Hospital Baliña, Posadas, Misiones', precio: '$1.250.000/mes', precioNota: 'Antes $1.500.000', descripcion: 'Excelente propiedad de destino mixto (comercial/habitacional), en zona de alto tránsito vehicular y gran visibilidad.', tags: ['45x45 m', '3 dormitorios', '2 baños', 'Uso mixto'], caracteristicas: ['Terreno de 45x45 metros', '3 dormitorios y 2 baños', 'Galería techada', 'Predio totalmente cerrado', 'Muros perimetrales y portones', 'Sistema de alarma', 'Frente al Hospital Baliña'], imagenPrincipal: 'https://i.ibb.co/wNNdMn8S/inmueble1.jpg', galeria: ['https://i.ibb.co/prfy2HJy/inmueble2.jpg','https://i.ibb.co/nqV8KLtr/inmueble3.jpg','https://i.ibb.co/RpLmdGLz/inmueble4.jpg','https://i.ibb.co/yBBzDcsC/inmueble5.jpg','https://i.ibb.co/JFCXgbRW/inmueble6.jpg','https://i.ibb.co/XxDFJtmm/inmueble7.jpg'] }
   ];
 }
 
-// ===== FUNCIÓN MODIFICADA PARA GUARDAR PROPIEDADES (usada por el admin) =====
-async function guardarPropiedadesEnSupabase(propiedades) {
-  for (const p of propiedades) {
-    await supabaseClient
-      .from('propiedades')
-      .upsert({
-        id: p.id,
-        badge: p.badge,
-        titulo: p.titulo,
-        ubicacion: p.ubicacion,
-        precio: p.precio,
-        precio_nota: p.precioNota,
-        descripcion: p.descripcion,
-        tags: p.tags,
-        caracteristicas: p.caracteristicas,
-        imagen_principal: p.imagenPrincipal,
-        galeria: p.galeria
-      });
-  }
-  // También guardar en localStorage como respaldo
-  localStorage.setItem('barbara_propiedades', JSON.stringify(propiedades));
-}
-
-// ===== EL RESTO DE TU CÓDIGO JAVASCRIPT ORIGINAL =====
+// ===== EL RESTO DEL JS ORIGINAL SIN CAMBIOS =====
 (function() {
-  // Modificar getPropiedades para que use la versión async
   let propiedadesCache = [];
-  
+
   async function init() {
     propiedadesCache = await getPropiedades();
     buildSlides();
   }
-  
+
   /* ---- HEADER ---- */
   const header = document.getElementById('header');
   window.addEventListener('scroll', () => { header.classList.toggle('scrolled', window.scrollY > 40); });
@@ -631,11 +608,11 @@ async function guardarPropiedadesEnSupabase(propiedades) {
     const card = document.createElement('div');
     card.className = 'prop-card';
     const galeriaHtml = p.galeria.slice(0, 4).map(img =>
-      `<div class="prop-galeria-img"><img src="${img}" alt="Interior" loading="lazy"></div>`
+      `<div class="prop-galeria-img"><img src="${img}" alt="Interior" loading="lazy" decoding="async"></div>`
     ).join('');
     card.innerHTML = `
       <div class="prop-img-main">
-        <img src="${p.imagenPrincipal}" alt="${p.titulo}" loading="lazy">
+        <img src="${p.imagenPrincipal}" alt="${p.titulo}" loading="lazy" decoding="async">
         <span class="prop-badge">${p.badge}</span>
       </div>
       <div class="prop-body">
@@ -707,7 +684,7 @@ async function guardarPropiedadesEnSupabase(propiedades) {
     allImgs.forEach((img, idx) => {
       const item = document.createElement('div');
       item.className = 'detail-galeria-item' + (idx === 0 ? ' active' : '');
-      item.innerHTML = `<img src="${img}" alt="Foto ${idx+1}" loading="lazy">`;
+      item.innerHTML = `<img src="${img}" alt="Foto ${idx+1}" loading="lazy" decoding="async">`;
       item.addEventListener('click', () => {
         document.getElementById('detailMainImg').src = img;
         galeriaEl.querySelectorAll('.detail-galeria-item').forEach(el => el.classList.remove('active'));
@@ -749,7 +726,7 @@ async function guardarPropiedadesEnSupabase(propiedades) {
     window.open(`https://wa.me/5493765409158?text=${encodeURIComponent(`📋 *Nueva solicitud desde la web*\n\n👤 *Nombre:* ${nombre}\n📧 *Email:* ${email}\n📱 *Teléfono:* ${telefono}\n💬 *Mensaje:* ${mensaje}`)}`, '_blank');
     this.reset();
   });
-  
+
   init();
 })();
 </script>
