@@ -84,11 +84,23 @@ body {
 .carousel-slide { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; flex: 0 0 100%; min-width: 0; }
 .prop-card { background: white; border-radius: 20px; box-shadow: var(--sombra-suave); border: 1px solid rgba(194,212,181,0.5); overflow: hidden; transition: all 0.35s ease; cursor: pointer; display: flex; flex-direction: column; }
 .prop-card:hover { transform: translateY(-8px); box-shadow: var(--sombra-media); }
-/* IMÁGENES MEJORADAS – sin compresión, calidad original */
-.prop-img-main { position: relative; width: 100%; height: 300px; overflow: hidden; background: #f3f7ef; flex-shrink: 0; }
+
+/* ===== IMÁGENES MEJORADAS - PROPORCIONES OPTIMIZADAS ===== */
+.prop-img-main { 
+  position: relative; 
+  width: 100%; 
+  /* Cambio: aspect-ratio 4/3 para mejor proporción inmobiliaria */
+  aspect-ratio: 4/3; 
+  overflow: hidden; 
+  background: #f3f7ef; 
+  flex-shrink: 0; 
+}
 .prop-img-main img {
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: center;
+  width: 100%; 
+  height: 100%;
+  object-fit: cover; 
+  /* Cambio: object-position optimizado para mostrar más del inmueble */
+  object-position: center 25%; 
   display: block;
   transition: transform 0.5s ease;
   image-rendering: auto;
@@ -97,6 +109,7 @@ body {
   transform: translateZ(0);
 }
 .prop-card:hover .prop-img-main img { transform: translateZ(0) scale(1.04); }
+
 .prop-badge { position: absolute; top: 14px; left: 14px; background: var(--verde-medio); color: white; font-size: 0.75rem; font-weight: 700; padding: 5px 12px; border-radius: 50px; letter-spacing: 0.5px; text-transform: uppercase; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
 .prop-body { padding: 20px 20px 12px; flex: 1; display: flex; flex-direction: column; }
 .prop-titulo { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--verde-oscuro); margin-bottom: 8px; line-height: 1.3; }
@@ -133,11 +146,17 @@ body {
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 .detail-back { display: inline-flex; align-items: center; gap: 8px; background: none; border: 2px solid var(--verde-palido); color: var(--verde-medio); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.95rem; padding: 12px 20px; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; margin-bottom: 24px; min-height: 48px; }
 .detail-back:hover { background: var(--verde-lima); border-color: var(--verde-claro); }
-/* Imagen detalle – máxima calidad */
+
+/* Imagen detalle – proporciones optimizadas */
 .detail-main-img {
-  width: 100%; height: 480px;
-  object-fit: cover; object-position: center;
-  border-radius: 20px; display: block; margin-bottom: 16px;
+  width: 100%; 
+  /* Cambio: aspect-ratio para mejor visualización */
+  aspect-ratio: 16/9; 
+  object-fit: cover; 
+  object-position: center 25%; 
+  border-radius: 20px; 
+  display: block; 
+  margin-bottom: 16px;
   box-shadow: var(--sombra-media);
   image-rendering: auto;
   -webkit-backface-visibility: hidden;
@@ -148,7 +167,9 @@ body {
 .detail-galeria-item { aspect-ratio: 4/3; border-radius: 12px; overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
 .detail-galeria-item img {
   width: 100%; height: 100%;
-  object-fit: cover; display: block;
+  object-fit: cover; 
+  object-position: center 25%; 
+  display: block;
   transition: transform 0.3s;
   image-rendering: auto;
   -webkit-backface-visibility: hidden;
@@ -265,6 +286,8 @@ body {
 .footer-copyright { font-size: 0.85rem; color: #2d472d; }
 .footer-copyright a { color: #1e3a1e; text-decoration: none; font-weight: 600; }
 .footer-copyright a:hover { text-decoration: underline; }
+
+/* ===== MEDIA QUERIES CON AJUSTES DE PROPORCIÓN ===== */
 @media (max-width: 900px) {
   .sobre-container { grid-template-columns: 1fr; gap: 36px; }
   .sobre-img-frame { max-width: 320px; }
@@ -274,7 +297,10 @@ body {
   .contacto-container { grid-template-columns: 1fr; gap: 40px; }
   .detail-body { grid-template-columns: 1fr; }
   .detail-sidebar { position: static; }
-  .detail-main-img { height: 320px; }
+  .detail-main-img { 
+    aspect-ratio: 16/9; 
+    height: auto; 
+  }
 }
 @media (max-width: 600px) {
   .header { padding: 0.7rem 1rem; }
@@ -291,7 +317,11 @@ body {
   .section-head p { font-size: 0.92rem; }
   .carousel-slide { grid-template-columns: 1fr; }
   .carousel-track { gap: 16px; }
-  .prop-img-main { height: 260px; }
+  /* Ajuste mobile para imágenes del carrusel */
+  .prop-img-main { 
+    aspect-ratio: 4/3; 
+    height: auto; 
+  }
   .prop-titulo { font-size: 1.05rem; }
   .prop-precio { font-size: 1.25rem; }
   .prop-galeria { grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 10px 14px; }
@@ -299,7 +329,11 @@ body {
   .prop-footer { padding: 0 14px 16px; }
   .carousel-btn { width: 44px; height: 44px; font-size: 1rem; }
   .carousel-controls { gap: 14px; margin-top: 20px; }
-  .detail-main-img { height: 240px; border-radius: 14px; }
+  .detail-main-img { 
+    aspect-ratio: 16/9; 
+    height: auto; 
+    border-radius: 14px; 
+  }
   .detail-galeria { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
   .detail-info-titulo { font-size: 1.5rem; }
   .detail-precio { font-size: 1.6rem; }
@@ -328,7 +362,7 @@ body {
 @media (max-width: 380px) {
   .hero-content h1 { font-size: 2rem; }
   .sobre-img-frame { max-width: 220px; }
-  .prop-img-main { height: 220px; }
+  .prop-img-main { aspect-ratio: 4/3; }
   .contacto-form-box { padding: 22px 16px; }
 }
 </style>
