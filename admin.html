@@ -13,113 +13,101 @@
   --v6: #e5f0da; --v7: #f0f5ea; --v8: #f8fbf5;
   --red: #e74c3c; --red-l: rgba(231,76,60,0.12);
   --shadow: 0 4px 24px rgba(30,58,30,0.08);
-  --shadow-md: 0 8px 32px rgba(30,58,30,0.12);
   --radius: 18px; --radius-sm: 12px;
   --trans: all 0.28s cubic-bezier(0.4,0,0.2,1);
 }
 body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a; min-height: 100vh; }
 .login-screen { position: fixed; inset: 0; background: linear-gradient(135deg, var(--v0) 0%, var(--v2) 100%); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
-.login-box { background: white; border-radius: 28px; padding: 48px 44px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 20px 60px rgba(30,58,30,0.18); }
+.login-box { background: white; border-radius: 28px; padding: 48px 44px; width: 100%; max-width: 420px; text-align: center; }
 .login-logo { width: 72px; height: 72px; border-radius: 50%; background: var(--v7); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 20px; border: 3px solid var(--v5); }
-.login-box h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--v1); margin-bottom: 4px; }
-.login-box > p { color: #999; margin-bottom: 32px; font-size: 0.9rem; }
-.login-field { position: relative; margin-bottom: 14px; }
-.login-field input { width: 100%; padding: 15px 18px; border: 2px solid var(--v5); border-radius: 14px; font-size: 1rem; font-family: 'DM Sans', sans-serif; background: var(--v7); transition: var(--trans); }
-.login-field input:focus { outline: none; border-color: var(--v2); background: white; box-shadow: 0 0 0 4px rgba(45,71,45,0.08); }
-.login-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--v1), var(--v2)); color: white; border: none; border-radius: 14px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: var(--trans); margin-top: 6px; }
-.login-btn:hover { transform: translateY(-2px); }
+.login-box h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--v1); }
+.login-box > p { color: #999; margin-bottom: 32px; }
+.login-field { margin-bottom: 14px; }
+.login-field input { width: 100%; padding: 15px 18px; border: 2px solid var(--v5); border-radius: 14px; background: var(--v7); }
+.login-field input:focus { outline: none; border-color: var(--v2); }
+.login-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--v1), var(--v2)); color: white; border: none; border-radius: 14px; font-weight: 700; cursor: pointer; }
 .login-error { color: var(--red); font-size: 0.85rem; margin-top: 12px; display: none; }
 .admin-panel { display: none; min-height: 100vh; }
 .admin-panel.visible { display: flex; }
-.sidebar { width: 260px; background: linear-gradient(180deg, var(--v0) 0%, var(--v1) 100%); min-height: 100vh; padding: 24px 14px 20px; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 0; height: 100vh; overflow-y: auto; box-shadow: 4px 0 24px rgba(0,0,0,0.25); }
-.sidebar-brand { display: flex; align-items: center; gap: 12px; padding: 10px 10px 8px; margin-bottom: 4px; }
+.sidebar { width: 260px; background: linear-gradient(180deg, var(--v0) 0%, var(--v1) 100%); min-height: 100vh; padding: 24px 14px; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+.sidebar-brand { display: flex; align-items: center; gap: 12px; padding: 10px; margin-bottom: 4px; }
 .sidebar-brand-icon { width: 42px; height: 42px; border-radius: 12px; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
-.sidebar-brand-text strong { display: block; color: white; font-size: 0.92rem; font-weight: 700; }
+.sidebar-brand-text strong { display: block; color: white; font-size: 0.92rem; }
 .sidebar-brand-text span { color: rgba(255,255,255,0.45); font-size: 0.72rem; }
 .sidebar-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 8px 0; }
 .sidebar-label { font-size: 0.65rem; font-weight: 800; color: rgba(255,255,255,0.3); text-transform: uppercase; padding: 0 10px; margin: 6px 0 2px; }
-.sidebar a, .sidebar-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: rgba(255,255,255,0.65); text-decoration: none; border-radius: 12px; font-size: 0.88rem; font-weight: 500; transition: var(--trans); cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; }
+.sidebar a, .sidebar-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: rgba(255,255,255,0.65); text-decoration: none; border-radius: 12px; font-size: 0.88rem; cursor: pointer; background: none; border: none; width: 100%; text-align: left; }
 .sidebar a:hover, .sidebar-link:hover { background: rgba(255,255,255,0.1); color: white; }
-.sidebar a.active, .sidebar-link.active { background: rgba(255,255,255,0.15); color: white; font-weight: 600; }
-.sidebar-icon { font-size: 1rem; width: 20px; text-align: center; }
-.sidebar-logout { margin-top: auto; padding: 11px 14px; background: var(--red-l); color: rgba(255,150,150,0.9); border: 1px solid rgba(231,76,60,0.2); border-radius: 12px; font-size: 0.88rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+.sidebar a.active, .sidebar-link.active { background: rgba(255,255,255,0.15); color: white; }
+.sidebar-icon { font-size: 1rem; width: 20px; }
+.sidebar-logout { margin-top: auto; padding: 11px 14px; background: var(--red-l); color: rgba(255,150,150,0.9); border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
 .sidebar-logout:hover { background: rgba(231,76,60,0.3); color: white; }
-.mobile-topbar { display: none; position: sticky; top: 0; background: linear-gradient(135deg, var(--v0), var(--v1)); padding: 12px 16px; align-items: center; justify-content: space-between; z-index: 100; }
+.mobile-topbar { display: none; position: sticky; top: 0; background: linear-gradient(135deg, var(--v0), var(--v1)); padding: 12px 16px; align-items: center; justify-content: space-between; }
 .mobile-brand { color: white; font-weight: 700; }
 .mobile-menu-btn { width: 44px; height: 44px; border-radius: 10px; background: rgba(255,255,255,0.12); border: none; color: white; font-size: 1.3rem; cursor: pointer; }
 .mobile-sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 998; }
 .mobile-sidebar-overlay.open { display: block; }
-.main-content { flex: 1; padding: 28px 32px; overflow-x: hidden; max-width: calc(100vw - 260px); }
+.main-content { flex: 1; padding: 28px 32px; max-width: calc(100vw - 260px); }
 .page-header { margin-bottom: 28px; }
-.page-header h2 { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: var(--v1); font-weight: 800; }
-.page-header p { color: #999; margin-top: 5px; font-size: 0.9rem; }
+.page-header h2 { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: var(--v1); }
+.page-header p { color: #999; margin-top: 5px; }
 .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
-.stat-card { background: white; border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); border: 1px solid rgba(194,212,181,0.3); }
-.stat-n { font-size: 2.2rem; font-weight: 800; color: var(--v1); line-height: 1; }
+.stat-card { background: white; border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
+.stat-n { font-size: 2.2rem; font-weight: 800; color: var(--v1); }
 .stat-l { font-size: 0.78rem; color: #aaa; margin-top: 5px; }
-.admin-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid rgba(194,212,181,0.25); overflow: hidden; margin-bottom: 22px; }
-.admin-card-header { padding: 18px 24px; border-bottom: 1px solid var(--v6); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, var(--v8), white); }
+.admin-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 22px; }
+.admin-card-header { padding: 18px 24px; border-bottom: 1px solid var(--v6); display: flex; align-items: center; justify-content: space-between; }
 .admin-card-header h3 { font-size: 0.98rem; color: var(--v1); font-weight: 700; }
 .admin-card-body { padding: 24px; }
-/* Aviso cómo guardar */
-.aviso-json { background: linear-gradient(135deg, #fff8e1, #fff3cd); border: 1px solid #f0c040; border-radius: 14px; padding: 18px 22px; margin-bottom: 22px; }
-.aviso-json h4 { color: #856404; font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; }
-.aviso-json p { color: #856404; font-size: 0.83rem; line-height: 1.6; margin-bottom: 4px; }
-.aviso-json code { background: rgba(133,100,4,0.15); padding: 2px 7px; border-radius: 5px; font-size: 0.8rem; font-family: monospace; }
 .field-group { margin-bottom: 18px; }
 .field-group label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--v2); text-transform: uppercase; margin-bottom: 7px; }
-.field-group input, .field-group textarea, .field-group select { width: 100%; padding: 12px 16px; border: 2px solid var(--v5); border-radius: var(--radius-sm); font-size: 0.95rem; font-family: 'DM Sans', sans-serif; background: var(--v7); transition: var(--trans); }
+.field-group input, .field-group textarea, .field-group select { width: 100%; padding: 12px 16px; border: 2px solid var(--v5); border-radius: var(--radius-sm); font-size: 0.95rem; background: var(--v7); }
 .field-group input:focus, .field-group textarea:focus { outline: none; border-color: var(--v2); background: white; }
 .field-group textarea { resize: vertical; min-height: 82px; }
 .field-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.img-preview { width: 100%; max-height: 160px; object-fit: cover; border-radius: 10px; margin-top: 10px; display: none; border: 2px solid var(--v5); }
+.img-preview { width: 100%; max-height: 160px; object-fit: cover; border-radius: 10px; margin-top: 10px; display: none; }
 .img-preview.show { display: block; }
-.btn-primary { padding: 11px 24px; background: linear-gradient(135deg, var(--v1), var(--v2)); color: white; border: none; border-radius: 50px; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: var(--trans); display: inline-flex; align-items: center; gap: 7px; }
+.btn-primary { padding: 11px 24px; background: linear-gradient(135deg, var(--v1), var(--v2)); color: white; border: none; border-radius: 50px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
 .btn-primary:hover { transform: translateY(-2px); }
-.btn-secondary { padding: 11px 20px; background: var(--v7); color: var(--v2); border: 2px solid var(--v5); border-radius: 50px; font-weight: 600; font-size: 0.88rem; cursor: pointer; transition: var(--trans); }
-.btn-secondary:hover { background: var(--v5); }
-.btn-danger { padding: 8px 14px; background: var(--red-l); color: var(--red); border: none; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
+.btn-secondary { padding: 11px 20px; background: var(--v7); color: var(--v2); border: 2px solid var(--v5); border-radius: 50px; font-weight: 600; cursor: pointer; }
+.btn-danger { padding: 8px 14px; background: var(--red-l); color: var(--red); border: none; border-radius: 8px; cursor: pointer; }
 .btn-danger:hover { background: var(--red); color: white; }
-.btn-edit-small { padding: 8px 14px; background: var(--v6); color: var(--v2); border: none; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
-/* Exportar JSON */
-.export-area { background: var(--v7); border: 2px solid var(--v5); border-radius: 14px; padding: 18px; margin-top: 20px; }
-.export-area h4 { font-size: 0.82rem; font-weight: 700; color: var(--v2); margin-bottom: 10px; }
-.export-area textarea { width: 100%; height: 180px; font-family: monospace; font-size: 0.76rem; background: white; border: 1px solid var(--v5); border-radius: 8px; padding: 10px; resize: vertical; }
-.export-btns { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.btn-edit-small { padding: 8px 14px; background: var(--v6); color: var(--v2); border: none; border-radius: 8px; cursor: pointer; }
+.token-config { background: linear-gradient(135deg, #e8f0fe, #d4e4f7); border: 1px solid #2196f3; border-radius: 14px; padding: 18px 22px; margin-bottom: 22px; }
+.token-config h4 { color: #0d47a1; margin-bottom: 10px; }
+.token-config p { font-size: 0.85rem; color: #0d47a1; margin-bottom: 12px; }
+.token-config input { width: 100%; padding: 12px; border: 1px solid #2196f3; border-radius: 8px; font-family: monospace; }
+.token-config button { margin-top: 10px; }
 .prop-list { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
 .prop-item { display: grid; grid-template-columns: 80px 1fr auto; gap: 14px; align-items: center; padding: 14px; border-radius: 14px; border: 1px solid rgba(194,212,181,0.3); background: var(--v8); }
 .prop-item-img { width: 80px; height: 62px; border-radius: 10px; object-fit: cover; }
-.prop-item-info h4 { font-size: 0.88rem; color: var(--v1); font-weight: 600; }
+.prop-item-info h4 { font-size: 0.88rem; color: var(--v1); }
 .prop-item-info p { font-size: 0.76rem; color: #aaa; }
-.prop-item-badge { display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; background: rgba(45,71,45,0.1); color: var(--v2); }
+.prop-item-badge { display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 0.7rem; background: rgba(45,71,45,0.1); color: var(--v2); }
 .prop-item-actions { display: flex; gap: 6px; }
 .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); z-index: 9998; display: none; align-items: center; justify-content: center; padding: 20px; }
 .modal-bg.open { display: flex; }
 .modal { background: white; border-radius: 28px; padding: 36px; width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; }
-.modal-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--v1); font-weight: 800; margin-bottom: 28px; }
+.modal-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--v1); margin-bottom: 28px; }
 .modal-actions { display: flex; gap: 12px; margin-top: 28px; }
-.modal-actions .btn-primary { flex: 1; justify-content: center; padding: 15px; font-size: 1rem; border-radius: 14px; }
-.modal-actions .btn-secondary { padding: 15px 24px; border-radius: 14px; }
-.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(100px); background: linear-gradient(135deg, var(--v1), var(--v2)); color: white; padding: 14px 32px; border-radius: 50px; font-size: 0.93rem; font-weight: 600; z-index: 99999; transition: transform 0.4s; pointer-events: none; }
+.modal-actions .btn-primary { flex: 1; justify-content: center; padding: 15px; }
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(100px); background: linear-gradient(135deg, var(--v1), var(--v2)); color: white; padding: 14px 32px; border-radius: 50px; z-index: 99999; transition: transform 0.4s; pointer-events: none; }
 .toast.show { transform: translateX(-50%) translateY(0); }
 .toast.error { background: linear-gradient(135deg, #c0392b, var(--red)); }
 .servicio-editor { border: 2px solid var(--v5); border-radius: 16px; padding: 20px; margin-bottom: 14px; background: var(--v8); }
-.servicio-num { font-size: 0.7rem; font-weight: 800; color: var(--v4); margin-bottom: 14px; }
 @media (max-width: 900px) {
   .mobile-topbar { display: flex; }
-  .sidebar { position: fixed; left: -280px; top: 0; z-index: 999; transition: left 0.35s; height: 100vh; width: 260px; }
+  .sidebar { position: fixed; left: -280px; top: 0; z-index: 999; transition: left 0.35s; height: 100vh; }
   .sidebar.mobile-open { left: 0; }
   .admin-panel { flex-direction: column; }
   .main-content { max-width: 100%; padding: 20px 16px; }
-  .stats-row { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
   .field-grid-2 { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
-  .main-content { padding: 16px 12px; }
   .stats-row { grid-template-columns: 1fr; }
   .prop-item { grid-template-columns: 68px 1fr; }
-  .prop-item-actions { grid-column: 1 / -1; display: flex; gap: 8px; }
-  .modal { padding: 24px 18px; }
+  .prop-item-actions { grid-column: 1 / -1; display: flex; }
 }
 </style>
 </head>
@@ -131,9 +119,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
     <div class="login-logo">🏠</div>
     <h1>Panel Admin</h1>
     <p>Bárbara Insaurralde Inmobiliaria</p>
-    <div class="login-field"><input type="text" id="loginUser" placeholder="Usuario" onkeydown="if(event.key==='Enter')doLogin()"></div>
-    <div class="login-field"><input type="password" id="loginPass" placeholder="Contraseña" onkeydown="if(event.key==='Enter')doLogin()"></div>
-    <button class="login-btn" onclick="doLogin()">Ingresar al panel →</button>
+    <div class="login-field"><input type="text" id="loginUser" placeholder="Usuario"></div>
+    <div class="login-field"><input type="password" id="loginPass" placeholder="Contraseña"></div>
+    <button class="login-btn" onclick="doLogin()">Ingresar →</button>
     <p class="login-error" id="loginError">⚠ Usuario o contraseña incorrectos</p>
   </div>
 </div>
@@ -158,6 +146,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
     <a href="#" onclick="showSec('servicios',this);return false;"><span class="sidebar-icon">📋</span>Servicios</a>
     <div class="sidebar-divider"></div>
     <div class="sidebar-label">Configuración</div>
+    <a href="#" onclick="showSec('token',this);return false;"><span class="sidebar-icon">🔑</span>GitHub Token</a>
     <a href="#" onclick="showSec('credenciales',this);return false;"><span class="sidebar-icon">🔒</span>Contraseña</a>
     <div class="sidebar-divider"></div>
     <button class="sidebar-logout" onclick="doLogout()">🚪 Cerrar sesión</button>
@@ -177,44 +166,38 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
     <!-- Propiedades -->
     <section id="sec-propiedades" style="display:none">
       <div class="page-header"><h2>🏠 Propiedades</h2><p>Gestioná todas las propiedades</p></div>
-
-      <div class="aviso-json">
-        <h4>⚠️ ¿Cómo guardar los cambios en el sitio?</h4>
-        <p>1. Editá o agregá propiedades usando los botones de abajo.</p>
-        <p>2. Cuando termines, hacé clic en <strong>"📋 Exportar datos.json"</strong> al pie de esta sección.</p>
-        <p>3. Copiá el JSON generado, pegalo en tu archivo <code>datos.json</code> y subilo a GitHub.</p>
-        <p>Vercel lo actualizará automáticamente en segundos. ✅</p>
-      </div>
-
       <div class="admin-card">
-        <div class="admin-card-header"><h3>Lista de propiedades</h3><button class="btn-primary" onclick="openPropModal()">+ Agregar propiedad</button></div>
+        <div class="admin-card-header"><h3>Lista de propiedades</h3><button class="btn-primary" onclick="openPropModal()">+ Agregar</button></div>
         <div class="prop-list" id="propList"></div>
-      </div>
-
-      <div class="export-area">
-        <h4>📋 Exportar datos.json actualizado</h4>
-        <textarea id="exportJson" readonly placeholder="Aparecerá el JSON aquí..."></textarea>
-        <div class="export-btns">
-          <button class="btn-primary" onclick="generarExport()">🔄 Generar JSON</button>
-          <button class="btn-secondary" onclick="copiarExport()">📋 Copiar al portapapeles</button>
-        </div>
       </div>
     </section>
 
     <!-- Servicios -->
     <section id="sec-servicios" style="display:none">
       <div class="page-header"><h2>📋 Servicios</h2><p>Editá los 3 servicios</p></div>
-      <div class="aviso-json">
-        <h4>⚠️ ¿Cómo guardar los cambios?</h4>
-        <p>Editá los servicios abajo → hacé clic en <strong>"💾 Guardar servicios"</strong> → el JSON se actualiza abajo → copialo y pegalo en <code>datos.json</code> → subilo a GitHub.</p>
-      </div>
       <div id="serviciosEditor"></div>
       <button class="btn-primary" onclick="saveServicios()">💾 Guardar servicios</button>
-      <div class="export-area" style="margin-top:20px">
-        <h4>📋 datos.json actualizado (con servicios guardados)</h4>
-        <textarea id="exportJsonServ" readonly placeholder="Aparecerá aquí después de guardar..."></textarea>
-        <div class="export-btns">
-          <button class="btn-secondary" onclick="copiarExportServ()">📋 Copiar al portapapeles</button>
+    </section>
+
+    <!-- Configuración Token -->
+    <section id="sec-token" style="display:none">
+      <div class="page-header"><h2>🔑 GitHub Token</h2><p>Configurar token para guardar automáticamente</p></div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>Token de acceso personal</h3></div>
+        <div class="admin-card-body">
+          <div class="token-config">
+            <h4>📌 ¿Cómo obtener el token?</h4>
+            <p>1. Ve a <a href="https://github.com/settings/tokens" target="_blank">GitHub Tokens</a><br>
+            2. Haz clic en "Generate new token (classic)"<br>
+            3. Nombre: "panel-barbara"<br>
+            4. Expiración: "No expiration"<br>
+            5. Marca SOLO el permiso <strong>repo</strong><br>
+            6. Genera y copia el token</p>
+          </div>
+          <div class="field-group"><label>GitHub Token</label><input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx"></div>
+          <div class="field-group"><label>Repositorio (usuario/repo)</label><input type="text" id="repoName" placeholder="ej: barbara/barbara-inmobiliaria"></div>
+          <button class="btn-primary" onclick="guardarToken()">💾 Guardar Token</button>
+          <p id="tokenStatus" style="margin-top:12px; font-size:0.8rem;"></p>
         </div>
       </div>
     </section>
@@ -245,17 +228,17 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
       <div class="field-group"><label>Estado</label><select id="fBadge"><option value="En Venta">En Venta</option><option value="En Alquiler">En Alquiler</option></select></div>
       <div class="field-group"><label>Precio</label><input type="text" id="fPrecio"></div>
     </div>
-    <div class="field-group"><label>Nota de precio</label><input type="text" id="fPrecioNota" placeholder="Ej: Cochera incluida, Negociable..."></div>
+    <div class="field-group"><label>Nota de precio</label><input type="text" id="fPrecioNota"></div>
     <div class="field-group"><label>Ubicación</label><input type="text" id="fUbi"></div>
     <div class="field-group"><label>Descripción</label><textarea id="fDesc" rows="4"></textarea></div>
-    <div class="field-group"><label>Tags (separar con comas)</label><input type="text" id="fTags" placeholder="2 dormitorios, 1 baño, 80 m²"></div>
-    <div class="field-group"><label>Características (una por línea)</label><textarea id="fCaract" rows="4" placeholder="Cocina equipada&#10;Piscina&#10;Garaje"></textarea></div>
-    <div class="field-group"><label>URL imagen principal</label><input type="text" id="fImgPrincipal" oninput="previewImg('fImgPrincipal','fImgPreview')" placeholder="https://i.ibb.co/..."></div>
+    <div class="field-group"><label>Tags (separar con comas)</label><input type="text" id="fTags"></div>
+    <div class="field-group"><label>Características (una por línea)</label><textarea id="fCaract" rows="4"></textarea></div>
+    <div class="field-group"><label>URL imagen principal</label><input type="text" id="fImgPrincipal" oninput="previewImg('fImgPrincipal','fImgPreview')"></div>
     <img id="fImgPreview" class="img-preview">
-    <div class="field-group"><label>URLs galería (una por línea)</label><textarea id="fGaleria" rows="4" placeholder="https://i.ibb.co/foto2.jpg&#10;https://i.ibb.co/foto3.jpg"></textarea></div>
+    <div class="field-group"><label>URLs galería (una por línea)</label><textarea id="fGaleria" rows="4"></textarea></div>
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
-      <button class="btn-primary" onclick="saveProp()">💾 Guardar propiedad</button>
+      <button class="btn-primary" onclick="saveProp()">💾 Guardar</button>
     </div>
   </div>
 </div>
@@ -267,62 +250,94 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
 let CREDS = { user: 'admin', pass: 'barbara243' };
 try { const saved = localStorage.getItem('barbara_creds_admin'); if (saved) CREDS = JSON.parse(saved); } catch(e) {}
 
-// ===== DATOS EN MEMORIA (cargados desde datos.json) =====
+// ===== CONFIGURACIÓN GITHUB =====
+let GITHUB_CONFIG = { token: '', repo: '' };
+try { const saved = localStorage.getItem('github_config'); if (saved) GITHUB_CONFIG = JSON.parse(saved); } catch(e) {}
+
+// ===== DATOS =====
 let propiedadesGlobal = [];
 let serviciosGlobal = [
-  { id: 1, numero: '01', titulo: 'Venta de propiedades', descripcion: 'Asesoramiento integral para la comercialización de inmuebles, incluyendo tasación, estrategia de difusión y acompañamiento hasta la concreción de la operación.' },
-  { id: 2, numero: '02', titulo: 'Tasaciones inmobiliarias', descripcion: 'Valoración profesional de propiedades basada en análisis de mercado, ubicación y características del inmueble para determinar su valor real.' },
-  { id: 3, numero: '03', titulo: 'Alquileres y administración', descripcion: 'Gestión integral de alquileres, redacción de contratos, selección de inquilinos y seguimiento administrativo durante toda la relación locativa.' }
+  { id: 1, numero: '01', titulo: 'Venta de propiedades', descripcion: 'Asesoramiento integral para la comercialización de inmuebles...' },
+  { id: 2, numero: '02', titulo: 'Tasaciones inmobiliarias', descripcion: 'Valoración profesional de propiedades...' },
+  { id: 3, numero: '03', titulo: 'Alquileres y administración', descripcion: 'Gestión integral de alquileres...' }
 ];
 
-// ===== CARGA datos.json =====
+// ===== CARGAR DATOS =====
 async function cargarDatos() {
   try {
     const res = await fetch('./datos.json?v=' + Date.now());
-    if (!res.ok) throw new Error('Sin datos.json');
+    if (!res.ok) throw new Error();
     const datos = await res.json();
     if (datos.propiedades) propiedadesGlobal = datos.propiedades;
     if (datos.servicios) serviciosGlobal = datos.servicios;
   } catch(e) {
-    // Fallback localStorage
     try { const s = localStorage.getItem('barbara_propiedades'); if (s) propiedadesGlobal = JSON.parse(s); } catch(e2) {}
-    console.warn('Usando localStorage como fallback');
   }
 }
 
-// ===== GUARDAR EN LOCALSTORAGE (respaldo local) =====
-function guardarLocal() {
-  localStorage.setItem('barbara_propiedades', JSON.stringify(propiedadesGlobal));
+// ===== GUARDAR EN GITHUB AUTOMÁTICAMENTE =====
+async function guardarEnGitHub() {
+  if (!GITHUB_CONFIG.token || !GITHUB_CONFIG.repo) {
+    showToast('⚠️ Configurá primero el Token de GitHub en la sección "GitHub Token"', 'error');
+    return false;
+  }
+  
+  const datosCompletos = { propiedades: propiedadesGlobal, servicios: serviciosGlobal };
+  const contenido = JSON.stringify(datosCompletos, null, 2);
+  const contenidoBase64 = btoa(unescape(encodeURIComponent(contenido)));
+  
+  try {
+    // Obtener el SHA actual del archivo
+    const shaRes = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.repo}/contents/datos.json`, {
+      headers: { 'Authorization': `token ${GITHUB_CONFIG.token}` }
+    });
+    
+    let sha = null;
+    if (shaRes.ok) {
+      const shaData = await shaRes.json();
+      sha = shaData.sha;
+    }
+    
+    // Guardar el archivo
+    const saveRes = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.repo}/contents/datos.json`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${GITHUB_CONFIG.token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: 'Actualización desde panel admin',
+        content: contenidoBase64,
+        sha: sha
+      })
+    });
+    
+    if (saveRes.ok) {
+      showToast('✅ Guardado en GitHub exitoso. La web se actualizará en 1-2 minutos');
+      return true;
+    } else {
+      const error = await saveRes.json();
+      showToast('❌ Error al guardar: ' + (error.message || 'Error desconocido'), 'error');
+      return false;
+    }
+  } catch(e) {
+    showToast('❌ Error de conexión: ' + e.message, 'error');
+    return false;
+  }
 }
 
-// ===== GENERAR JSON PARA COPIAR =====
-function generarJsonCompleto() {
-  return JSON.stringify({ propiedades: propiedadesGlobal, servicios: serviciosGlobal }, null, 2);
-}
-
-function generarExport() {
-  document.getElementById('exportJson').value = generarJsonCompleto();
-  showToast('✓ JSON generado. Copialo y pegalo en datos.json');
-}
-
-function copiarExport() {
-  const txt = document.getElementById('exportJson').value;
-  if (!txt) { showToast('Primero generá el JSON', 'error'); return; }
-  navigator.clipboard.writeText(txt).then(() => showToast('✓ Copiado al portapapeles')).catch(() => {
-    document.getElementById('exportJson').select();
-    document.execCommand('copy');
-    showToast('✓ Copiado');
-  });
-}
-
-function copiarExportServ() {
-  const txt = document.getElementById('exportJsonServ').value;
-  if (!txt) { showToast('Primero guardá los servicios', 'error'); return; }
-  navigator.clipboard.writeText(txt).then(() => showToast('✓ Copiado al portapapeles')).catch(() => {
-    document.getElementById('exportJsonServ').select();
-    document.execCommand('copy');
-    showToast('✓ Copiado');
-  });
+// ===== FUNCIÓN PARA GUARDAR TODO (propiedades + servicios) =====
+async function guardarTodo() {
+  const btn = document.querySelector('.btn-primary');
+  const textoOriginal = btn?.textContent;
+  if (btn) { btn.textContent = '⏳ Guardando...'; btn.disabled = true; }
+  
+  const ok = await guardarEnGitHub();
+  
+  if (btn) { btn.textContent = textoOriginal; btn.disabled = false; }
+  if (ok) {
+    localStorage.setItem('barbara_propiedades', JSON.stringify(propiedadesGlobal));
+  }
 }
 
 // ===== AUTH =====
@@ -335,22 +350,33 @@ async function doLogin() {
     document.getElementById('adminPanel').classList.add('visible');
     await cargarDatos();
     renderAll();
+    cargarTokenConfig();
   } else {
     document.getElementById('loginError').style.display = 'block';
-    document.getElementById('loginPass').value = '';
   }
 }
 
-function doLogout() {
-  sessionStorage.removeItem('admin_auth');
-  location.reload();
-}
+function doLogout() { sessionStorage.removeItem('admin_auth'); location.reload(); }
 
-// Auto-login si ya estaba logueado
 if (sessionStorage.getItem('admin_auth') === '1') {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('adminPanel').classList.add('visible');
   cargarDatos().then(() => renderAll());
+  cargarTokenConfig();
+}
+
+function cargarTokenConfig() {
+  if (GITHUB_CONFIG.token) document.getElementById('githubToken').value = GITHUB_CONFIG.token;
+  if (GITHUB_CONFIG.repo) document.getElementById('repoName').value = GITHUB_CONFIG.repo;
+}
+
+function guardarToken() {
+  const token = document.getElementById('githubToken').value.trim();
+  const repo = document.getElementById('repoName').value.trim();
+  if (!token || !repo) { showToast('Completá token y repositorio', 'error'); return; }
+  GITHUB_CONFIG = { token, repo };
+  localStorage.setItem('github_config', JSON.stringify(GITHUB_CONFIG));
+  showToast('✅ Token guardado. Ahora los cambios se guardan automáticamente en GitHub');
 }
 
 // ===== MOBILE =====
@@ -397,26 +423,26 @@ function renderStats() {
 function renderDashProps() {
   document.getElementById('dashPropList').innerHTML =
     propiedadesGlobal.slice(0, 3).map(propHTML).join('') ||
-    '<div style="padding:20px;text-align:center;color:#aaa">No hay propiedades cargadas</div>';
+    '<div style="padding:20px;text-align:center">No hay propiedades</div>';
 }
 
 function renderPropList() {
   document.getElementById('propList').innerHTML =
     propiedadesGlobal.map(propHTML).join('') ||
-    '<div style="padding:20px;text-align:center;color:#aaa">No hay propiedades. ¡Agregá la primera!</div>';
+    '<div style="padding:20px;text-align:center">No hay propiedades. ¡Agregá la primera!</div>';
 }
 
 function propHTML(p) {
   return `
     <div class="prop-item">
-      <img src="${p.imagenPrincipal || 'https://placehold.co/80x62?text=IMG'}" class="prop-item-img" onerror="this.src='https://placehold.co/80x62?text=IMG'">
+      <img src="${p.imagenPrincipal || 'https://placehold.co/80x62'}" class="prop-item-img" onerror="this.src='https://placehold.co/80x62'">
       <div class="prop-item-info">
         <h4>${p.titulo}</h4>
         <p>${p.ubicacion}</p>
         <span class="prop-item-badge">${p.badge} · ${p.precio}</span>
       </div>
       <div class="prop-item-actions">
-        <button class="btn-edit-small" onclick="openPropModal(${p.id})">✏️ Editar</button>
+        <button class="btn-edit-small" onclick="openPropModal(${p.id})">✏️</button>
         <button class="btn-danger" onclick="deleteProp(${p.id})">🗑</button>
       </div>
     </div>`;
@@ -480,26 +506,24 @@ function saveProp() {
     imagenPrincipal: document.getElementById('fImgPrincipal').value.trim(),
     galeria: document.getElementById('fGaleria').value.split('\n').map(s => s.trim()).filter(Boolean)
   };
-
+  
   if (editId) {
     const idx = propiedadesGlobal.findIndex(x => x.id === parseInt(editId));
     if (idx >= 0) propiedadesGlobal[idx] = prop;
   } else {
     propiedadesGlobal.push(prop);
   }
-
-  guardarLocal();
-  renderStats(); renderDashProps(); renderPropList();
+  
   closeModal();
-  showToast(editId ? '✓ Propiedad actualizada — ¡Exportá el JSON!' : '✓ Propiedad agregada — ¡Exportá el JSON!');
+  renderAll();
+  guardarTodo();
 }
 
 function deleteProp(id) {
   if (!confirm('¿Eliminar esta propiedad?')) return;
   propiedadesGlobal = propiedadesGlobal.filter(x => x.id !== id);
-  guardarLocal();
-  renderStats(); renderDashProps(); renderPropList();
-  showToast('Propiedad eliminada — ¡Exportá el JSON!');
+  renderAll();
+  guardarTodo();
 }
 
 // ===== SERVICIOS =====
@@ -509,8 +533,8 @@ function saveServicios() {
     const d = document.getElementById(`sv_d_${i}`).value.trim();
     if (t) { serviciosGlobal[i].titulo = t; serviciosGlobal[i].descripcion = d; }
   }
-  document.getElementById('exportJsonServ').value = generarJsonCompleto();
-  showToast('✓ Servicios guardados — Copiá el JSON de abajo');
+  renderServiciosEditor();
+  guardarTodo();
 }
 
 // ===== CREDENCIALES =====
