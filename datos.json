@@ -1,0 +1,128 @@
+{
+  "propiedades": [
+    {
+      "id": 1,
+      "badge": "En Venta",
+      "titulo": "Departamento en Venta – Edificio Ysyry",
+      "ubicacion": "Planta baja – contrafrente, Posadas, Misiones",
+      "precio": "USD 70.000",
+      "precioNota": "",
+      "descripcion": "Excelente oportunidad en uno de los edificios más buscados de la ciudad, ubicado en una zona estratégica, con cercanía al centro, la costanera y principales accesos. Ideal tanto para vivienda como para inversión.",
+      "tags": ["1 dormitorio", "1 baño", "40,74 m²"],
+      "caracteristicas": [
+        "Cocina integrada",
+        "Living-comedor luminoso",
+        "Lavadero",
+        "Diseño moderno",
+        "Ascensor",
+        "Entorno residencial tranquilo"
+      ],
+      "imagenPrincipal": "https://i.ibb.co/Mk1M19JK/imagen1.jpg",
+      "galeria": [
+        "https://i.ibb.co/5WNk97S2/imagen2.jpg",
+        "https://i.ibb.co/DfVQxv6C/imagen3.jpg",
+        "https://i.ibb.co/209RJVGn/imagen4.jpg",
+        "https://i.ibb.co/twCqCtkC/imagen5.jpg"
+      ]
+    },
+    {
+      "id": 2,
+      "badge": "En Venta",
+      "titulo": "Departamento en Venta – Edificio Citrino",
+      "ubicacion": "Séptimo piso con vista al río Paraná, Posadas, Misiones",
+      "precio": "USD 200.000",
+      "precioNota": "Cochera incluida",
+      "descripcion": "Excelente departamento en uno de los edificios más destacados de Posadas, con cercanía al centro, la costanera y principales accesos. Séptimo piso con vista al río.",
+      "tags": ["2 dormitorios", "2 baños", "Cochera incluida", "Vista al río"],
+      "caracteristicas": [
+        "Cocina funcional",
+        "Living-comedor amplio y luminoso",
+        "Lavadero independiente",
+        "Seguridad y accesos controlados",
+        "Ascensores",
+        "Excelente calidad constructiva"
+      ],
+      "imagenPrincipal": "https://i.ibb.co/4ZRDzRVN/imagen1.jpg",
+      "galeria": [
+        "https://i.ibb.co/0RGkthtm/imagen2.jpg",
+        "https://i.ibb.co/ym30xhJL/imagen3.jpg",
+        "https://i.ibb.co/1tDTgY3K/imagen4.jpg",
+        "https://i.ibb.co/Vpx0v1DW/imagen5.jpg",
+        "https://i.ibb.co/99m1B426/imagen6.jpg",
+        "https://i.ibb.co/20bss0h5/imagen7.jpg",
+        "https://i.ibb.co/BKqs7YcK/imagen8.jpg"
+      ]
+    },
+    {
+      "id": 3,
+      "badge": "En Venta",
+      "titulo": "Terreno en Venta – Av. Las Heras",
+      "ubicacion": "Avenida Las Heras, Posadas, Misiones",
+      "precio": "USD 50.000",
+      "precioNota": "Negociable • Consultar financiación",
+      "descripcion": "Excelente oportunidad sobre una de las avenidas principales de Posadas, con alto tránsito, visibilidad y gran proyección comercial y residencial.",
+      "tags": ["433 m²", "Frente sobre avenida", "Zona consolidada"],
+      "caracteristicas": [
+        "Superficie total 433 m²",
+        "Frente sobre avenida principal",
+        "Construcción existente apta para reciclaje",
+        "Entorno consolidado",
+        "Alto tránsito vehicular",
+        "Negociable"
+      ],
+      "imagenPrincipal": "https://i.ibb.co/GvrGyvdZ/terreno1.jpg",
+      "galeria": [
+        "https://i.ibb.co/DfbM1Tdx/terreno2.jpg",
+        "https://i.ibb.co/qF0Nd1Q6/terreno3.jpg"
+      ]
+    },
+    {
+      "id": 4,
+      "badge": "En Alquiler",
+      "titulo": "Inmueble de Destino Mixto en Alquiler – Ruta 12",
+      "ubicacion": "Sobre Ruta Nacional 12, frente al Hospital Baliña, Posadas, Misiones",
+      "precio": "$1.250.000/mes",
+      "precioNota": "Antes $1.500.000",
+      "descripcion": "Excelente propiedad de destino mixto (comercial/habitacional), en zona de alto tránsito vehicular y gran visibilidad. Ideal para empresas, instituciones, comercios, consultorios o logística.",
+      "tags": ["45x45 m", "3 dormitorios", "2 baños", "Uso mixto"],
+      "caracteristicas": [
+        "Terreno de 45x45 metros",
+        "3 dormitorios y 2 baños",
+        "Galería techada",
+        "Predio totalmente cerrado",
+        "Muros perimetrales y portones",
+        "Sistema de alarma",
+        "Frente al Hospital Baliña"
+      ],
+      "imagenPrincipal": "https://i.ibb.co/wNNdMn8S/inmueble1.jpg",
+      "galeria": [
+        "https://i.ibb.co/prfy2HJy/inmueble2.jpg",
+        "https://i.ibb.co/nqV8KLtr/inmueble3.jpg",
+        "https://i.ibb.co/RpLmdGLz/inmueble4.jpg",
+        "https://i.ibb.co/yBBzDcsC/inmueble5.jpg",
+        "https://i.ibb.co/JFCXgbRW/inmueble6.jpg",
+        "https://i.ibb.co/XxDFJtmm/inmueble7.jpg"
+      ]
+    }
+  ],
+  "servicios": [
+    {
+      "id": 1,
+      "numero": "01",
+      "titulo": "Venta de propiedades",
+      "descripcion": "Asesoramiento integral para la comercialización de inmuebles, incluyendo tasación, estrategia de difusión y acompañamiento hasta la concreción de la operación."
+    },
+    {
+      "id": 2,
+      "numero": "02",
+      "titulo": "Tasaciones inmobiliarias",
+      "descripcion": "Valoración profesional de propiedades basada en análisis de mercado, ubicación y características del inmueble para determinar su valor real."
+    },
+    {
+      "id": 3,
+      "numero": "03",
+      "titulo": "Alquileres y administración",
+      "descripcion": "Gestión integral de alquileres, redacción de contratos, selección de inquilinos y seguimiento administrativo durante toda la relación locativa."
+    }
+  ]
+}
