@@ -3,12 +3,17 @@
     {
       "id": 1,
       "badge": "En Venta",
-      "titulo": "Departamento en Venta – Edificio Ysyry",
+      "titulo": "Departamento en Venta – Edificio Ysyry1",
       "ubicacion": "Planta baja – contrafrente, Posadas, Misiones",
       "precio": "USD 70.000",
       "precioNota": "",
       "descripcion": "Excelente oportunidad en uno de los edificios más buscados de la ciudad, ubicado en una zona estratégica, con cercanía al centro, la costanera y principales accesos. Ideal tanto para vivienda como para inversión.",
-      "tags": ["1 dormitorio", "1 baño", "40,74 m²"],
+      "tags": [
+        "1 dormitorio",
+        "1 baño",
+        "40",
+        "74 m²"
+      ],
       "caracteristicas": [
         "Cocina integrada",
         "Living-comedor luminoso",
@@ -33,7 +38,12 @@
       "precio": "USD 200.000",
       "precioNota": "Cochera incluida",
       "descripcion": "Excelente departamento en uno de los edificios más destacados de Posadas, con cercanía al centro, la costanera y principales accesos. Séptimo piso con vista al río.",
-      "tags": ["2 dormitorios", "2 baños", "Cochera incluida", "Vista al río"],
+      "tags": [
+        "2 dormitorios",
+        "2 baños",
+        "Cochera incluida",
+        "Vista al río"
+      ],
       "caracteristicas": [
         "Cocina funcional",
         "Living-comedor amplio y luminoso",
@@ -61,7 +71,11 @@
       "precio": "USD 50.000",
       "precioNota": "Negociable • Consultar financiación",
       "descripcion": "Excelente oportunidad sobre una de las avenidas principales de Posadas, con alto tránsito, visibilidad y gran proyección comercial y residencial.",
-      "tags": ["433 m²", "Frente sobre avenida", "Zona consolidada"],
+      "tags": [
+        "433 m²",
+        "Frente sobre avenida",
+        "Zona consolidada"
+      ],
       "caracteristicas": [
         "Superficie total 433 m²",
         "Frente sobre avenida principal",
@@ -84,7 +98,12 @@
       "precio": "$1.250.000/mes",
       "precioNota": "Antes $1.500.000",
       "descripcion": "Excelente propiedad de destino mixto (comercial/habitacional), en zona de alto tránsito vehicular y gran visibilidad. Ideal para empresas, instituciones, comercios, consultorios o logística.",
-      "tags": ["45x45 m", "3 dormitorios", "2 baños", "Uso mixto"],
+      "tags": [
+        "45x45 m",
+        "3 dormitorios",
+        "2 baños",
+        "Uso mixto"
+      ],
       "caracteristicas": [
         "Terreno de 45x45 metros",
         "3 dormitorios y 2 baños",
