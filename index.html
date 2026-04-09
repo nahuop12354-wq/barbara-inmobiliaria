@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ===== TODO TU CSS ORIGINAL COMPLETO ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
@@ -36,13 +35,11 @@ body {
 .logo-wrap { display: flex; align-items: center; gap: 12px; text-decoration: none; }
 .logo-img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(155,184,136,0.6); background: white; box-shadow: 0 4px 12px rgba(30,58,30,0.15); }
 .hamburger { background: rgba(255,255,255,0.2); border: 1.5px solid rgba(155,184,136,0.5); width: 46px; height: 46px; border-radius: 50%; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; transition: all 0.3s ease; backdrop-filter: blur(6px); }
-.hamburger span { display: block; width: 22px; height: 2px; background: var(--verde-medio); border-radius: 2px; transition: all 0.3s ease; }
+.hamburger span { display: block; width: 22px; height: 2px; background: white; border-radius: 2px; transition: all 0.3s ease; }
 .header.scrolled .hamburger span { background: var(--verde-oscuro); }
 .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
 .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
-.hamburger span { background: white; }
-.header.scrolled .hamburger span { background: var(--verde-oscuro); }
 .side-menu { position: fixed; top: 0; right: -300px; width: 280px; height: 100vh; background: white; z-index: 9998; transition: right 0.4s cubic-bezier(0.4,0,0.2,1); padding: 90px 1.5rem 2rem; box-shadow: -5px 0 30px rgba(30,58,30,0.2); border-left: 3px solid var(--verde-palido); overflow-y: auto; }
 .side-menu.open { right: 0; }
 .side-menu ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
@@ -85,22 +82,22 @@ body {
 .prop-card { background: white; border-radius: 20px; box-shadow: var(--sombra-suave); border: 1px solid rgba(194,212,181,0.5); overflow: hidden; transition: all 0.35s ease; cursor: pointer; display: flex; flex-direction: column; }
 .prop-card:hover { transform: translateY(-8px); box-shadow: var(--sombra-media); }
 
-/* ===== IMÁGENES MEJORADAS - PROPORCIONES OPTIMIZADAS ===== */
-.prop-img-main { 
-  position: relative; 
-  width: 100%; 
-  /* Cambio: aspect-ratio 4/3 para mejor proporción inmobiliaria */
-  aspect-ratio: 4/3; 
-  overflow: hidden; 
-  background: #f3f7ef; 
-  flex-shrink: 0; 
+/* ===== IMÁGENES CARRUSEL — PROPORCIONES MEJORADAS ===== */
+.prop-img-main {
+  position: relative;
+  width: 100%;
+  /* 3/2 = proporción ideal para fotos inmobiliarias de interiores/exteriores */
+  aspect-ratio: 3/2;
+  overflow: hidden;
+  background: #f3f7ef;
+  flex-shrink: 0;
 }
 .prop-img-main img {
-  width: 100%; 
+  width: 100%;
   height: 100%;
-  object-fit: cover; 
-  /* Cambio: object-position optimizado para mostrar más del inmueble */
-  object-position: center 25%; 
+  object-fit: cover;
+  /* center center: sin recorte arbitrario, muestra el centro de la imagen */
+  object-position: center center;
   display: block;
   transition: transform 0.5s ease;
   image-rendering: auto;
@@ -119,11 +116,14 @@ body {
 .prop-det-item { font-size: 0.82rem; padding: 4px 12px; background: var(--verde-lima); color: var(--verde-medio); border-radius: 50px; font-weight: 600; border: 1px solid rgba(155,184,136,0.3); }
 .prop-precio { font-size: 1.4rem; font-weight: 800; color: var(--verde-medio); margin-bottom: 0; margin-top: auto; line-height: 1.3; }
 .prop-precio small { display: block; font-size: 0.82rem; font-weight: 400; color: #999; margin-top: 2px; }
+
+/* ===== MINIATURAS CARRUSEL — proporciones mejoradas ===== */
 .prop-galeria { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 12px 20px; }
-.prop-galeria-img { aspect-ratio: 1; overflow: hidden; border-radius: 8px; cursor: pointer; background: #edeae2; }
+.prop-galeria-img { aspect-ratio: 4/3; overflow: hidden; border-radius: 8px; cursor: pointer; background: #edeae2; }
 .prop-galeria-img img {
   width: 100%; height: 100%;
   object-fit: cover;
+  object-position: center center;
   display: block;
   transition: transform 0.3s;
   image-rendering: auto;
@@ -132,6 +132,7 @@ body {
   transform: translateZ(0);
 }
 .prop-galeria-img:hover img { transform: translateZ(0) scale(1.1); }
+
 .prop-footer { padding: 0 20px 20px; }
 .btn-ver { display: block; width: 100%; text-align: center; padding: 13px; background: var(--verde-oscuro); color: white; font-weight: 700; font-size: 0.95rem; border-radius: 12px; border: 2px solid var(--verde-oscuro); cursor: pointer; transition: all 0.3s ease; text-decoration: none; font-family: 'DM Sans', sans-serif; min-height: 48px; }
 .btn-ver:hover { background: transparent; color: var(--verde-oscuro); }
@@ -147,15 +148,15 @@ body {
 .detail-back { display: inline-flex; align-items: center; gap: 8px; background: none; border: 2px solid var(--verde-palido); color: var(--verde-medio); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.95rem; padding: 12px 20px; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; margin-bottom: 24px; min-height: 48px; }
 .detail-back:hover { background: var(--verde-lima); border-color: var(--verde-claro); }
 
-/* Imagen detalle – proporciones optimizadas */
+/* ===== IMAGEN DETALLE PRINCIPAL — proporción mejorada ===== */
 .detail-main-img {
-  width: 100%; 
-  /* Cambio: aspect-ratio para mejor visualización */
-  aspect-ratio: 16/9; 
-  object-fit: cover; 
-  object-position: center 25%; 
-  border-radius: 20px; 
-  display: block; 
+  width: 100%;
+  /* 4/3: muestra mejor los espacios interiores sin cortar techo ni piso */
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  object-position: center center;
+  border-radius: 20px;
+  display: block;
   margin-bottom: 16px;
   box-shadow: var(--sombra-media);
   image-rendering: auto;
@@ -163,12 +164,14 @@ body {
   backface-visibility: hidden;
   transform: translateZ(0);
 }
+
+/* ===== MINIATURAS DETALLE — proporción mejorada ===== */
 .detail-galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-bottom: 36px; }
 .detail-galeria-item { aspect-ratio: 4/3; border-radius: 12px; overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
 .detail-galeria-item img {
   width: 100%; height: 100%;
-  object-fit: cover; 
-  object-position: center 25%; 
+  object-fit: cover;
+  object-position: center center;
   display: block;
   transition: transform 0.3s;
   image-rendering: auto;
@@ -178,6 +181,7 @@ body {
 }
 .detail-galeria-item:hover img { transform: translateZ(0) scale(1.08); }
 .detail-galeria-item.active { border-color: var(--verde-medio); box-shadow: 0 0 0 2px var(--verde-palido); }
+
 .detail-body { display: grid; grid-template-columns: 1fr 340px; gap: 40px; }
 .detail-info-titulo { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 800; color: var(--verde-oscuro); line-height: 1.2; margin-bottom: 10px; }
 .detail-info-ubi { font-size: 0.95rem; color: #888; margin-bottom: 20px; display: flex; align-items: center; gap: 6px; }
@@ -287,7 +291,6 @@ body {
 .footer-copyright a { color: #1e3a1e; text-decoration: none; font-weight: 600; }
 .footer-copyright a:hover { text-decoration: underline; }
 
-/* ===== MEDIA QUERIES CON AJUSTES DE PROPORCIÓN ===== */
 @media (max-width: 900px) {
   .sobre-container { grid-template-columns: 1fr; gap: 36px; }
   .sobre-img-frame { max-width: 320px; }
@@ -297,10 +300,7 @@ body {
   .contacto-container { grid-template-columns: 1fr; gap: 40px; }
   .detail-body { grid-template-columns: 1fr; }
   .detail-sidebar { position: static; }
-  .detail-main-img { 
-    aspect-ratio: 16/9; 
-    height: auto; 
-  }
+  .detail-main-img { aspect-ratio: 4/3; height: auto; }
 }
 @media (max-width: 600px) {
   .header { padding: 0.7rem 1rem; }
@@ -317,11 +317,7 @@ body {
   .section-head p { font-size: 0.92rem; }
   .carousel-slide { grid-template-columns: 1fr; }
   .carousel-track { gap: 16px; }
-  /* Ajuste mobile para imágenes del carrusel */
-  .prop-img-main { 
-    aspect-ratio: 4/3; 
-    height: auto; 
-  }
+  .prop-img-main { aspect-ratio: 3/2; height: auto; }
   .prop-titulo { font-size: 1.05rem; }
   .prop-precio { font-size: 1.25rem; }
   .prop-galeria { grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 10px 14px; }
@@ -329,11 +325,7 @@ body {
   .prop-footer { padding: 0 14px 16px; }
   .carousel-btn { width: 44px; height: 44px; font-size: 1rem; }
   .carousel-controls { gap: 14px; margin-top: 20px; }
-  .detail-main-img { 
-    aspect-ratio: 16/9; 
-    height: auto; 
-    border-radius: 14px; 
-  }
+  .detail-main-img { aspect-ratio: 4/3; height: auto; border-radius: 14px; }
   .detail-galeria { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
   .detail-info-titulo { font-size: 1.5rem; }
   .detail-precio { font-size: 1.6rem; }
@@ -362,7 +354,7 @@ body {
 @media (max-width: 380px) {
   .hero-content h1 { font-size: 2rem; }
   .sobre-img-frame { max-width: 220px; }
-  .prop-img-main { aspect-ratio: 4/3; }
+  .prop-img-main { aspect-ratio: 3/2; }
   .contacto-form-box { padding: 22px 16px; }
 }
 </style>
@@ -465,7 +457,7 @@ body {
   </div>
 </section>
 
-<!-- SERVICIOS — IGUAL AL ORIGINAL, sin cambios -->
+<!-- SERVICIOS -->
 <section class="servicios-section" id="servicios">
   <div class="servicios-overlay">
     <div class="servicios-inner">
@@ -571,7 +563,6 @@ body {
 </footer>
 
 <script>
-// ===== CARGA DESDE datos.json (sin Supabase) =====
 async function getPropiedades() {
   try {
     const res = await fetch('./datos.json?v=' + Date.now());
@@ -579,7 +570,6 @@ async function getPropiedades() {
     const datos = await res.json();
     if (datos.propiedades && datos.propiedades.length > 0) return datos.propiedades;
   } catch(e) { console.warn('Usando datos por defecto:', e); }
-  // Fallback localStorage
   try { const s = localStorage.getItem('barbara_propiedades'); if (s) return JSON.parse(s); } catch(e) {}
   return [
     { id: 1, badge: 'En Venta', titulo: 'Departamento en Venta – Edificio Ysyry', ubicacion: 'Planta baja – contrafrente, Posadas, Misiones', precio: 'USD 70.000', precioNota: '', descripcion: 'Excelente oportunidad en uno de los edificios más buscados de la ciudad, ubicado en una zona estratégica, con cercanía al centro, la costanera y principales accesos. Ideal tanto para vivienda como para inversión.', tags: ['1 dormitorio', '1 baño', '40,74 m²'], caracteristicas: ['Cocina integrada', 'Living-comedor luminoso', 'Lavadero', 'Diseño moderno', 'Ascensor', 'Entorno residencial tranquilo'], imagenPrincipal: 'https://i.ibb.co/Mk1M19JK/imagen1.jpg', galeria: ['https://i.ibb.co/5WNk97S2/imagen2.jpg','https://i.ibb.co/DfVQxv6C/imagen3.jpg','https://i.ibb.co/209RJVGn/imagen4.jpg','https://i.ibb.co/twCqCtkC/imagen5.jpg'] },
@@ -589,7 +579,6 @@ async function getPropiedades() {
   ];
 }
 
-// ===== EL RESTO DEL JS ORIGINAL SIN CAMBIOS =====
 (function() {
   let propiedadesCache = [];
 
@@ -598,11 +587,9 @@ async function getPropiedades() {
     buildSlides();
   }
 
-  /* ---- HEADER ---- */
   const header = document.getElementById('header');
   window.addEventListener('scroll', () => { header.classList.toggle('scrolled', window.scrollY > 40); });
 
-  /* ---- MENÚ ---- */
   const hamburger = document.getElementById('hamburger');
   const sideMenu = document.getElementById('sideMenu');
   const overlay = document.getElementById('overlay');
@@ -617,7 +604,6 @@ async function getPropiedades() {
   overlay.addEventListener('click', () => toggleMenu(false));
   document.querySelectorAll('.menu-close-link').forEach(a => a.addEventListener('click', () => toggleMenu(false)));
 
-  /* ---- SCROLL SUAVE ---- */
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       const target = document.querySelector(a.getAttribute('href'));
@@ -628,7 +614,6 @@ async function getPropiedades() {
     });
   });
 
-  /* ---- CARRUSEL ---- */
   const track = document.getElementById('carouselTrack');
   const dotsContainer = document.getElementById('carouselDots');
   const prevBtn = document.getElementById('prevBtn');
@@ -706,7 +691,6 @@ async function getPropiedades() {
 
   window.addEventListener('resize', () => { buildSlides(); goTo(0); });
 
-  /* ---- DETALLE ---- */
   function openDetail(id) {
     const p = propiedadesCache.find(x => x.id === id);
     if (!p) return;
@@ -750,7 +734,6 @@ async function getPropiedades() {
     setTimeout(() => { carouselWrapper.style.opacity = '1'; }, 30);
   });
 
-  /* ---- FORMULARIO ---- */
   document.getElementById('contactForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const nombre = document.getElementById('nombre').value;
