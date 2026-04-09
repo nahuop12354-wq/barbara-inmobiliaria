@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Panel Admin – Bárbara Insaurralde</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
 <style>
@@ -42,12 +42,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
 .sidebar-icon { font-size: 1rem; width: 20px; }
 .sidebar-logout { margin-top: auto; padding: 11px 14px; background: var(--red-l); color: rgba(255,150,150,0.9); border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
 .sidebar-logout:hover { background: rgba(231,76,60,0.3); color: white; }
-.mobile-topbar { display: none; position: sticky; top: 0; background: linear-gradient(135deg, var(--v0), var(--v1)); padding: 12px 16px; align-items: center; justify-content: space-between; }
+.mobile-topbar { display: none; position: sticky; top: 0; background: linear-gradient(135deg, var(--v0), var(--v1)); padding: 12px 16px; align-items: center; justify-content: space-between; z-index: 100; }
 .mobile-brand { color: white; font-weight: 700; }
 .mobile-menu-btn { width: 44px; height: 44px; border-radius: 10px; background: rgba(255,255,255,0.12); border: none; color: white; font-size: 1.3rem; cursor: pointer; }
 .mobile-sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 998; }
 .mobile-sidebar-overlay.open { display: block; }
-.main-content { flex: 1; padding: 28px 32px; max-width: calc(100vw - 260px); }
+.main-content { flex: 1; padding: 28px 32px; overflow-x: hidden; max-width: calc(100vw - 260px); }
 .page-header { margin-bottom: 28px; }
 .page-header h2 { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: var(--v1); }
 .page-header p { color: #999; margin-top: 5px; }
@@ -56,58 +56,82 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
 .stat-n { font-size: 2.2rem; font-weight: 800; color: var(--v1); }
 .stat-l { font-size: 0.78rem; color: #aaa; margin-top: 5px; }
 .admin-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 22px; }
-.admin-card-header { padding: 18px 24px; border-bottom: 1px solid var(--v6); display: flex; align-items: center; justify-content: space-between; }
+.admin-card-header { padding: 18px 24px; border-bottom: 1px solid var(--v6); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, var(--v8), white); }
 .admin-card-header h3 { font-size: 0.98rem; color: var(--v1); font-weight: 700; }
 .admin-card-body { padding: 24px; }
 .field-group { margin-bottom: 18px; }
 .field-group label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--v2); text-transform: uppercase; margin-bottom: 7px; }
-.field-group input, .field-group textarea, .field-group select { width: 100%; padding: 12px 16px; border: 2px solid var(--v5); border-radius: var(--radius-sm); font-size: 0.95rem; background: var(--v7); }
+.field-group input, .field-group textarea, .field-group select { width: 100%; padding: 12px 16px; border: 2px solid var(--v5); border-radius: var(--radius-sm); font-size: 0.95rem; background: var(--v7); transition: var(--trans); }
 .field-group input:focus, .field-group textarea:focus { outline: none; border-color: var(--v2); background: white; }
 .field-group textarea { resize: vertical; min-height: 82px; }
 .field-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.img-preview { width: 100%; max-height: 160px; object-fit: cover; border-radius: 10px; margin-top: 10px; display: none; }
+.img-preview { width: 100%; max-height: 160px; object-fit: cover; border-radius: 10px; margin-top: 10px; display: none; border: 2px solid var(--v5); }
 .img-preview.show { display: block; }
-.btn-primary { padding: 11px 24px; background: linear-gradient(135deg, var(--v1), var(--v2)); color: white; border: none; border-radius: 50px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
+.btn-primary { padding: 11px 24px; background: linear-gradient(135deg, var(--v1), var(--v2)); color: white; border: none; border-radius: 50px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; transition: var(--trans); }
 .btn-primary:hover { transform: translateY(-2px); }
-.btn-secondary { padding: 11px 20px; background: var(--v7); color: var(--v2); border: 2px solid var(--v5); border-radius: 50px; font-weight: 600; cursor: pointer; }
-.btn-danger { padding: 8px 14px; background: var(--red-l); color: var(--red); border: none; border-radius: 8px; cursor: pointer; }
+.btn-secondary { padding: 11px 20px; background: var(--v7); color: var(--v2); border: 2px solid var(--v5); border-radius: 50px; font-weight: 600; cursor: pointer; transition: var(--trans); }
+.btn-secondary:hover { background: var(--v5); }
+.btn-danger { padding: 8px 14px; background: var(--red-l); color: var(--red); border: none; border-radius: 8px; cursor: pointer; transition: var(--trans); }
 .btn-danger:hover { background: var(--red); color: white; }
-.btn-edit-small { padding: 8px 14px; background: var(--v6); color: var(--v2); border: none; border-radius: 8px; cursor: pointer; }
+.btn-edit-small { padding: 8px 14px; background: var(--v6); color: var(--v2); border: none; border-radius: 8px; cursor: pointer; transition: var(--trans); }
+.btn-edit-small:hover { background: var(--v4); color: white; }
 .token-config { background: linear-gradient(135deg, #e8f0fe, #d4e4f7); border: 1px solid #2196f3; border-radius: 14px; padding: 18px 22px; margin-bottom: 22px; }
 .token-config h4 { color: #0d47a1; margin-bottom: 10px; }
 .token-config p { font-size: 0.85rem; color: #0d47a1; margin-bottom: 12px; }
 .token-config input { width: 100%; padding: 12px; border: 1px solid #2196f3; border-radius: 8px; font-family: monospace; }
-.token-config button { margin-top: 10px; }
 .prop-list { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-.prop-item { display: grid; grid-template-columns: 80px 1fr auto; gap: 14px; align-items: center; padding: 14px; border-radius: 14px; border: 1px solid rgba(194,212,181,0.3); background: var(--v8); }
+.prop-item { display: grid; grid-template-columns: 80px 1fr auto; gap: 14px; align-items: center; padding: 14px; border-radius: 14px; border: 1px solid rgba(194,212,181,0.3); background: var(--v8); transition: var(--trans); }
+.prop-item:hover { border-color: var(--v4); background: white; }
 .prop-item-img { width: 80px; height: 62px; border-radius: 10px; object-fit: cover; }
-.prop-item-info h4 { font-size: 0.88rem; color: var(--v1); }
+.prop-item-info h4 { font-size: 0.88rem; color: var(--v1); font-weight: 600; }
 .prop-item-info p { font-size: 0.76rem; color: #aaa; }
-.prop-item-badge { display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 0.7rem; background: rgba(45,71,45,0.1); color: var(--v2); }
+.prop-item-badge { display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; background: rgba(45,71,45,0.1); color: var(--v2); }
 .prop-item-actions { display: flex; gap: 6px; }
 .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); z-index: 9998; display: none; align-items: center; justify-content: center; padding: 20px; }
 .modal-bg.open { display: flex; }
-.modal { background: white; border-radius: 28px; padding: 36px; width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; }
+.modal { background: white; border-radius: 28px; padding: 36px; width: 100%; max-width: 750px; max-height: 90vh; overflow-y: auto; }
 .modal-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--v1); margin-bottom: 28px; }
 .modal-actions { display: flex; gap: 12px; margin-top: 28px; }
-.modal-actions .btn-primary { flex: 1; justify-content: center; padding: 15px; }
-.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(100px); background: linear-gradient(135deg, var(--v1), var(--v2)); color: white; padding: 14px 32px; border-radius: 50px; z-index: 99999; transition: transform 0.4s; pointer-events: none; }
+.modal-actions .btn-primary { flex: 1; justify-content: center; padding: 15px; font-size: 1rem; border-radius: 14px; }
+.modal-actions .btn-secondary { padding: 15px 24px; border-radius: 14px; }
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: linear-gradient(135deg, var(--v1), var(--v2)); color: white; padding: 14px 28px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; z-index: 99999; transition: transform 0.3s ease; pointer-events: none; white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 .toast.show { transform: translateX(-50%) translateY(0); }
 .toast.error { background: linear-gradient(135deg, #c0392b, var(--red)); }
-.servicio-editor { border: 2px solid var(--v5); border-radius: 16px; padding: 20px; margin-bottom: 14px; background: var(--v8); }
+@media (max-width: 700px) {
+  .toast { white-space: normal; text-align: center; max-width: 85%; padding: 12px 20px; font-size: 0.85rem; bottom: 20px; }
+}
+.servicio-editor { border: 2px solid var(--v5); border-radius: 16px; padding: 20px; margin-bottom: 14px; background: var(--v8); transition: var(--trans); }
+.servicio-editor:hover { border-color: var(--v4); background: white; }
+.servicio-num { font-size: 0.7rem; font-weight: 800; color: var(--v4); margin-bottom: 14px; letter-spacing: 1px; }
+.lista-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.lista-item input { flex: 1; padding: 10px 14px; border: 2px solid var(--v5); border-radius: 10px; font-size: 0.9rem; background: var(--v7); }
+.lista-item input:focus { outline: none; border-color: var(--v2); background: white; }
+.btn-remove-item { width: 36px; height: 36px; border-radius: 50%; background: var(--red-l); color: var(--red); border: none; cursor: pointer; font-size: 1.2rem; transition: var(--trans); }
+.btn-remove-item:hover { background: var(--red); color: white; transform: scale(1.05); }
 @media (max-width: 900px) {
   .mobile-topbar { display: flex; }
-  .sidebar { position: fixed; left: -280px; top: 0; z-index: 999; transition: left 0.35s; height: 100vh; }
+  .sidebar { position: fixed; left: -280px; top: 0; z-index: 999; transition: left 0.35s; height: 100vh; width: 260px; }
   .sidebar.mobile-open { left: 0; }
   .admin-panel { flex-direction: column; }
   .main-content { max-width: 100%; padding: 20px 16px; }
-  .stats-row { grid-template-columns: 1fr 1fr; }
-  .field-grid-2 { grid-template-columns: 1fr; }
+  .stats-row { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field-grid-2 { grid-template-columns: 1fr; gap: 12px; }
+  .admin-card-header { flex-wrap: wrap; gap: 12px; }
+  .admin-card-body { padding: 20px; }
+  .prop-item { grid-template-columns: 68px 1fr; gap: 12px; }
+  .prop-item-actions { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 10px; margin-top: 5px; }
+  .modal { padding: 24px 20px; }
 }
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   .stats-row { grid-template-columns: 1fr; }
-  .prop-item { grid-template-columns: 68px 1fr; }
-  .prop-item-actions { grid-column: 1 / -1; display: flex; }
+  .main-content { padding: 16px 12px; }
+  .stat-card { padding: 16px; }
+  .stat-n { font-size: 1.8rem; }
+  .admin-card-header { padding: 14px 16px; }
+  .admin-card-body { padding: 16px; }
+  .prop-item { padding: 12px; }
+  .modal-actions { flex-direction: column; }
+  .modal-actions .btn-secondary { order: 2; }
 }
 </style>
 </head>
@@ -142,10 +166,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
     <div class="sidebar-divider"></div>
     <div class="sidebar-label">Contenido</div>
     <a href="#" onclick="showSec('dashboard',this);return false;" class="active"><span class="sidebar-icon">📊</span>Dashboard</a>
+    <a href="#" onclick="showSec('hero',this);return false;"><span class="sidebar-icon">🖼️</span>Hero</a>
+    <a href="#" onclick="showSec('sobremi',this);return false;"><span class="sidebar-icon">👤</span>Sobre Mí</a>
     <a href="#" onclick="showSec('propiedades',this);return false;"><span class="sidebar-icon">🏠</span>Propiedades</a>
     <a href="#" onclick="showSec('servicios',this);return false;"><span class="sidebar-icon">📋</span>Servicios</a>
+    <a href="#" onclick="showSec('contacto',this);return false;"><span class="sidebar-icon">📬</span>Contacto</a>
+    <a href="#" onclick="showSec('mapa',this);return false;"><span class="sidebar-icon">📍</span>Mapa</a>
     <div class="sidebar-divider"></div>
     <div class="sidebar-label">Configuración</div>
+    <a href="#" onclick="showSec('config',this);return false;"><span class="sidebar-icon">⚙️</span>Configuración</a>
     <a href="#" onclick="showSec('token',this);return false;"><span class="sidebar-icon">🔑</span>GitHub Token</a>
     <a href="#" onclick="showSec('credenciales',this);return false;"><span class="sidebar-icon">🔒</span>Contraseña</a>
     <div class="sidebar-divider"></div>
@@ -158,8 +187,49 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
       <div class="page-header"><h2>📊 Dashboard</h2><p>Resumen general</p></div>
       <div class="stats-row" id="statsRow"></div>
       <div class="admin-card">
-        <div class="admin-card-header"><h3>🏠 Propiedades recientes</h3><button class="btn-primary" onclick="showSec('propiedades',document.querySelectorAll('.sidebar a')[1])">Ver todas</button></div>
+        <div class="admin-card-header"><h3>🏠 Propiedades recientes</h3><button class="btn-primary" onclick="showSec('propiedades',document.querySelectorAll('.sidebar a')[4])">Ver todas</button></div>
         <div class="prop-list" id="dashPropList"></div>
+      </div>
+    </section>
+
+    <!-- Hero -->
+    <section id="sec-hero" style="display:none">
+      <div class="page-header"><h2>🖼️ Hero</h2><p>Editar el contenido principal de la página de inicio</p></div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>Contenido del Hero</h3></div>
+        <div class="admin-card-body">
+          <div class="field-grid-2">
+            <div class="field-group"><label>Título principal</label><input type="text" id="heroTitulo" placeholder="Bárbara Insaurralde"></div>
+            <div class="field-group"><label>Subtítulo</label><input type="text" id="heroSubtitulo" placeholder="Servicios Inmobiliarios"></div>
+          </div>
+          <div class="field-group"><label>Texto del botón</label><input type="text" id="heroBtnTxt" placeholder="CONTACTAR"></div>
+          <div class="field-group"><label>URL imagen de fondo</label><input type="text" id="heroImg" placeholder="https://i.imgur.com/kvBk8Go.png" oninput="previewImg('heroImg','heroImgPreview')"></div>
+          <img id="heroImgPreview" class="img-preview">
+          <button class="btn-primary" onclick="saveHero()" style="margin-top:10px">💾 Guardar Hero</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sobre Mí -->
+    <section id="sec-sobremi" style="display:none">
+      <div class="page-header"><h2>👤 Sobre Mí</h2><p>Editar tu información personal</p></div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>Información personal</h3></div>
+        <div class="admin-card-body">
+          <div class="field-grid-2">
+            <div class="field-group"><label>Nombre completo</label><input type="text" id="smNombre"></div>
+            <div class="field-group"><label>Cargo / Matrícula</label><input type="text" id="smCargo"></div>
+          </div>
+          <div class="field-group"><label>Tag (etiqueta verde)</label><input type="text" id="smTag"></div>
+          <div class="field-group"><label>Párrafo 1</label><textarea id="smParrafo1" rows="3"></textarea></div>
+          <div class="field-group"><label>Párrafo 2</label><textarea id="smParrafo2" rows="3"></textarea></div>
+          <div class="field-group"><label>Frase firma</label><input type="text" id="smFirma"></div>
+          <div class="field-group"><label>URL foto de perfil</label><input type="text" id="smFoto" oninput="previewImg('smFoto','smFotoPreview')"></div>
+          <img id="smFotoPreview" class="img-preview">
+          <div class="field-group"><label>URL logo (header)</label><input type="text" id="smLogo" oninput="previewImg('smLogo','smLogoPreview')"></div>
+          <img id="smLogoPreview" class="img-preview">
+          <button class="btn-primary" onclick="saveSobreMi()" style="margin-top:10px">💾 Guardar Sobre Mí</button>
+        </div>
       </div>
     </section>
 
@@ -179,7 +249,88 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
       <button class="btn-primary" onclick="saveServicios()">💾 Guardar servicios</button>
     </section>
 
-    <!-- Configuración Token -->
+    <!-- Contacto -->
+    <section id="sec-contacto" style="display:none">
+      <div class="page-header"><h2>📬 Contacto</h2><p>Editar datos de contacto y textos</p></div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>📱 Datos de contacto</h3></div>
+        <div class="admin-card-body">
+          <div class="field-grid-2">
+            <div class="field-group"><label>Número WhatsApp</label><input type="text" id="ctWA" placeholder="5493765409158"></div>
+            <div class="field-group"><label>Email</label><input type="text" id="ctEmail" placeholder="barbara@email.com"></div>
+          </div>
+          <button class="btn-primary" onclick="saveContactoDatos()">💾 Guardar datos</button>
+        </div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>✍️ Textos de la sección</h3></div>
+        <div class="admin-card-body">
+          <div class="field-group"><label>Tag superior</label><input type="text" id="ctTag"></div>
+          <div class="field-group"><label>Título</label><textarea id="ctTitulo" rows="2"></textarea></div>
+          <div class="field-group"><label>Párrafo 1</label><textarea id="ctParrafo1" rows="3"></textarea></div>
+          <div class="field-group"><label>Párrafo 2</label><textarea id="ctParrafo2" rows="3"></textarea></div>
+          <div class="field-group"><label>Texto botón tasación</label><input type="text" id="ctBtnTxt"></div>
+          <div class="field-group"><label>Mensaje WhatsApp tasación</label><textarea id="ctWAMsg" rows="2"></textarea></div>
+          <button class="btn-primary" onclick="saveContactoTextos()">💾 Guardar textos</button>
+        </div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>✅ Lista de servicios (checks)</h3></div>
+        <div class="admin-card-body">
+          <div id="checkListEditor"></div>
+          <button class="btn-secondary" onclick="addCheckItem()" style="margin-top:10px">+ Agregar ítem</button>
+          <button class="btn-primary" onclick="saveCheckList()" style="margin-left:10px">💾 Guardar lista</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mapa -->
+    <section id="sec-mapa" style="display:none">
+      <div class="page-header"><h2>📍 Mapa</h2><p>Configurar ubicación en el mapa</p></div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>Configuración del mapa</h3></div>
+        <div class="admin-card-body">
+          <div class="field-grid-2">
+            <div class="field-group"><label>Latitud</label><input type="text" id="mapLat" value="-27.3666"></div>
+            <div class="field-group"><label>Longitud</label><input type="text" id="mapLng" value="-55.8969"></div>
+          </div>
+          <div class="field-group"><label>Dirección visible</label><input type="text" id="mapDir" value="Posadas, Misiones, Argentina"></div>
+          <div class="field-group"><label>Texto botón "Cómo llegar"</label><input type="text" id="mapBtnTxt" value="↗ Cómo llegar"></div>
+          <button class="btn-primary" onclick="saveMapa()">💾 Guardar mapa</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Configuración General -->
+    <section id="sec-config" style="display:none">
+      <div class="page-header"><h2>⚙️ Configuración</h2><p>Ajustes generales del sitio</p></div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>SEO / Metadatos</h3></div>
+        <div class="admin-card-body">
+          <div class="field-group"><label>Título de la pestaña</label><input type="text" id="seoTitle"></div>
+          <div class="field-group"><label>Descripción (Google)</label><textarea id="seoDesc" rows="2"></textarea></div>
+          <button class="btn-primary" onclick="saveSEO()">💾 Guardar SEO</button>
+        </div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>🖼️ Imagen de fondo – Servicios</h3></div>
+        <div class="admin-card-body">
+          <div class="field-group"><label>URL imagen</label><input type="text" id="serviciosFondo" oninput="previewImg('serviciosFondo','serviciosFondoPreview')"></div>
+          <img id="serviciosFondoPreview" class="img-preview">
+          <button class="btn-primary" onclick="saveServiciosFondo()">💾 Guardar imagen</button>
+        </div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>🏠 Textos sección Propiedades</h3></div>
+        <div class="admin-card-body">
+          <div class="field-group"><label>Título</label><input type="text" id="propSecTitulo"></div>
+          <div class="field-group"><label>Subtítulo</label><input type="text" id="propSecSub"></div>
+          <button class="btn-primary" onclick="savePropSec()">💾 Guardar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- GitHub Token -->
     <section id="sec-token" style="display:none">
       <div class="page-header"><h2>🔑 GitHub Token</h2><p>Configurar token para guardar automáticamente</p></div>
       <div class="admin-card">
@@ -195,7 +346,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
             6. Genera y copia el token</p>
           </div>
           <div class="field-group"><label>GitHub Token</label><input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx"></div>
-          <div class="field-group"><label>Repositorio (usuario/repo)</label><input type="text" id="repoName" placeholder="ej: barbara/barbara-inmobiliaria"></div>
+          <div class="field-group"><label>Repositorio (usuario/repo)</label><input type="text" id="repoName" placeholder="ej: nahuop12354-wq/barbara-inmobiliaria"></div>
           <button class="btn-primary" onclick="guardarToken()">💾 Guardar Token</button>
           <p id="tokenStatus" style="margin-top:12px; font-size:0.8rem;"></p>
         </div>
@@ -228,17 +379,17 @@ body { font-family: 'DM Sans', sans-serif; background: var(--v8); color: #2a2a2a
       <div class="field-group"><label>Estado</label><select id="fBadge"><option value="En Venta">En Venta</option><option value="En Alquiler">En Alquiler</option></select></div>
       <div class="field-group"><label>Precio</label><input type="text" id="fPrecio"></div>
     </div>
-    <div class="field-group"><label>Nota de precio</label><input type="text" id="fPrecioNota"></div>
+    <div class="field-group"><label>Nota de precio</label><input type="text" id="fPrecioNota" placeholder="Ej: Cochera incluida"></div>
     <div class="field-group"><label>Ubicación</label><input type="text" id="fUbi"></div>
     <div class="field-group"><label>Descripción</label><textarea id="fDesc" rows="4"></textarea></div>
-    <div class="field-group"><label>Tags (separar con comas)</label><input type="text" id="fTags"></div>
-    <div class="field-group"><label>Características (una por línea)</label><textarea id="fCaract" rows="4"></textarea></div>
-    <div class="field-group"><label>URL imagen principal</label><input type="text" id="fImgPrincipal" oninput="previewImg('fImgPrincipal','fImgPreview')"></div>
+    <div class="field-group"><label>Tags (separar con comas)</label><input type="text" id="fTags" placeholder="2 dormitorios, 1 baño, 80 m²"></div>
+    <div class="field-group"><label>Características (una por línea)</label><textarea id="fCaract" rows="4" placeholder="Cocina equipada&#10;Piscina&#10;Garaje"></textarea></div>
+    <div class="field-group"><label>URL imagen principal</label><input type="text" id="fImgPrincipal" oninput="previewImg('fImgPrincipal','fImgPreview')" placeholder="https://i.ibb.co/..."></div>
     <img id="fImgPreview" class="img-preview">
-    <div class="field-group"><label>URLs galería (una por línea)</label><textarea id="fGaleria" rows="4"></textarea></div>
+    <div class="field-group"><label>URLs galería (una por línea - hasta 8 imágenes)</label><textarea id="fGaleria" rows="4" placeholder="https://i.ibb.co/foto2.jpg&#10;https://i.ibb.co/foto3.jpg"></textarea></div>
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
-      <button class="btn-primary" onclick="saveProp()">💾 Guardar</button>
+      <button class="btn-primary" onclick="saveProp()">💾 Guardar propiedad</button>
     </div>
   </div>
 </div>
@@ -254,12 +405,12 @@ try { const saved = localStorage.getItem('barbara_creds_admin'); if (saved) CRED
 let GITHUB_CONFIG = { token: '', repo: '' };
 try { const saved = localStorage.getItem('github_config'); if (saved) GITHUB_CONFIG = JSON.parse(saved); } catch(e) {}
 
-// ===== DATOS =====
+// ===== DATOS GLOBALES =====
 let propiedadesGlobal = [];
 let serviciosGlobal = [
-  { id: 1, numero: '01', titulo: 'Venta de propiedades', descripcion: 'Asesoramiento integral para la comercialización de inmuebles...' },
-  { id: 2, numero: '02', titulo: 'Tasaciones inmobiliarias', descripcion: 'Valoración profesional de propiedades...' },
-  { id: 3, numero: '03', titulo: 'Alquileres y administración', descripcion: 'Gestión integral de alquileres...' }
+  { id: 1, numero: '01', titulo: 'Venta de propiedades', descripcion: 'Asesoramiento integral para la comercialización de inmuebles, incluyendo tasación, estrategia de difusión y acompañamiento hasta la concreción de la operación.' },
+  { id: 2, numero: '02', titulo: 'Tasaciones inmobiliarias', descripcion: 'Valoración profesional de propiedades basada en análisis de mercado, ubicación y características del inmueble para determinar su valor real.' },
+  { id: 3, numero: '03', titulo: 'Alquileres y administración', descripcion: 'Gestión integral de alquileres, redacción de contratos, selección de inquilinos y seguimiento administrativo durante toda la relación locativa.' }
 ];
 
 // ===== CARGAR DATOS =====
@@ -273,72 +424,33 @@ async function cargarDatos() {
   } catch(e) {
     try { const s = localStorage.getItem('barbara_propiedades'); if (s) propiedadesGlobal = JSON.parse(s); } catch(e2) {}
   }
+  cargarHero(); cargarSobreMi(); cargarContacto(); cargarMapa(); cargarConfig();
 }
 
-// ===== GUARDAR EN GITHUB AUTOMÁTICAMENTE =====
+// ===== GUARDAR EN GITHUB =====
 async function guardarEnGitHub() {
   if (!GITHUB_CONFIG.token || !GITHUB_CONFIG.repo) {
-    showToast('⚠️ Configurá primero el Token de GitHub en la sección "GitHub Token"', 'error');
+    showToast('⚠️ Configurá primero el Token de GitHub', 'error');
     return false;
   }
-  
   const datosCompletos = { propiedades: propiedadesGlobal, servicios: serviciosGlobal };
   const contenido = JSON.stringify(datosCompletos, null, 2);
   const contenidoBase64 = btoa(unescape(encodeURIComponent(contenido)));
-  
   try {
-    // Obtener el SHA actual del archivo
     const shaRes = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.repo}/contents/datos.json`, {
       headers: { 'Authorization': `token ${GITHUB_CONFIG.token}` }
     });
-    
     let sha = null;
-    if (shaRes.ok) {
-      const shaData = await shaRes.json();
-      sha = shaData.sha;
-    }
-    
-    // Guardar el archivo
+    if (shaRes.ok) { const shaData = await shaRes.json(); sha = shaData.sha; }
     const saveRes = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.repo}/contents/datos.json`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `token ${GITHUB_CONFIG.token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        message: 'Actualización desde panel admin',
-        content: contenidoBase64,
-        sha: sha
-      })
+      method: 'PUT', headers: { 'Authorization': `token ${GITHUB_CONFIG.token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'Actualización desde panel admin', content: contenidoBase64, sha: sha })
     });
-    
-    if (saveRes.ok) {
-      showToast('✅ Guardado en GitHub exitoso. La web se actualizará en 1-2 minutos');
-      return true;
-    } else {
-      const error = await saveRes.json();
-      showToast('❌ Error al guardar: ' + (error.message || 'Error desconocido'), 'error');
-      return false;
-    }
-  } catch(e) {
-    showToast('❌ Error de conexión: ' + e.message, 'error');
-    return false;
-  }
+    if (saveRes.ok) { showToast('✅ Guardado en GitHub. La web se actualizará en 1-2 min'); return true; }
+    else { const error = await saveRes.json(); showToast('❌ Error: ' + (error.message || 'Error desconocido'), 'error'); return false; }
+  } catch(e) { showToast('❌ Error de conexión: ' + e.message, 'error'); return false; }
 }
-
-// ===== FUNCIÓN PARA GUARDAR TODO (propiedades + servicios) =====
-async function guardarTodo() {
-  const btn = document.querySelector('.btn-primary');
-  const textoOriginal = btn?.textContent;
-  if (btn) { btn.textContent = '⏳ Guardando...'; btn.disabled = true; }
-  
-  const ok = await guardarEnGitHub();
-  
-  if (btn) { btn.textContent = textoOriginal; btn.disabled = false; }
-  if (ok) {
-    localStorage.setItem('barbara_propiedades', JSON.stringify(propiedadesGlobal));
-  }
-}
+async function guardarTodo() { await guardarEnGitHub(); localStorage.setItem('barbara_propiedades', JSON.stringify(propiedadesGlobal)); }
 
 // ===== AUTH =====
 async function doLogin() {
@@ -351,13 +463,9 @@ async function doLogin() {
     await cargarDatos();
     renderAll();
     cargarTokenConfig();
-  } else {
-    document.getElementById('loginError').style.display = 'block';
-  }
+  } else { document.getElementById('loginError').style.display = 'block'; }
 }
-
 function doLogout() { sessionStorage.removeItem('admin_auth'); location.reload(); }
-
 if (sessionStorage.getItem('admin_auth') === '1') {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('adminPanel').classList.add('visible');
@@ -365,31 +473,10 @@ if (sessionStorage.getItem('admin_auth') === '1') {
   cargarTokenConfig();
 }
 
-function cargarTokenConfig() {
-  if (GITHUB_CONFIG.token) document.getElementById('githubToken').value = GITHUB_CONFIG.token;
-  if (GITHUB_CONFIG.repo) document.getElementById('repoName').value = GITHUB_CONFIG.repo;
-}
-
-function guardarToken() {
-  const token = document.getElementById('githubToken').value.trim();
-  const repo = document.getElementById('repoName').value.trim();
-  if (!token || !repo) { showToast('Completá token y repositorio', 'error'); return; }
-  GITHUB_CONFIG = { token, repo };
-  localStorage.setItem('github_config', JSON.stringify(GITHUB_CONFIG));
-  showToast('✅ Token guardado. Ahora los cambios se guardan automáticamente en GitHub');
-}
-
 // ===== MOBILE =====
-function toggleMobileSidebar() {
-  document.getElementById('sidebar').classList.toggle('mobile-open');
-  document.getElementById('mobileSidebarOverlay').classList.toggle('open');
-}
-function closeMobileSidebar() {
-  document.getElementById('sidebar').classList.remove('mobile-open');
-  document.getElementById('mobileSidebarOverlay').classList.remove('open');
-}
+function toggleMobileSidebar() { document.getElementById('sidebar').classList.toggle('mobile-open'); document.getElementById('mobileSidebarOverlay').classList.toggle('open'); }
+function closeMobileSidebar() { document.getElementById('sidebar').classList.remove('mobile-open'); document.getElementById('mobileSidebarOverlay').classList.remove('open'); }
 
-// ===== NAV =====
 function showSec(name, el) {
   document.querySelectorAll('.main-content > section').forEach(s => s.style.display = 'none');
   const sec = document.getElementById('sec-' + name);
@@ -401,12 +488,7 @@ function showSec(name, el) {
 }
 
 // ===== RENDER =====
-function renderAll() {
-  renderStats();
-  renderDashProps();
-  renderPropList();
-  renderServiciosEditor();
-}
+function renderAll() { renderStats(); renderDashProps(); renderPropList(); renderServiciosEditor(); }
 
 function renderStats() {
   const stats = [
@@ -415,47 +497,12 @@ function renderStats() {
     { n: propiedadesGlobal.filter(p => p.badge === 'En Alquiler').length, l: 'En Alquiler' },
     { n: serviciosGlobal.length, l: 'Servicios activos' }
   ];
-  document.getElementById('statsRow').innerHTML = stats.map(s =>
-    `<div class="stat-card"><div class="stat-n">${s.n}</div><div class="stat-l">${s.l}</div></div>`
-  ).join('');
+  document.getElementById('statsRow').innerHTML = stats.map(s => `<div class="stat-card"><div class="stat-n">${s.n}</div><div class="stat-l">${s.l}</div></div>`).join('');
 }
-
-function renderDashProps() {
-  document.getElementById('dashPropList').innerHTML =
-    propiedadesGlobal.slice(0, 3).map(propHTML).join('') ||
-    '<div style="padding:20px;text-align:center">No hay propiedades</div>';
-}
-
-function renderPropList() {
-  document.getElementById('propList').innerHTML =
-    propiedadesGlobal.map(propHTML).join('') ||
-    '<div style="padding:20px;text-align:center">No hay propiedades. ¡Agregá la primera!</div>';
-}
-
-function propHTML(p) {
-  return `
-    <div class="prop-item">
-      <img src="${p.imagenPrincipal || 'https://placehold.co/80x62'}" class="prop-item-img" onerror="this.src='https://placehold.co/80x62'">
-      <div class="prop-item-info">
-        <h4>${p.titulo}</h4>
-        <p>${p.ubicacion}</p>
-        <span class="prop-item-badge">${p.badge} · ${p.precio}</span>
-      </div>
-      <div class="prop-item-actions">
-        <button class="btn-edit-small" onclick="openPropModal(${p.id})">✏️</button>
-        <button class="btn-danger" onclick="deleteProp(${p.id})">🗑</button>
-      </div>
-    </div>`;
-}
-
-function renderServiciosEditor() {
-  document.getElementById('serviciosEditor').innerHTML = serviciosGlobal.map((sv, i) => `
-    <div class="servicio-editor">
-      <div class="servicio-num">SERVICIO ${sv.numero}</div>
-      <div class="field-group"><label>Título</label><input type="text" id="sv_t_${i}" value="${sv.titulo.replace(/"/g,'&quot;')}"></div>
-      <div class="field-group"><label>Descripción</label><textarea id="sv_d_${i}" rows="3">${sv.descripcion}</textarea></div>
-    </div>`).join('');
-}
+function renderDashProps() { document.getElementById('dashPropList').innerHTML = propiedadesGlobal.slice(0, 3).map(propHTML).join('') || '<div style="padding:20px;text-align:center">No hay propiedades</div>'; }
+function renderPropList() { document.getElementById('propList').innerHTML = propiedadesGlobal.map(propHTML).join('') || '<div style="padding:20px;text-align:center">No hay propiedades. ¡Agregá la primera!</div>'; }
+function propHTML(p) { return `<div class="prop-item"><img src="${p.imagenPrincipal || 'https://placehold.co/80x62'}" class="prop-item-img" onerror="this.src='https://placehold.co/80x62'"><div class="prop-item-info"><h4>${p.titulo}</h4><p>${p.ubicacion}</p><span class="prop-item-badge">${p.badge} · ${p.precio}</span></div><div class="prop-item-actions"><button class="btn-edit-small" onclick="openPropModal(${p.id})">✏️</button><button class="btn-danger" onclick="deleteProp(${p.id})">🗑</button></div></div>`; }
+function renderServiciosEditor() { document.getElementById('serviciosEditor').innerHTML = serviciosGlobal.map((sv, i) => `<div class="servicio-editor"><div class="servicio-num">SERVICIO ${sv.numero}</div><div class="field-group"><label>Título</label><input type="text" id="sv_t_${i}" value="${sv.titulo.replace(/"/g,'&quot;')}"></div><div class="field-group"><label>Descripción</label><textarea id="sv_d_${i}" rows="3">${sv.descripcion}</textarea></div></div>`).join(''); }
 
 // ===== PROPIEDADES CRUD =====
 function openPropModal(id) {
@@ -485,87 +532,54 @@ function openPropModal(id) {
     document.getElementById('fImgPreview').classList.remove('show');
   }
 }
-
 function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
 document.getElementById('modalBg').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
-
 function saveProp() {
   const titulo = document.getElementById('fTitulo').value.trim();
   if (!titulo) { showToast('El título es obligatorio', 'error'); return; }
   const editId = document.getElementById('propId').value;
   const prop = {
-    id: editId ? parseInt(editId) : Date.now(),
-    badge: document.getElementById('fBadge').value,
-    titulo: titulo,
-    ubicacion: document.getElementById('fUbi').value.trim(),
-    precio: document.getElementById('fPrecio').value.trim(),
-    precioNota: document.getElementById('fPrecioNota').value.trim(),
-    descripcion: document.getElementById('fDesc').value.trim(),
+    id: editId ? parseInt(editId) : Date.now(), badge: document.getElementById('fBadge').value, titulo: titulo,
+    ubicacion: document.getElementById('fUbi').value.trim(), precio: document.getElementById('fPrecio').value.trim(),
+    precioNota: document.getElementById('fPrecioNota').value.trim(), descripcion: document.getElementById('fDesc').value.trim(),
     tags: document.getElementById('fTags').value.split(',').map(s => s.trim()).filter(Boolean),
     caracteristicas: document.getElementById('fCaract').value.split('\n').map(s => s.trim()).filter(Boolean),
     imagenPrincipal: document.getElementById('fImgPrincipal').value.trim(),
     galeria: document.getElementById('fGaleria').value.split('\n').map(s => s.trim()).filter(Boolean)
   };
-  
-  if (editId) {
-    const idx = propiedadesGlobal.findIndex(x => x.id === parseInt(editId));
-    if (idx >= 0) propiedadesGlobal[idx] = prop;
-  } else {
-    propiedadesGlobal.push(prop);
-  }
-  
-  closeModal();
-  renderAll();
-  guardarTodo();
+  if (editId) { const idx = propiedadesGlobal.findIndex(x => x.id === parseInt(editId)); if (idx >= 0) propiedadesGlobal[idx] = prop; }
+  else { propiedadesGlobal.push(prop); }
+  closeModal(); renderAll(); guardarTodo();
 }
-
-function deleteProp(id) {
-  if (!confirm('¿Eliminar esta propiedad?')) return;
-  propiedadesGlobal = propiedadesGlobal.filter(x => x.id !== id);
-  renderAll();
-  guardarTodo();
-}
+function deleteProp(id) { if (!confirm('¿Eliminar esta propiedad?')) return; propiedadesGlobal = propiedadesGlobal.filter(x => x.id !== id); renderAll(); guardarTodo(); }
 
 // ===== SERVICIOS =====
-function saveServicios() {
-  for (let i = 0; i < serviciosGlobal.length; i++) {
-    const t = document.getElementById(`sv_t_${i}`).value.trim();
-    const d = document.getElementById(`sv_d_${i}`).value.trim();
-    if (t) { serviciosGlobal[i].titulo = t; serviciosGlobal[i].descripcion = d; }
-  }
-  renderServiciosEditor();
-  guardarTodo();
-}
+function saveServicios() { for (let i = 0; i < serviciosGlobal.length; i++) { const t = document.getElementById(`sv_t_${i}`).value.trim(); const d = document.getElementById(`sv_d_${i}`).value.trim(); if (t) { serviciosGlobal[i].titulo = t; serviciosGlobal[i].descripcion = d; } } renderServiciosEditor(); guardarTodo(); }
 
-// ===== CREDENCIALES =====
-function saveCredenciales() {
-  const actual = document.getElementById('credActual').value;
-  const nueva = document.getElementById('credNueva').value;
-  const rep = document.getElementById('credRepetir').value;
-  if (actual !== CREDS.pass) { showToast('Contraseña actual incorrecta', 'error'); return; }
-  if (!nueva || nueva.length < 4) { showToast('Mínimo 4 caracteres', 'error'); return; }
-  if (nueva !== rep) { showToast('Las contraseñas no coinciden', 'error'); return; }
-  CREDS.pass = nueva;
-  localStorage.setItem('barbara_creds_admin', JSON.stringify(CREDS));
-  ['credActual','credNueva','credRepetir'].forEach(id => document.getElementById(id).value = '');
-  showToast('✓ Contraseña cambiada');
-}
-
-// ===== UTILS =====
-function previewImg(inputId, previewId) {
-  const url = document.getElementById(inputId).value.trim();
-  const prev = document.getElementById(previewId);
-  if (url) { prev.src = url; prev.classList.add('show'); }
-  else { prev.classList.remove('show'); }
-}
-
-function showToast(msg, type = '') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast' + (type === 'error' ? ' error' : '');
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3500);
-}
+// ===== HERO (localStorage por ahora, luego se puede integrar a JSON) =====
+function cargarHero() { const d = JSON.parse(localStorage.getItem('barbara_hero') || '{"titulo":"Bárbara Insaurralde","subtitulo":"Servicios Inmobiliarios","btnTxt":"CONTACTAR","img":"https://i.imgur.com/kvBk8Go.png"}'); document.getElementById('heroTitulo').value = d.titulo; document.getElementById('heroSubtitulo').value = d.subtitulo; document.getElementById('heroBtnTxt').value = d.btnTxt; document.getElementById('heroImg').value = d.img; previewImg('heroImg','heroImgPreview'); }
+function saveHero() { const hero = { titulo: document.getElementById('heroTitulo').value.trim(), subtitulo: document.getElementById('heroSubtitulo').value.trim(), btnTxt: document.getElementById('heroBtnTxt').value.trim(), img: document.getElementById('heroImg').value.trim() }; localStorage.setItem('barbara_hero', JSON.stringify(hero)); showToast('✓ Hero guardado'); }
+function cargarSobreMi() { const d = JSON.parse(localStorage.getItem('barbara_sobremi') || '{"nombre":"Bárbara Insaurralde","cargo":"Martillera Pública y Corredora de Comercio – MP 243","tag":"Sobre Mí","parrafo1":"","parrafo2":"","firma":"Compromiso y excelencia","foto":"https://i.imgur.com/Gr3SWOi.png","logo":"https://i.imgur.com/FqChLBS.png"}'); document.getElementById('smNombre').value = d.nombre; document.getElementById('smCargo').value = d.cargo; document.getElementById('smTag').value = d.tag; document.getElementById('smParrafo1').value = d.parrafo1; document.getElementById('smParrafo2').value = d.parrafo2; document.getElementById('smFirma').value = d.firma; document.getElementById('smFoto').value = d.foto; document.getElementById('smLogo').value = d.logo; previewImg('smFoto','smFotoPreview'); previewImg('smLogo','smLogoPreview'); }
+function saveSobreMi() { const sm = { nombre: document.getElementById('smNombre').value.trim(), cargo: document.getElementById('smCargo').value.trim(), tag: document.getElementById('smTag').value.trim(), parrafo1: document.getElementById('smParrafo1').value.trim(), parrafo2: document.getElementById('smParrafo2').value.trim(), firma: document.getElementById('smFirma').value.trim(), foto: document.getElementById('smFoto').value.trim(), logo: document.getElementById('smLogo').value.trim() }; localStorage.setItem('barbara_sobremi', JSON.stringify(sm)); showToast('✓ Sobre Mí guardado'); }
+function cargarContacto() { const d = JSON.parse(localStorage.getItem('barbara_contacto') || '{"wa":"5493765409158","email":"","tag":"¿Querés vender tu propiedad?","titulo":"Vendé tu propiedad con asesoramiento profesional","parrafo1":"","parrafo2":"","btnTxt":"Solicitar tasación","waMsg":"Hola Bárbara, quiero solicitar una tasación","checkList":["Tasación profesional","Publicación en portales","Difusión en redes","Asesoramiento legal","Acompañamiento hasta la firma"]}'); document.getElementById('ctWA').value = d.wa; document.getElementById('ctEmail').value = d.email || ''; document.getElementById('ctTag').value = d.tag; document.getElementById('ctTitulo').value = d.titulo; document.getElementById('ctParrafo1').value = d.parrafo1; document.getElementById('ctParrafo2').value = d.parrafo2; document.getElementById('ctBtnTxt').value = d.btnTxt; document.getElementById('ctWAMsg').value = d.waMsg; renderCheckList(d.checkList || []); }
+function renderCheckList(items) { document.getElementById('checkListEditor').innerHTML = items.map((item,i) => `<div class="lista-item"><input type="text" value="${item.replace(/"/g,'&quot;')}" id="chk_${i}" placeholder="Ítem"><button class="btn-remove-item" onclick="removeCheckItem(${i})">×</button></div>`).join(''); }
+function getCheckItems() { const items = []; document.querySelectorAll('#checkListEditor input').forEach(inp => { if(inp.value.trim()) items.push(inp.value.trim()); }); return items; }
+function addCheckItem() { renderCheckList([...getCheckItems(), 'Nuevo ítem']); }
+function removeCheckItem(idx) { const items = getCheckItems(); items.splice(idx,1); renderCheckList(items); }
+function saveContactoDatos() { const d = JSON.parse(localStorage.getItem('barbara_contacto') || '{}'); d.wa = document.getElementById('ctWA').value.trim(); d.email = document.getElementById('ctEmail').value.trim(); localStorage.setItem('barbara_contacto', JSON.stringify(d)); showToast('✓ Datos guardados'); }
+function saveContactoTextos() { const d = JSON.parse(localStorage.getItem('barbara_contacto') || '{}'); d.tag = document.getElementById('ctTag').value.trim(); d.titulo = document.getElementById('ctTitulo').value.trim(); d.parrafo1 = document.getElementById('ctParrafo1').value.trim(); d.parrafo2 = document.getElementById('ctParrafo2').value.trim(); d.btnTxt = document.getElementById('ctBtnTxt').value.trim(); d.waMsg = document.getElementById('ctWAMsg').value.trim(); localStorage.setItem('barbara_contacto', JSON.stringify(d)); showToast('✓ Textos guardados'); }
+function saveCheckList() { const d = JSON.parse(localStorage.getItem('barbara_contacto') || '{}'); d.checkList = getCheckItems(); localStorage.setItem('barbara_contacto', JSON.stringify(d)); showToast('✓ Lista guardada'); }
+function cargarMapa() { const d = JSON.parse(localStorage.getItem('barbara_mapa') || '{"lat":"-27.3666","lng":"-55.8969","dir":"Posadas, Misiones, Argentina","btnTxt":"↗ Cómo llegar"}'); document.getElementById('mapLat').value = d.lat; document.getElementById('mapLng').value = d.lng; document.getElementById('mapDir').value = d.dir; document.getElementById('mapBtnTxt').value = d.btnTxt; }
+function saveMapa() { const mapa = { lat: document.getElementById('mapLat').value.trim(), lng: document.getElementById('mapLng').value.trim(), dir: document.getElementById('mapDir').value.trim(), btnTxt: document.getElementById('mapBtnTxt').value.trim() }; localStorage.setItem('barbara_mapa', JSON.stringify(mapa)); showToast('✓ Mapa guardado'); }
+function cargarConfig() { const seo = JSON.parse(localStorage.getItem('barbara_seo') || '{"title":"Bárbara Insaurralde – Servicios Inmobiliarios","desc":"Martillera Pública en Posadas, Misiones."}'); document.getElementById('seoTitle').value = seo.title; document.getElementById('seoDesc').value = seo.desc; const c = JSON.parse(localStorage.getItem('barbara_config') || '{"serviciosFondo":"https://i.imgur.com/I6J8uv2.png","propSecTitulo":"Propiedades Destacadas","propSecSub":"Encontrá tu próxima inversión"}'); document.getElementById('serviciosFondo').value = c.serviciosFondo || ''; document.getElementById('propSecTitulo').value = c.propSecTitulo || ''; document.getElementById('propSecSub').value = c.propSecSub || ''; previewImg('serviciosFondo','serviciosFondoPreview'); }
+function saveSEO() { const seo = { title: document.getElementById('seoTitle').value.trim(), desc: document.getElementById('seoDesc').value.trim() }; localStorage.setItem('barbara_seo', JSON.stringify(seo)); showToast('✓ SEO guardado'); }
+function saveServiciosFondo() { const c = JSON.parse(localStorage.getItem('barbara_config') || '{}'); c.serviciosFondo = document.getElementById('serviciosFondo').value.trim(); localStorage.setItem('barbara_config', JSON.stringify(c)); showToast('✓ Imagen guardada'); }
+function savePropSec() { const c = JSON.parse(localStorage.getItem('barbara_config') || '{}'); c.propSecTitulo = document.getElementById('propSecTitulo').value.trim(); c.propSecSub = document.getElementById('propSecSub').value.trim(); localStorage.setItem('barbara_config', JSON.stringify(c)); showToast('✓ Guardado'); }
+function cargarTokenConfig() { if (GITHUB_CONFIG.token) document.getElementById('githubToken').value = GITHUB_CONFIG.token; if (GITHUB_CONFIG.repo) document.getElementById('repoName').value = GITHUB_CONFIG.repo; }
+function guardarToken() { const token = document.getElementById('githubToken').value.trim(); const repo = document.getElementById('repoName').value.trim(); if (!token || !repo) { showToast('Completá token y repositorio', 'error'); return; } GITHUB_CONFIG = { token, repo }; localStorage.setItem('github_config', JSON.stringify(GITHUB_CONFIG)); showToast('✅ Token guardado. Ahora los cambios se guardan automáticamente en GitHub'); }
+function saveCredenciales() { const actual = document.getElementById('credActual').value; const nueva = document.getElementById('credNueva').value; const rep = document.getElementById('credRepetir').value; if (actual !== CREDS.pass) { showToast('Contraseña actual incorrecta', 'error'); return; } if (!nueva || nueva.length < 4) { showToast('Mínimo 4 caracteres', 'error'); return; } if (nueva !== rep) { showToast('Las contraseñas no coinciden', 'error'); return; } CREDS.pass = nueva; localStorage.setItem('barbara_creds_admin', JSON.stringify(CREDS)); ['credActual','credNueva','credRepetir'].forEach(id => document.getElementById(id).value = ''); showToast('✓ Contraseña cambiada'); }
+function previewImg(inputId, previewId) { const url = document.getElementById(inputId).value.trim(); const prev = document.getElementById(previewId); if (url) { prev.src = url; prev.classList.add('show'); } else { prev.classList.remove('show'); } }
+function showToast(msg, type = '') { const t = document.getElementById('toast'); t.textContent = msg; t.className = 'toast' + (type === 'error' ? ' error' : ''); t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3500); }
 </script>
 </body>
 </html>
